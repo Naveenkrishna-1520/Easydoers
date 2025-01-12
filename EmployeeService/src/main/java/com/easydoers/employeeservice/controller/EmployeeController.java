@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.SaleRequest;
 import com.easydoers.employeeservice.entity.Employee;
-import com.easydoers.employeeservice.service.EmployeeServiceInterface;
+import com.easydoers.employeeservice.service.EmployeeService;
+
 
 @RestController
 @RequestMapping("v1/employee")
 public class EmployeeController {
 
     @Autowired
-    private EmployeeServiceInterface employeeService;
-    
-    
-    
+    private EmployeeService employeeService;
+ 
 
     @PostMapping("/saveEmployee")
     public ResponseEntity<String> saveEmployee(@RequestBody Employee employee) {
@@ -35,7 +34,8 @@ public class EmployeeController {
     @PostMapping("/clockInRequset/{employeeNtid}/{delaerStoreId}") 
     public ResponseEntity<String> saveClokInTimeForEmployee(@PathVariable String employeeNtid, @PathVariable String delaerStoreId){
     	String saveClockInTimeForEmployee = employeeService.saveClockInTimeForEmployee(employeeNtid, delaerStoreId);
-		return ResponseEntity.ok(saveClockInTimeForEmployee);
+    	String ipAddress = employeeService.getSerialNumber();
+		return ResponseEntity.ok(saveClockInTimeForEmployee+"      ip address is :"+ipAddress);
     	
     }
     

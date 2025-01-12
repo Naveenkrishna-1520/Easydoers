@@ -7,11 +7,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
+import com.easydoers.employeeservice.dto.LogInRequest;
 import com.easydoers.employeeservice.dto.SaleDTO;
 import com.easydoers.employeeservice.dto.SaleRequest;
 import com.easydoers.employeeservice.entity.Address;
@@ -29,10 +35,10 @@ import com.easydoers.employeeservice.repository.SaleRepository;
 import com.easydoers.employeeservice.repository.StoreRepository;
 import com.easydoers.employeeservice.repository.UserRepository;
 import com.easydoers.employeeservice.repository.WorkRepository;
-import com.easydoers.employeeservice.service.EmployeeServiceInterface;
+import com.easydoers.employeeservice.service.EmployeeService;
 
 @Service
-public class EmployeeServiceImplementation implements EmployeeServiceInterface {
+public class EmployeeServiceImplementation implements EmployeeService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
@@ -50,20 +56,22 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface {
 	private UserRepository userRepository;
 	@Autowired(required = true)
 	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	@Autowired
+	private JWTTokenService tokenService;
 
 	@Override
-	public String saveSaleDetails(String employeeNTId, String dealerStoreId,SaleRequest saleRequest) {
+	public String saveSaleDetails(String employeeNTId, String dealerStoreId, SaleRequest saleRequest) {
 
-		return saveEndOfTheDaySaleReportEnteredByEmployee (saleRequest, employeeNTId, dealerStoreId);
+		return saveEndOfTheDaySaleReportEnteredByEmployee(saleRequest, employeeNTId, dealerStoreId);
 	}
-
-	
 
 	@Override
 	public Employee saveEmployee(Employee employee) {
 		if (employeeRepository.findByEmployeeNtid(employee.getEmployeeNtid()) != null) {
 			throw new DuplicateUserException("Employee already exists with : " + employee.getEmployeeNtid());
-		}	
+		}
 		Address employeeAddress = employee.getAddress();
 		addressRepository.save(employeeAddress);
 		Users user = new Users();
@@ -74,18 +82,19 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface {
 		employee.setCompany(employeeCompany);
 		return employeeRepository.save(employee);
 	}
-	
-	
-	private String saveEndOfTheDaySaleReportEnteredByEmployee(SaleRequest saleRequest, String employeeNTId, String dealerStoreId) {
+
+	private String saveEndOfTheDaySaleReportEnteredByEmployee(SaleRequest saleRequest, String employeeNTId,
+			String dealerStoreId) {
 		Employee employee = employeeRepository.findByEmployeeNtid(employeeNTId);
 		Store store = storeRepository.findByDealerStoreId(dealerStoreId);
 		Sale saleCheck = saleRepository.findByEmployeeIdAndDate(employee.getEmployeeId(), LocalDate.now());
-		if(saleCheck ==null) {
+		if (saleCheck == null) {
 			Sale saveSaleDetails = new Sale();
 			saveSaleDetails.setEmployee(employee);
 			saveSaleDetails.setStore(store);
 			saveSaleDetails.setSystemAccessories(saleRequest.getSystemAccessories());
-			saveSaleDetails.setAccessories(calculateAccessoriesForEmployeee(saleRequest.getSystemCard(),saleRequest.getSystemCash(),saleRequest.getActualCard(),saleRequest.getActualCash()));
+			saveSaleDetails.setAccessories(calculateAccessoriesForEmployeee(saleRequest.getSystemCard(),
+					saleRequest.getSystemCash(), saleRequest.getActualCard(), saleRequest.getActualCash()));
 			saveSaleDetails.setBoxesSold(saleRequest.getBoxesSold());
 			saveSaleDetails.setTabletsSold(saveSaleDetails.getTabletsSold());
 			saveSaleDetails.setHsiSold(saleRequest.getHsiSold());
@@ -100,101 +109,113 @@ public class EmployeeServiceImplementation implements EmployeeServiceInterface {
 			saleRepository.save(saveSaleDetails);
 			Work work = workRepository.findByEmployeeIdAndDate(employee.getEmployeeId(), LocalDate.now());
 			work.setClockOutTime(LocalTime.now());
-			work.setNumberOfHoursWorkedByEmployee(calculateNumberOfWorkedByEmployee(work.getClockOutTime(),work.getClockInTime()));
+			work.setNumberOfHoursWorkedByEmployee(
+					calculateNumberOfWorkedByEmployee(work.getClockOutTime(), work.getClockInTime()));
 			workRepository.save(work);
-			return employee.getEmployeeNtid()+" : Saved End Of The Day Report Successfully ";
+			return employee.getEmployeeNtid() + " : Saved End Of The Day Report Successfully ";
 		}
-		
-		return employee.getEmployeeName()+" : "+employee.getEmployeeNtid()+" Already Saved End Of The Sale Report "+saleRepository.findBySaleId(saleCheck.getSaleId());
+
+		return employee.getEmployeeName() + " : " + employee.getEmployeeNtid()
+				+ " Already Saved End Of The Sale Report " + saleRepository.findBySaleId(saleCheck.getSaleId());
 	}
-	
-
-
 
 	private double calculateAccessoriesForEmployeee(double systemCard, double systemCash, double actualCard,
 			double actualCash) {
-		double totalAccessoriesByEmployeeInCashAndCard = (actualCard-systemCard)+(actualCash-systemCash);
+		double totalAccessoriesByEmployeeInCashAndCard = (actualCard - systemCard) + (actualCash - systemCash);
 		return totalAccessoriesByEmployeeInCashAndCard;
 	}
 
-
-
 	private double calculateNumberOfWorkedByEmployee(LocalTime clockOutTime, LocalTime clockInTime) {
-		 Duration numberOfWorkedByEmployee = Duration.between(clockInTime, clockOutTime);
-		 double hoursWorked = numberOfWorkedByEmployee.toMinutes() / 60.0;
-		 DecimalFormat format = new DecimalFormat("#.##");
-		 double roundedValueForHoursWorked = Double.parseDouble(format.format(hoursWorked));		 
+		Duration numberOfWorkedByEmployee = Duration.between(clockInTime, clockOutTime);
+		double hoursWorked = numberOfWorkedByEmployee.toMinutes() / 60.0;
+		DecimalFormat format = new DecimalFormat("#.##");
+		double roundedValueForHoursWorked = Double.parseDouble(format.format(hoursWorked));
 		return roundedValueForHoursWorked;
 	}
-
-
 
 	@Override
 	public EmployeeSalesDTO getEmployeeSales(String employeeNtid) {
 		System.out.println(LocalDateTime.now());
 		Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
-		List<SaleDTO> salesByEmployee = saleRepository.findSalesByEmployeeId(employee.getEmployeeId());		
-		return new EmployeeSalesDTO( employee.getEmployeeNtid(),employee.getEmployeeName(), salesByEmployee);
+		List<SaleDTO> salesByEmployee = saleRepository.findSalesByEmployeeId(employee.getEmployeeId());
+		return new EmployeeSalesDTO(employee.getEmployeeNtid(), employee.getEmployeeName(), salesByEmployee);
 	}
-	
+
 	@Override
 	public String saveClockInTimeForEmployee(String employeeNtid, String dealerStoreId) {
 		Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
 		Store store = storeRepository.findByDealerStoreId(dealerStoreId);
 		Work work = workRepository.findByEmployeeIdAndDate(employee.getEmployeeId(), LocalDate.now());
-		if(work ==null) {
+		if (work == null) {
 			Work workRequset = new Work();
 			workRequset.setEmployee(employee);
 			workRequset.setStore(store);
-			workRequset.setClockInTime(LocalTime.now());;
+			workRequset.setClockInTime(LocalTime.now());
 			workRequset.setDate(LocalDate.now());
 			workRepository.save(workRequset);
-			return "Employee successfully clocked in at : "+workRequset.getClockInTime();			
-		}		
-		return "Employee already clocked in at : "+work.getClockInTime();
+			return "Employee successfully clocked in at : " + workRequset.getClockInTime();
+		}
+		return "Employee already clocked in at : " + work.getClockInTime();
 	}
-	
+
+	public String getSerialNumber() {
+		String serialNumber = "";
+		try {
+			Process process = Runtime.getRuntime().exec("ioreg -l | grep IOPlatformSerialNumber");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.contains("IOPlatformSerialNumber")) {
+					serialNumber = line.split("\"")[3]; // Extract the serial number
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Error retrieving serial number";
+		}
+		return serialNumber;
+	}
 
 	private CharSequence createPassword() {
-		// Define character sets
-        String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String lowerCase = "abcdefghijklmnopqrstuvwxyz";
-        String digits = "0123456789";
-        String symbols = "!@#$%^&*()-_+=<>?";
+		String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String lowerCase = "abcdefghijklmnopqrstuvwxyz";
+		String digits = "0123456789";
+		String symbols = "!@#$%^&*()-_+=<>?";
+		String allChars = upperCase + lowerCase + digits + symbols;
+		SecureRandom random = new SecureRandom();
+		StringBuilder password = new StringBuilder();
+		password.append(upperCase.charAt(random.nextInt(upperCase.length())));
+		password.append(lowerCase.charAt(random.nextInt(lowerCase.length())));
+		password.append(digits.charAt(random.nextInt(digits.length())));
+		password.append(symbols.charAt(random.nextInt(symbols.length())));
 
-        // Combine all character sets
-        String allChars = upperCase + lowerCase + digits + symbols;
+		for (int i = 4; i < 10; i++) {
+			password.append(allChars.charAt(random.nextInt(allChars.length())));
+		}
 
-        // Use SecureRandom for better randomness
-        SecureRandom random = new SecureRandom();
+		return shuffleString(password.toString(), random);
+	}
 
-        // StringBuilder for password
-        StringBuilder password = new StringBuilder();
+	private static String shuffleString(String input, SecureRandom random) {
+		char[] chars = input.toCharArray();
+		for (int i = chars.length - 1; i > 0; i--) {
+			int j = random.nextInt(i + 1);
+			char temp = chars[i];
+			chars[i] = chars[j];
+			chars[j] = temp;
+		}
+		return new String(chars);
+	}
 
-        // Ensure at least one character from each set
-        password.append(upperCase.charAt(random.nextInt(upperCase.length())));
-        password.append(lowerCase.charAt(random.nextInt(lowerCase.length())));
-        password.append(digits.charAt(random.nextInt(digits.length())));
-        password.append(symbols.charAt(random.nextInt(symbols.length())));
+	@Override
+	public String validateUser(LogInRequest logInRequest) {
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(logInRequest.getUserName(),logInRequest.getPassword()));
+		
+	 if(authentication.isAuthenticated()) {
+			return tokenService.generateToken(logInRequest.getUserName());
+		}
+	return "failure";
+	}
 
-        // Fill the rest of the password length
-        for (int i = 4; i < 10; i++) {
-            password.append(allChars.charAt(random.nextInt(allChars.length())));
-        }
-
-        // Shuffle the characters for better randomness
-        return shuffleString(password.toString(), random);
-    }
-
-    private static String shuffleString(String input, SecureRandom random) {
-        char[] chars = input.toCharArray();
-        for (int i = chars.length - 1; i > 0; i--) {
-            int j = random.nextInt(i + 1);
-            char temp = chars[i];
-            chars[i] = chars[j];
-            chars[j] = temp;
-        }
-        return new String(chars);
-    }
-	
 }
