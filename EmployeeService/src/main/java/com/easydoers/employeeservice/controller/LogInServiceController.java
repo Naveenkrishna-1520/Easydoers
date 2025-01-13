@@ -20,9 +20,10 @@ public class LogInServiceController {
     
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LogInRequest logInRequest) {
-    	String checkUser = employeeService.validateUser(logInRequest);
-		return ResponseEntity.ok(checkUser);
+    	String response = employeeService.loginUser(logInRequest);
+		return ResponseEntity.ok(response);
     	
     }
 
+    
 }

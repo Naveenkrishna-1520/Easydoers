@@ -28,6 +28,10 @@ public class EmployeeDTO {
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
 	}
+	@Override
+	public String toString() {
+		return "EmployeeDTO [employeeNtid=" + employeeNtid + ", employeeName=" + employeeName + "]";
+	}
 	
 	
 

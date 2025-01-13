@@ -14,6 +14,7 @@ public interface EmployeeService {
 	String saveClockInTimeForEmployee(String employeeNtid, String delaerStoreId);
 	String getSerialNumber();
 	String validateUser(LogInRequest logInRequest);
+	String loginUser(LogInRequest logInRequest);
 	
 
 }

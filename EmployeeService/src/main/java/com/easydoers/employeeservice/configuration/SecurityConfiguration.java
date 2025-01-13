@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -25,12 +24,14 @@ public class SecurityConfiguration {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
+	
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		
 		return http
 			.csrf(customizer -> customizer.disable())
-			.authorizeHttpRequests(request -> request.requestMatchers("/register", "/v1/authentication/login").permitAll()
+			.authorizeHttpRequests(request -> request.requestMatchers("/v1/authentication/login").permitAll()
 					.anyRequest().authenticated())
 			.httpBasic(Customizer.withDefaults())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

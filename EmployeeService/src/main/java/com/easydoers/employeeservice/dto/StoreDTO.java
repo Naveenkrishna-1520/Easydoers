@@ -4,6 +4,15 @@ public class StoreDTO {
 	
     private String dealerStoreId;
     private String storeName;
+    
+    
+	/**
+	 * 
+	 */
+	public StoreDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * @param dealerStoreId
 	 * @param storeName

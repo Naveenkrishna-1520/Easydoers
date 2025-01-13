@@ -16,10 +16,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.easydoers.employeeservice.dto.EmployeeDTO;
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.LogInRequest;
+import com.easydoers.employeeservice.dto.LogInResponse;
 import com.easydoers.employeeservice.dto.SaleDTO;
 import com.easydoers.employeeservice.dto.SaleRequest;
+import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
@@ -210,12 +214,31 @@ public class EmployeeServiceImplementation implements EmployeeService {
 
 	@Override
 	public String validateUser(LogInRequest logInRequest) {
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(logInRequest.getUserName(),logInRequest.getPassword()));
 		
-	 if(authentication.isAuthenticated()) {
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(logInRequest.getUserName(), logInRequest.getPassword()));
+		if (authentication.isAuthenticated()) {
 			return tokenService.generateToken(logInRequest.getUserName());
 		}
-	return "failure";
+		return "failure";	
+	}
+
+	@Override
+	public String loginUser(LogInRequest logInRequest) {
+		Employee employee = employeeRepository.findByEmployeeNtid(logInRequest.getPassword());
+		Store store = storeRepository.findByDealerStoreId(logInRequest.getUserName());
+		
+		LogInResponse response = new LogInResponse();
+		EmployeeDTO employeeDTO = new EmployeeDTO();
+		StoreDTO storeDTO = new StoreDTO();
+		
+		employeeDTO.setEmployeeNtid(employee.getEmployeeNtid());
+		employeeDTO.setEmployeeName(employee.getEmployeeName());
+		storeDTO.setDealerStoreId(store.getDealerStoreId());
+		storeDTO.setStoreName(store.getStoreName());
+		response.setEmployeeDTO(employeeDTO);
+		response.setStoreDTO(storeDTO);
+		return response.toString();
 	}
 
 }

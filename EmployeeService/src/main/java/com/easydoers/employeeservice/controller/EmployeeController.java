@@ -34,8 +34,7 @@ public class EmployeeController {
     @PostMapping("/clockInRequset/{employeeNtid}/{delaerStoreId}") 
     public ResponseEntity<String> saveClokInTimeForEmployee(@PathVariable String employeeNtid, @PathVariable String delaerStoreId){
     	String saveClockInTimeForEmployee = employeeService.saveClockInTimeForEmployee(employeeNtid, delaerStoreId);
-    	String ipAddress = employeeService.getSerialNumber();
-		return ResponseEntity.ok(saveClockInTimeForEmployee+"      ip address is :"+ipAddress);
+		return ResponseEntity.ok(saveClockInTimeForEmployee);
     	
     }
     
