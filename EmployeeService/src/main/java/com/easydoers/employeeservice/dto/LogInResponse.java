@@ -1,9 +1,14 @@
 package com.easydoers.employeeservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LogInResponse {
 	
-	private EmployeeDTO employeeDTO;
-	private StoreDTO storeDTO;
+	private EmployeeDTO employee;
+	private StoreDTO store;
+	private String errorMessage;
+	private String bearerToken;
 	
 	/**
 	 * 
@@ -14,49 +19,74 @@ public class LogInResponse {
 	}
 
 	/**
-	 * @param employeeDTO
-	 * @param storeDTO
+	 * @param employee
+	 * @param store
+	 * @param errorMessage
+	 * @param bearerToken
 	 */
-	public LogInResponse(EmployeeDTO employeeDTO, StoreDTO storeDTO) {
+	public LogInResponse(EmployeeDTO employee, StoreDTO store, String errorMessage, String bearerToken) {
 		super();
-		this.employeeDTO = employeeDTO;
-		this.storeDTO = storeDTO;
+		this.employee = employee;
+		this.store = store;
+		this.errorMessage = errorMessage;
+		this.bearerToken = bearerToken;
 	}
 
 	/**
-	 * @return the employeeDTO
+	 * @return the employee
 	 */
-	public EmployeeDTO getEmployeeDTO() {
-		return employeeDTO;
+	public EmployeeDTO getEmployee() {
+		return employee;
 	}
 
 	/**
-	 * @param employeeDTO the employeeDTO to set
+	 * @param employee the employee to set
 	 */
-	public void setEmployeeDTO(EmployeeDTO employeeDTO) {
-		this.employeeDTO = employeeDTO;
+	public void setEmployee(EmployeeDTO employee) {
+		this.employee = employee;
 	}
 
 	/**
-	 * @return the storeDTO
+	 * @return the store
 	 */
-	public StoreDTO getStoreDTO() {
-		return storeDTO;
+	public StoreDTO getStore() {
+		return store;
 	}
 
 	/**
-	 * @param storeDTO the storeDTO to set
+	 * @param store the store to set
 	 */
-	public void setStoreDTO(StoreDTO storeDTO) {
-		this.storeDTO = storeDTO;
+	public void setStore(StoreDTO store) {
+		this.store = store;
 	}
 
-	@Override
-	public String toString() {
-		return "LogInResponse [employee=" + employeeDTO + ", store=" + storeDTO + "]";
+	/**
+	 * @return the errorMessage
+	 */
+	public String getErrorMessage() {
+		return errorMessage;
 	}
-	
 
+	/**
+	 * @param errorMessage the errorMessage to set
+	 */
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	/**
+	 * @return the bearerToken
+	 */
+	public String getBearerToken() {
+		return bearerToken;
+	}
+
+	/**
+	 * @param bearerToken the bearerToken to set
+	 */
+	public void setBearerToken(String bearerToken) {
+		this.bearerToken = bearerToken;
+	}
 }
 
 

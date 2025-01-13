@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.easydoers.employeeservice.dto.ClockinResponse;
 import com.easydoers.employeeservice.dto.EmployeeDTO;
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.LogInRequest;
@@ -146,20 +147,30 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	}
 
 	@Override
-	public String saveClockInTimeForEmployee(String employeeNtid, String dealerStoreId) {
-		Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
-		Store store = storeRepository.findByDealerStoreId(dealerStoreId);
-		Work work = workRepository.findByEmployeeIdAndDate(employee.getEmployeeId(), LocalDate.now());
-		if (work == null) {
-			Work workRequset = new Work();
-			workRequset.setEmployee(employee);
-			workRequset.setStore(store);
-			workRequset.setClockInTime(LocalTime.now());
-			workRequset.setDate(LocalDate.now());
-			workRepository.save(workRequset);
-			return "Employee successfully clocked in at : " + workRequset.getClockInTime();
+	public ClockinResponse saveClockInTimeForEmployee(String employeeNtid, String dealerStoreId) {
+		ClockinResponse response = new ClockinResponse();
+		try {
+			Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
+			Store store = storeRepository.findByDealerStoreId(dealerStoreId);
+			Work work = workRepository.findByEmployeeIdAndDate(employee.getEmployeeId(), LocalDate.now());
+			if (work == null) {
+				Work workRequset = new Work();
+				workRequset.setEmployee(employee);
+				workRequset.setStore(store);
+				workRequset.setClockInTime(LocalTime.now());
+				workRequset.setDate(LocalDate.now());
+				workRepository.save(workRequset);
+				response.setClockin(true);
+				return response;
+			}
+			response.setClockin(false);
+			return response;
+
+		} catch (NullPointerException e) {
+			response.setMessage(e.getLocalizedMessage());
+			return response;
 		}
-		return "Employee already clocked in at : " + work.getClockInTime();
+
 	}
 
 	public String getSerialNumber() {
@@ -214,31 +225,38 @@ public class EmployeeServiceImplementation implements EmployeeService {
 
 	@Override
 	public String validateUser(LogInRequest logInRequest) {
-		
+
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(logInRequest.getUserName(), logInRequest.getPassword()));
 		if (authentication.isAuthenticated()) {
 			return tokenService.generateToken(logInRequest.getUserName());
 		}
-		return "failure";	
+		return "failure";
 	}
 
 	@Override
 	public LogInResponse loginUser(LogInRequest logInRequest) {
-		Employee employee = employeeRepository.findByEmployeeNtid(logInRequest.getPassword());
-		Store store = storeRepository.findByDealerStoreId(logInRequest.getUserName());
-		
+
 		LogInResponse response = new LogInResponse();
-		EmployeeDTO employeeDTO = new EmployeeDTO();
-		StoreDTO storeDTO = new StoreDTO();
-		
-		employeeDTO.setEmployeeNtid(employee.getEmployeeNtid());
-		employeeDTO.setEmployeeName(employee.getEmployeeName());
-		storeDTO.setDealerStoreId(store.getDealerStoreId());
-		storeDTO.setStoreName(store.getStoreName());
-		response.setEmployeeDTO(employeeDTO);
-		response.setStoreDTO(storeDTO);
-		return response;
+		try {
+			Employee employee = employeeRepository.findByEmployeeNtid(logInRequest.getPassword());
+			Store store = storeRepository.findByDealerStoreId(logInRequest.getUserName());
+			EmployeeDTO employeeDTO = new EmployeeDTO();
+			StoreDTO storeDTO = new StoreDTO();
+			employeeDTO.setEmployeeNtid(employee.getEmployeeNtid());
+			employeeDTO.setEmployeeName(employee.getEmployeeName());
+			storeDTO.setDealerStoreId(store.getDealerStoreId());
+			storeDTO.setStoreName(store.getStoreName());
+			response.setEmployee(employeeDTO);
+			response.setStore(storeDTO);
+			response.setBearerToken(tokenService.generateToken(logInRequest.getUserName()));
+			return response;
+
+		} catch (NullPointerException e) {
+			response.setErrorMessage(e.getLocalizedMessage());
+			return response;
+		}
+
 	}
 
 }

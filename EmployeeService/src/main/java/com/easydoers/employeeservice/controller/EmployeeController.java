@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.easydoers.employeeservice.dto.ClockinRequest;
+import com.easydoers.employeeservice.dto.ClockinResponse;
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.SaleRequest;
 import com.easydoers.employeeservice.entity.Employee;
@@ -31,9 +34,9 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee '" + savedEmployee.getEmployeeNtid()+ "' saved successfully!");
     }
     
-    @PostMapping("/clockInRequset/{employeeNtid}/{delaerStoreId}") 
-    public ResponseEntity<String> saveClokInTimeForEmployee(@PathVariable String employeeNtid, @PathVariable String delaerStoreId){
-    	String saveClockInTimeForEmployee = employeeService.saveClockInTimeForEmployee(employeeNtid, delaerStoreId);
+    @PostMapping("/clockin") 
+    public ResponseEntity<ClockinResponse> saveClokInTimeForEmployee(@RequestBody ClockinRequest clockinRequest){
+    	ClockinResponse saveClockInTimeForEmployee = employeeService.saveClockInTimeForEmployee(clockinRequest.getEmployeeNtid(), clockinRequest.getDelaerStoreId());
 		return ResponseEntity.ok(saveClockInTimeForEmployee);
     	
     }
