@@ -30,7 +30,7 @@ public class EmployeeDTO {
 	}
 	@Override
 	public String toString() {
-		return "EmployeeDTO [employeeNtid=" + employeeNtid + ", employeeName=" + employeeName + "]";
+		return "[employeeNtid=" + employeeNtid + ", employeeName=" + employeeName + "]";
 	}
 	
 	

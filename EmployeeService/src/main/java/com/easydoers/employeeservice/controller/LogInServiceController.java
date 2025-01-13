@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.LogInRequest;
+import com.easydoers.employeeservice.dto.LogInResponse;
 import com.easydoers.employeeservice.service.EmployeeService;
 
 @RestController
@@ -19,8 +20,8 @@ public class LogInServiceController {
     
     
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LogInRequest logInRequest) {
-    	String response = employeeService.loginUser(logInRequest);
+    public ResponseEntity<LogInResponse> login(@RequestBody LogInRequest logInRequest) {
+    	LogInResponse response = employeeService.loginUser(logInRequest);
 		return ResponseEntity.ok(response);
     	
     }

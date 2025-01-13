@@ -224,7 +224,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	}
 
 	@Override
-	public String loginUser(LogInRequest logInRequest) {
+	public LogInResponse loginUser(LogInRequest logInRequest) {
 		Employee employee = employeeRepository.findByEmployeeNtid(logInRequest.getPassword());
 		Store store = storeRepository.findByDealerStoreId(logInRequest.getUserName());
 		
@@ -238,7 +238,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		storeDTO.setStoreName(store.getStoreName());
 		response.setEmployeeDTO(employeeDTO);
 		response.setStoreDTO(storeDTO);
-		return response.toString();
+		return response;
 	}
 
 }

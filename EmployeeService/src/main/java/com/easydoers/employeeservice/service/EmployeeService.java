@@ -2,6 +2,7 @@ package com.easydoers.employeeservice.service;
 
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.LogInRequest;
+import com.easydoers.employeeservice.dto.LogInResponse;
 import com.easydoers.employeeservice.dto.SaleRequest;
 import com.easydoers.employeeservice.entity.Employee;
 
@@ -14,7 +15,7 @@ public interface EmployeeService {
 	String saveClockInTimeForEmployee(String employeeNtid, String delaerStoreId);
 	String getSerialNumber();
 	String validateUser(LogInRequest logInRequest);
-	String loginUser(LogInRequest logInRequest);
+	LogInResponse loginUser(LogInRequest logInRequest);
 	
 
 }

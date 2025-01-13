@@ -53,7 +53,7 @@ public class LogInResponse {
 
 	@Override
 	public String toString() {
-		return "LogInResponse [employeeDTO=" + employeeDTO + ", storeDTO=" + storeDTO + "]";
+		return "LogInResponse [employee=" + employeeDTO + ", store=" + storeDTO + "]";
 	}
 	
 
