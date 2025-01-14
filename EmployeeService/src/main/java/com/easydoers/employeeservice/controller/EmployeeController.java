@@ -2,6 +2,7 @@ package com.easydoers.employeeservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.service.EmployeeService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("v1/employee")
 public class EmployeeController {
 

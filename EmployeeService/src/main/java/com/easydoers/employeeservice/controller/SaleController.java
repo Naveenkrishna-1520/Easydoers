@@ -2,18 +2,19 @@ package com.easydoers.employeeservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.EmployeeSalesRequest;
 import com.easydoers.employeeservice.dto.SaleRequest;
 import com.easydoers.employeeservice.service.SaleService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("v1/sale")
 public class SaleController {
 	
