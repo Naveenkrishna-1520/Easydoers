@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.LogInRequest;
 import com.easydoers.employeeservice.dto.LogInResponse;
-import com.easydoers.employeeservice.service.EmployeeService;
+import com.easydoers.employeeservice.service.LogInService;
 
 @RestController
 @RequestMapping("v1/authentication")
@@ -16,12 +16,12 @@ public class LogInServiceController {
 	
 	
 	@Autowired
-	private EmployeeService employeeService;
+	private LogInService logInService;;
     
     
     @PostMapping("/login")
     public ResponseEntity<LogInResponse> login(@RequestBody LogInRequest logInRequest) {
-    	LogInResponse response = employeeService.loginUser(logInRequest);
+    	LogInResponse response = logInService.loginUser(logInRequest);
 		return ResponseEntity.ok(response);
     	
     }

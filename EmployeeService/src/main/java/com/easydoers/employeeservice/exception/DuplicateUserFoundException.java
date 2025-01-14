@@ -1,9 +1,9 @@
 package com.easydoers.employeeservice.exception;
 
-public class DuplicateUserException extends RuntimeException {
+public class DuplicateUserFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public DuplicateUserException(String message) {
+	public DuplicateUserFoundException(String message) {
 		super(message);
 	}
 }
