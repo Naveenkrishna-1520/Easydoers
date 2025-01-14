@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfiguration {
 	
 	@Autowired
@@ -27,17 +26,11 @@ public class SecurityConfiguration {
 	
 	
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-		
-		return http
-			.csrf(customizer -> customizer.disable())
-			.authorizeHttpRequests(request -> request.requestMatchers("/v1/auth/login").permitAll()
-					.anyRequest().authenticated())
-			.httpBasic(Customizer.withDefaults())
-			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.build();
-		
-	}
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable() // Disable CSRF protection
+            .authorizeRequests().anyRequest().permitAll(); // Allow all requests
+        return http.build();
+    }
 	@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -58,4 +51,17 @@ public class SecurityConfiguration {
 		return authenticationConfiguration.getAuthenticationManager();
 		
 	}
+	
+//	@Bean
+//	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+//		
+//		return http
+//			.csrf(customizer -> customizer.disable())
+//			.authorizeHttpRequests(request -> request.requestMatchers("/v1/auth/login").permitAll()
+//					.anyRequest().authenticated())
+//			.httpBasic(Customizer.withDefaults())
+//			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//			.build();
+//		
+//	}
 }
