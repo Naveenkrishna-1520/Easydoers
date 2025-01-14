@@ -8,7 +8,9 @@ import com.easydoers.employeeservice.dto.ErrorResponse;
 import com.easydoers.employeeservice.exception.DuplicateUserFoundException;
 import com.easydoers.employeeservice.exception.EmployeeNotFoundException;
 import com.easydoers.employeeservice.exception.NoSalesFound;
+import com.easydoers.employeeservice.exception.NoSuchAlgorithmFoundException;
 import com.easydoers.employeeservice.exception.SavingEmployeeWorkException;
+import com.easydoers.employeeservice.exception.SignatureExceptionFound;
 import com.easydoers.employeeservice.exception.StoreNotFoundException;
 
 @ControllerAdvice
@@ -43,7 +45,17 @@ public class GlobalExceptionHandler {
         ErrorResponse response = new ErrorResponse(false, ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
-
+	@ExceptionHandler(NoSuchAlgorithmFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoSuchAlgorithmFoundException(NoSuchAlgorithmFoundException ex) {
+        ErrorResponse response = new ErrorResponse(false, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+	
+	@ExceptionHandler(SignatureExceptionFound.class)
+    public ResponseEntity<ErrorResponse> handleSignatureExceptionFound(SignatureExceptionFound ex) {
+        ErrorResponse response = new ErrorResponse(false, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 
 }
 

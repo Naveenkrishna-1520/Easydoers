@@ -8,7 +8,7 @@ public class LogInResponse {
 	private EmployeeDTO employee;
 	private StoreDTO store;
 	private String errorMessage;
-	private String bearerToken;
+	private String token;
 	
 	/**
 	 * 
@@ -22,14 +22,14 @@ public class LogInResponse {
 	 * @param employee
 	 * @param store
 	 * @param errorMessage
-	 * @param bearerToken
+	 * @param token
 	 */
-	public LogInResponse(EmployeeDTO employee, StoreDTO store, String errorMessage, String bearerToken) {
+	public LogInResponse(EmployeeDTO employee, StoreDTO store, String errorMessage, String token) {
 		super();
 		this.employee = employee;
 		this.store = store;
 		this.errorMessage = errorMessage;
-		this.bearerToken = bearerToken;
+		this.token = token;
 	}
 
 	/**
@@ -75,18 +75,19 @@ public class LogInResponse {
 	}
 
 	/**
-	 * @return the bearerToken
+	 * @return the token
 	 */
-	public String getBearerToken() {
-		return bearerToken;
+	public String getToken() {
+		return token;
 	}
 
 	/**
-	 * @param bearerToken the bearerToken to set
+	 * @param token the token to set
 	 */
-	public void setBearerToken(String bearerToken) {
-		this.bearerToken = bearerToken;
+	public void setToken(String token) {
+		this.token = token;
 	}
+
 }
 
 

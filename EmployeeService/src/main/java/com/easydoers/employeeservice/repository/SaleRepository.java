@@ -14,7 +14,7 @@ import com.easydoers.employeeservice.entity.Sale;
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
 	
-	@Query("SELECT new com.easydoers.employeeservice.dto.SaleDTO(s.saleId, s.boxesSold,s.systemAccessories, s.accessories, " +
+	@Query("SELECT new com.easydoers.employeeservice.dto.SaleDTO(s.saleId, s.boxesSold,s.systemAccessories, s.accessories, s.upgradePhonesSold, " +
 		       "s.tabletsSold, s.hsiSold, s.watchesSold, s.systemCash, s.systemCard, " +
 		       "s.actualCash, s.actualCard, s.cashExpense, s.expenseReason, s.localDate, " +
 		       "new com.easydoers.employeeservice.dto.StoreDTO(st.dealerStoreId, st.storeName)) " +
@@ -24,7 +24,7 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 	@Query("SELECT s FROM Sale s WHERE s.employee.id = :employeeId AND DATE(s.localDate) = :localDate")
 	Sale findByEmployeeIdAndDate(Long employeeId, LocalDate localDate);
 
-	@Query("SELECT new com.easydoers.employeeservice.dto.SaleDTO(s.saleId, s.boxesSold,s.systemAccessories, s.accessories, " +
+	@Query("SELECT new com.easydoers.employeeservice.dto.SaleDTO(s.saleId, s.boxesSold,s.systemAccessories, s.accessories, s.upgradePhonesSold, " +
 		       "s.tabletsSold, s.hsiSold, s.watchesSold, s.systemCash, s.systemCard, " +
 		       "s.actualCash, s.actualCard, s.cashExpense, s.expenseReason, s.localDate, " +
 		       "new com.easydoers.employeeservice.dto.StoreDTO(st.dealerStoreId, st.storeName)) " +

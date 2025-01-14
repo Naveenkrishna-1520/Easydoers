@@ -8,6 +8,7 @@ public class SaleDTO {
 	private int boxesSold;
 	private double systemAccessories;
 	private double accessories;
+	private int upgradePhonesSold;
 	private int tabletsSold;
 	private int hsiSold;
 	private int watchesSold;
@@ -20,10 +21,18 @@ public class SaleDTO {
 	private LocalDate localDate;
 	private StoreDTO store;
 	/**
+	 * 
+	 */
+	public SaleDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	/**
 	 * @param saleId
 	 * @param boxesSold
 	 * @param systemAccessories
 	 * @param accessories
+	 * @param upgradePhonesSold
 	 * @param tabletsSold
 	 * @param hsiSold
 	 * @param watchesSold
@@ -36,14 +45,15 @@ public class SaleDTO {
 	 * @param localDate
 	 * @param store
 	 */
-	public SaleDTO(Long saleId, int boxesSold, double systemAccessories, double accessories, int tabletsSold,
-			int hsiSold, int watchesSold, double systemCash, double systemCard, double actualCash, double actualCard,
-			double cashExpense, String expenseReason, LocalDate localDate, StoreDTO store) {
+	public SaleDTO(Long saleId, int boxesSold, double systemAccessories, double accessories, int upgradePhonesSold,
+			int tabletsSold, int hsiSold, int watchesSold, double systemCash, double systemCard, double actualCash,
+			double actualCard, double cashExpense, String expenseReason, LocalDate localDate, StoreDTO store) {
 		super();
 		this.saleId = saleId;
 		this.boxesSold = boxesSold;
 		this.systemAccessories = systemAccessories;
 		this.accessories = accessories;
+		this.upgradePhonesSold = upgradePhonesSold;
 		this.tabletsSold = tabletsSold;
 		this.hsiSold = hsiSold;
 		this.watchesSold = watchesSold;
@@ -103,6 +113,18 @@ public class SaleDTO {
 	 */
 	public void setAccessories(double accessories) {
 		this.accessories = accessories;
+	}
+	/**
+	 * @return the upgradePhonesSold
+	 */
+	public int getUpgradePhonesSold() {
+		return upgradePhonesSold;
+	}
+	/**
+	 * @param upgradePhonesSold the upgradePhonesSold to set
+	 */
+	public void setUpgradePhonesSold(int upgradePhonesSold) {
+		this.upgradePhonesSold = upgradePhonesSold;
 	}
 	/**
 	 * @return the tabletsSold
@@ -239,12 +261,12 @@ public class SaleDTO {
 	@Override
 	public String toString() {
 		return "SaleDTO [saleId=" + saleId + ", boxesSold=" + boxesSold + ", systemAccessories=" + systemAccessories
-				+ ", accessories=" + accessories + ", tabletsSold=" + tabletsSold + ", hsiSold=" + hsiSold
-				+ ", watchesSold=" + watchesSold + ", systemCash=" + systemCash + ", systemCard=" + systemCard
-				+ ", actualCash=" + actualCash + ", actualCard=" + actualCard + ", cashExpense=" + cashExpense
-				+ ", expenseReason=" + expenseReason + ", localDate=" + localDate + ", store=" + store + "]";
+				+ ", accessories=" + accessories + ", upgradePhonesSold=" + upgradePhonesSold + ", tabletsSold="
+				+ tabletsSold + ", hsiSold=" + hsiSold + ", watchesSold=" + watchesSold + ", systemCash=" + systemCash
+				+ ", systemCard=" + systemCard + ", actualCash=" + actualCash + ", actualCard=" + actualCard
+				+ ", cashExpense=" + cashExpense + ", expenseReason=" + expenseReason + ", localDate=" + localDate
+				+ ", store=" + store + "]";
 	}
-	
 	
 	
 }

@@ -37,7 +37,7 @@ public class LogInServiceImplementation implements LogInService{
 		storeDTO.setStoreName(store.getStoreName());
 		response.setEmployee(employeeDTO);
 		response.setStore(storeDTO);
-		response.setBearerToken(tokenService.generateToken(logInRequest.getUserName()));
+		response.setToken(tokenService.generateToken(logInRequest.getUserName()));
 		return response;
 	}
 }
