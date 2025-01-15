@@ -50,7 +50,7 @@ public class WorkServiceImplementation implements WorkService {
 	@Override
 	public ClockinResponse findByEmployeeInWork(Employee employee, LocalDate now, Store store) {
 		ClockinResponse response = new ClockinResponse();
-		Work work = workRepository.findByEmployeeIdAndDate(employee.getEmployeeId(), LocalDate.now());
+		Work work = checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
 		if (work == null) {
 			Work workRequset = new Work();
 			workRequset.setEmployee(employee);
@@ -62,6 +62,10 @@ public class WorkServiceImplementation implements WorkService {
 			return response;
 		}
 		return response;
+	}
+
+	public Work checkClockinStatus(Long employeeId, LocalDate now) {
+		return workRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now());
 	}
 
 }

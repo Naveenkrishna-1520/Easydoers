@@ -42,7 +42,7 @@ public class SaleServiceImplementation implements SaleService{
 			String dealerStoreId) {
 		Employee employee = employeeService.checkEmployee(employeeNTId);
 		Store store = storeService.checkStore(dealerStoreId);
-		Sale saleCheck = saleRepository.findByEmployeeIdAndDate(employee.getEmployeeId(), LocalDate.now());
+		Sale saleCheck = checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
 		if (saleCheck == null) {
 			Sale saveSaleDetails = new Sale();
 			saveSaleDetails.setEmployee(employee);
@@ -69,6 +69,11 @@ public class SaleServiceImplementation implements SaleService{
 
 		return employee.getEmployeeName() + " : " + employee.getEmployeeNtid()
 				+ " Already Saved End Of The Sale Report " + saleRepository.findBySaleId(saleCheck.getSaleId());
+	}
+
+	public Sale checkSaleSubmittedByEmployee(Long employeeId, LocalDate now) {
+		
+		return saleRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now());
 	}
 
 	private double calculateAccessoriesForEmployeee(double systemCard, double systemCash, double actualCard,

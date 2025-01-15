@@ -10,6 +10,8 @@ public class LogInResponse {
 	private StoreDTO store;
 	@JsonIgnore
 	private String token;
+	private boolean isColckin;
+	private boolean isSaleSubmit;
 	
 	/**
 	 * 
@@ -23,12 +25,16 @@ public class LogInResponse {
 	 * @param employee
 	 * @param store
 	 * @param token
+	 * @param isColckin
+	 * @param isSaleSubmit
 	 */
-	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token) {
+	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, boolean isColckin, boolean isSaleSubmit) {
 		super();
 		this.employee = employee;
 		this.store = store;
 		this.token = token;
+		this.isColckin = isColckin;
+		this.isSaleSubmit = isSaleSubmit;
 	}
 
 	/**
@@ -73,6 +79,35 @@ public class LogInResponse {
 		this.token = token;
 	}
 
+	/**
+	 * @return the isColckin
+	 */
+	public boolean isColckin() {
+		return isColckin;
+	}
+
+	/**
+	 * @param isColckin the isColckin to set
+	 */
+	public void setColckin(boolean isColckin) {
+		this.isColckin = isColckin;
+	}
+
+	/**
+	 * @return the isSaleSubmit
+	 */
+	public boolean isSaleSubmit() {
+		return isSaleSubmit;
+	}
+
+	/**
+	 * @param isSaleSubmit the isSaleSubmit to set
+	 */
+	public void setSaleSubmit(boolean isSaleSubmit) {
+		this.isSaleSubmit = isSaleSubmit;
+	}
+
+	
 	
 }
 

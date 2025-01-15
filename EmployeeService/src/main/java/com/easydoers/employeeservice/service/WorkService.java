@@ -16,4 +16,6 @@ public interface WorkService {
 
 	ClockinResponse findByEmployeeInWork(Employee employee, LocalDate now, Store store);
 
+	Work checkClockinStatus(Long employeeId, LocalDate now);
+
 }
