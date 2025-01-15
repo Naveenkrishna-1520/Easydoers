@@ -1,6 +1,7 @@
 package com.easydoers.employeeservice.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import com.easydoers.employeeservice.dto.EmployeeDTO;
@@ -9,6 +10,7 @@ import com.easydoers.employeeservice.dto.LogInResponse;
 import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Store;
+import com.easydoers.employeeservice.service.CookieSetupService;
 import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.LogInService;
 import com.easydoers.employeeservice.service.StoreService;
@@ -22,6 +24,8 @@ public class LogInServiceImplementation implements LogInService{
 	private StoreService storeService;
 	@Autowired
 	private JWTTokenService tokenService;
+	@Autowired
+	private CookieSetupService cookieSetupService;
 
 	@Override
 	public LogInResponse loginUser(LogInRequest logInRequest) {
@@ -37,7 +41,9 @@ public class LogInServiceImplementation implements LogInService{
 		storeDTO.setStoreName(store.getStoreName());
 		response.setEmployee(employeeDTO);
 		response.setStore(storeDTO);
-		response.setToken(tokenService.generateToken(logInRequest.getUserName()));
+		String jwtToken = tokenService.generateToken(logInRequest.getUserName());
+		ResponseCookie cookie = cookieSetupService.setupJwtCookie(jwtToken);
+        response.setToken(cookie.toString());
 		return response;
 	}
 }

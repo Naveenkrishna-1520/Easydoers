@@ -1,5 +1,6 @@
 package com.easydoers.employeeservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -7,7 +8,7 @@ public class LogInResponse {
 	
 	private EmployeeDTO employee;
 	private StoreDTO store;
-	private String errorMessage;
+	@JsonIgnore
 	private String token;
 	
 	/**
@@ -21,14 +22,12 @@ public class LogInResponse {
 	/**
 	 * @param employee
 	 * @param store
-	 * @param errorMessage
 	 * @param token
 	 */
-	public LogInResponse(EmployeeDTO employee, StoreDTO store, String errorMessage, String token) {
+	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token) {
 		super();
 		this.employee = employee;
 		this.store = store;
-		this.errorMessage = errorMessage;
 		this.token = token;
 	}
 
@@ -61,20 +60,6 @@ public class LogInResponse {
 	}
 
 	/**
-	 * @return the errorMessage
-	 */
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	/**
-	 * @param errorMessage the errorMessage to set
-	 */
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-
-	/**
 	 * @return the token
 	 */
 	public String getToken() {
@@ -88,6 +73,7 @@ public class LogInResponse {
 		this.token = token;
 	}
 
+	
 }
 
 

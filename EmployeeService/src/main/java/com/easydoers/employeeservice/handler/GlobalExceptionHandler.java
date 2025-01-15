@@ -1,5 +1,9 @@
 package com.easydoers.employeeservice.handler;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +16,7 @@ import com.easydoers.employeeservice.exception.NoSuchAlgorithmFoundException;
 import com.easydoers.employeeservice.exception.SavingEmployeeWorkException;
 import com.easydoers.employeeservice.exception.SignatureExceptionFound;
 import com.easydoers.employeeservice.exception.StoreNotFoundException;
+import com.easydoers.employeeservice.exception.TokenInvalidException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -55,6 +60,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleSignatureExceptionFound(SignatureExceptionFound ex) {
         ErrorResponse response = new ErrorResponse(false, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+	
+	@ExceptionHandler(TokenInvalidException.class)
+	public ResponseEntity<Map<String, Object>> handleTokenInvalidException(TokenInvalidException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.UNAUTHORIZED.value());
+        response.put("error", "Unauthorized");
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
 }

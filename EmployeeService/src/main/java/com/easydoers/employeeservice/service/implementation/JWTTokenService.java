@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.exception.NoSuchAlgorithmFoundException;
 import com.easydoers.employeeservice.exception.SignatureExceptionFound;
+import com.easydoers.employeeservice.exception.TokenInvalidException;
+
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -27,8 +31,8 @@ public class JWTTokenService {
 
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
+            SecretKey key = keyGen.generateKey();
+            secretkey = Base64.getEncoder().encodeToString(key.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new NoSuchAlgorithmFoundException("no algorithm found to generate token");
         }
@@ -63,9 +67,14 @@ public class JWTTokenService {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-			
-		} catch (SignatureException e) {
-			throw new SignatureExceptionFound("Invalid JWT signature");
+    	} catch (ExpiredJwtException e) {
+            throw new TokenInvalidException("Token has expired");	
+    	} catch (MalformedJwtException e) {
+            throw new TokenInvalidException("Invalid JWT structure");
+        } catch (SignatureException e) {
+            throw new SignatureExceptionFound("Invalid JWT signature");
+        } catch (Exception e) {
+            throw new TokenInvalidException("Token is invalid");
 		}
         
     }
