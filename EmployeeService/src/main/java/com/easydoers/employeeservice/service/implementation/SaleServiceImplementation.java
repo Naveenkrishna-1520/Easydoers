@@ -50,6 +50,7 @@ public class SaleServiceImplementation implements SaleService{
 			saveSaleDetails.setSystemAccessories(saleRequest.getSystemAccessories());
 			saveSaleDetails.setAccessories(calculateAccessoriesForEmployeee(saleRequest.getSystemCard(),
 					saleRequest.getSystemCash(), saleRequest.getActualCard(), saleRequest.getActualCash()));
+			saveSaleDetails.setUpgradePhonesSold(saleRequest.getUpgradePhonesSold());
 			saveSaleDetails.setBoxesSold(saleRequest.getBoxesSold());
 			saveSaleDetails.setTabletsSold(saveSaleDetails.getTabletsSold());
 			saveSaleDetails.setHsiSold(saleRequest.getHsiSold());
