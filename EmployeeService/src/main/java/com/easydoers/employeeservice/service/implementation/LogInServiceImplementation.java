@@ -56,7 +56,7 @@ public class LogInServiceImplementation implements LogInService{
         response.setToken(cookie.toString());
         Work checkClockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
         if(checkClockinStatus != null) {
-        	response.setColckin(true);
+        	response.setClockin(false);
         }
         Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
         if(sale!=null) {
