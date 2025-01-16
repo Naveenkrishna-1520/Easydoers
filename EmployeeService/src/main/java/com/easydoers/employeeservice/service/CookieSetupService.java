@@ -6,4 +6,6 @@ public interface CookieSetupService {
 
 	ResponseCookie setupJwtCookie(String jwtToken);
 
+	ResponseCookie setupRefreshJwtCookie(String refreshJwtToken);
+
 }

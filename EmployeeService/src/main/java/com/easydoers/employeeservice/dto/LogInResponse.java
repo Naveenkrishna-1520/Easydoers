@@ -10,6 +10,8 @@ public class LogInResponse {
 	private StoreDTO store;
 	@JsonIgnore
 	private String token;
+	@JsonIgnore
+	private String refreshToken;
 	private boolean isClockin;
 	private boolean isSaleSubmit;
 	
@@ -25,14 +27,17 @@ public class LogInResponse {
 	 * @param employee
 	 * @param store
 	 * @param token
+	 * @param refreshToken
 	 * @param isClockin
 	 * @param isSaleSubmit
 	 */
-	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, boolean isClockin, boolean isSaleSubmit) {
+	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, String refreshToken, boolean isClockin,
+			boolean isSaleSubmit) {
 		super();
 		this.employee = employee;
 		this.store = store;
 		this.token = token;
+		this.refreshToken = refreshToken;
 		this.isClockin = isClockin;
 		this.isSaleSubmit = isSaleSubmit;
 	}
@@ -77,6 +82,20 @@ public class LogInResponse {
 	 */
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	/**
+	 * @return the refreshToken
+	 */
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	/**
+	 * @param refreshToken the refreshToken to set
+	 */
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 
 	/**

@@ -25,14 +25,18 @@ import io.jsonwebtoken.security.SignatureException;
 @Service
 public class JWTTokenService {
 	
-	private String secretkey = "";
+	private String secretKey = "";
+	private String refreshSecretKey ="";
 
     public JWTTokenService() {
 
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey key = keyGen.generateKey();
-            secretkey = Base64.getEncoder().encodeToString(key.getEncoded());
+            SecretKey accessKey = keyGen.generateKey();
+            SecretKey refreshKey = keyGen.generateKey();
+
+            secretKey = Base64.getEncoder().encodeToString(accessKey.getEncoded());
+            refreshSecretKey = Base64.getEncoder().encodeToString(refreshKey.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new NoSuchAlgorithmFoundException("no algorithm found to generate token");
         }
@@ -44,9 +48,21 @@ public class JWTTokenService {
 		return Jwts.builder().claims().add(claims).subject(userName).issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)).and().signWith(getKey()).compact();
 	}
+	
+	public String generateRefreshToken(String userName) {
+		Map<String, Object> claims = new HashMap<>();
+
+		return Jwts.builder().claims().add(claims).subject(userName).issuedAt(new Date(System.currentTimeMillis()))
+				.expiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)).and().signWith(getRefreshKey()).compact();
+	}
+
+	private SecretKey getRefreshKey() {
+		byte[] keyBytes = Decoders.BASE64.decode(refreshSecretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+	}
 
 	private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -72,6 +88,7 @@ public class JWTTokenService {
     	} catch (MalformedJwtException e) {
             throw new TokenInvalidException("Invalid JWT structure");
         } catch (SignatureException e) {
+        	System.out.println("extract all claims method");
             throw new SignatureExceptionFound("Invalid JWT signature");
         } catch (Exception e) {
             throw new TokenInvalidException("Token is invalid");
@@ -91,5 +108,34 @@ public class JWTTokenService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
+	public boolean validateRefreshToken(String refreshToken) {
+		
+		try {
+    		 Jwts.parser()
+                    .verifyWith(getRefreshKey())
+                    .build()
+                    .parseSignedClaims(refreshToken)
+                    .getPayload();
+    		 return true;
+    	} catch (ExpiredJwtException e) {
+            throw new TokenInvalidException("Token has expired");	
+    	} catch (MalformedJwtException e) {
+            throw new TokenInvalidException("Invalid JWT structure");
+        } catch (SignatureException e) {
+            throw new SignatureExceptionFound("Invalid JWT signature");
+        } catch (Exception e) {
+            throw new TokenInvalidException("Token is invalid");
+		}
+	}
+
+	public String extractUserNameFromRefreshToken(String refreshToken) {
+		
+		return Jwts.parser()
+                .verifyWith(getRefreshKey())
+                .build()
+                .parseSignedClaims(refreshToken)
+                .getPayload().getSubject();	
+	}
 
 }

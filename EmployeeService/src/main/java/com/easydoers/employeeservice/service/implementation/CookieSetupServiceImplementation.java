@@ -11,7 +11,7 @@ public class CookieSetupServiceImplementation implements CookieSetupService{
 	@Override
 	public ResponseCookie setupJwtCookie(String jwtToken) {
 		// Create an HttpOnly cookie
-        ResponseCookie cookie = ResponseCookie.from("jwt", jwtToken)
+        ResponseCookie cookie = ResponseCookie.from("accessToken", jwtToken)
                 .httpOnly(true)
                 .secure(true) // Ensures the cookie is sent only over HTTPS
                 .path("/")
@@ -20,6 +20,19 @@ public class CookieSetupServiceImplementation implements CookieSetupService{
                 .build();
 		return cookie;
 		
+	}
+
+	@Override
+	public ResponseCookie setupRefreshJwtCookie(String refreshJwtToken) {
+		// Set refresh token as an HttpOnly cookie
+	    ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshJwtToken)
+	            .httpOnly(true)
+	            .secure(false) // Use true for HTTPS
+	            .path("/")
+	            .maxAge(7 * 24 * 60 * 60) // 7 days
+	            .sameSite("Strict")
+	            .build();
+		return refreshCookie;
 	}
 
 }

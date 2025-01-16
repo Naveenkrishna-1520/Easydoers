@@ -1,14 +1,17 @@
 package com.easydoers.employeeservice.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.LogInRequest;
 import com.easydoers.employeeservice.dto.LogInResponse;
+import com.easydoers.employeeservice.dto.RefreshTokenResponse;
 import com.easydoers.employeeservice.service.LogInService;
 
 @RestController
@@ -17,7 +20,7 @@ public class LogInServiceController {
 	
 	
 	@Autowired
-	private LogInService logInService;;
+	private LogInService logInService;
     
     
     @PostMapping("/login")
@@ -25,24 +28,42 @@ public class LogInServiceController {
     	LogInResponse response = logInService.loginUser(logInRequest);
 		return ResponseEntity.ok()
                 .header("Set-Cookie", response.getToken())
+                .header("Set-Cookie", response.getRefreshToken())
                 .body(response);
     	
     }
     
     @PostMapping("/logout")
     public ResponseEntity<String> logout(){
-    	ResponseCookie cookie = ResponseCookie.from("jwt", null)
+    	ResponseCookie cookie = ResponseCookie.from("accessToken", null)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
                 .build();
+    	// Clear the refresh token cookie
+        ResponseCookie clearCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true) // Set true in production
+                .path("/")
+                .maxAge(0) // Expire immediately
+                .sameSite("Strict")
+                .build();
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
+                .header("Set-Cookie", clearCookie.toString())
                 .body("Logged out successfully");
     	
     }
 
-    
+    @PostMapping("/refreshToken")
+    public ResponseEntity<RefreshTokenResponse> refreshToken(@CookieValue("refreshToken") String refreshToken) {
+    	
+    	RefreshTokenResponse response = logInService.checkTokenRefresh(refreshToken);
+    	return ResponseEntity.ok()
+                .header("Set-Cookie", response.getAccesstoken())
+                .body(response);
+        
+    }
 }
