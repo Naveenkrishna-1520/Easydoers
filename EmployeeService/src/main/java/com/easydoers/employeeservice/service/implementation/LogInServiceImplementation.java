@@ -61,6 +61,7 @@ public class LogInServiceImplementation implements LogInService {
 		Work checkClockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
 		if (checkClockinStatus != null) {
 			response.setClockin(true);
+			response.setClockinTime(checkClockinStatus.getClockInTime());
 		}
 		Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
 		if (sale != null) {

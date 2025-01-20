@@ -1,11 +1,10 @@
 package com.easydoers.employeeservice.dto;
 
+import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LogInResponse {
-	
+
 	private EmployeeDTO employee;
 	private StoreDTO store;
 	@JsonIgnore
@@ -14,7 +13,8 @@ public class LogInResponse {
 	private String refreshToken;
 	private boolean isClockin;
 	private boolean isSaleSubmit;
-	
+	private LocalTime clockinTime;
+
 	/**
 	 * 
 	 */
@@ -30,9 +30,10 @@ public class LogInResponse {
 	 * @param refreshToken
 	 * @param isClockin
 	 * @param isSaleSubmit
+	 * @param clockinTime
 	 */
 	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, String refreshToken, boolean isClockin,
-			boolean isSaleSubmit) {
+			boolean isSaleSubmit, LocalTime clockinTime) {
 		super();
 		this.employee = employee;
 		this.store = store;
@@ -40,6 +41,7 @@ public class LogInResponse {
 		this.refreshToken = refreshToken;
 		this.isClockin = isClockin;
 		this.isSaleSubmit = isSaleSubmit;
+		this.clockinTime = clockinTime;
 	}
 
 	/**
@@ -126,7 +128,18 @@ public class LogInResponse {
 		this.isSaleSubmit = isSaleSubmit;
 	}
 
-	
+	/**
+	 * @return the clockinTime
+	 */
+	public LocalTime getClockinTime() {
+		return clockinTime;
+	}
+
+	/**
+	 * @param clockinTime the clockinTime to set
+	 */
+	public void setClockinTime(LocalTime clockinTime) {
+		this.clockinTime = clockinTime;
+	}
+
 }
-
-
