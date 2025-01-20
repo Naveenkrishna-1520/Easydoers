@@ -12,7 +12,7 @@ import com.easydoers.employeeservice.entity.StoreInventory;
 @Repository
 public interface InventoryRepository extends JpaRepository<StoreInventory, Long>{
 
-	@Query("SELECT new com.easydoers.employeeservice.dto.ProductDTO(p.productName, si.quantity) " +
+	@Query("SELECT new com.easydoers.employeeservice.dto.ProductDTO(p.id,p.productName, si.quantity) " +
 	           "FROM StoreInventory si " +
 	           "JOIN si.product p " +
 	           "WHERE si.store.id = :storeId")

@@ -44,8 +44,6 @@ public class ManagerController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                .body(("Error generating payslip: " + e.getMessage()).getBytes());
 		}
-		
-
 	}
 
 }
