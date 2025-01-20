@@ -34,7 +34,7 @@ public class Sale {
 	private double actualCard;
 	private double cashExpense;
 	private String expenseReason;
-	private LocalDate localDate;
+	private LocalDate saleDate;
 
 	/**
 	 * 
@@ -61,12 +61,12 @@ public class Sale {
 	 * @param actualCard
 	 * @param cashExpense
 	 * @param expenseReason
-	 * @param localDate
+	 * @param saleDate
 	 */
 	public Sale(Long saleId, Employee employee, Store store, int boxesSold, double systemAccessories,
 			double accessories, int upgradePhonesSold, int tabletsSold, int hsiSold, int watchesSold, double systemCash,
 			double systemCard, double actualCash, double actualCard, double cashExpense, String expenseReason,
-			LocalDate localDate) {
+			LocalDate saleDate) {
 		super();
 		this.saleId = saleId;
 		this.employee = employee;
@@ -84,7 +84,7 @@ public class Sale {
 		this.actualCard = actualCard;
 		this.cashExpense = cashExpense;
 		this.expenseReason = expenseReason;
-		this.localDate = localDate;
+		this.saleDate = saleDate;
 	}
 
 	/**
@@ -312,17 +312,17 @@ public class Sale {
 	}
 
 	/**
-	 * @return the localDate
+	 * @return the saleDate
 	 */
-	public LocalDate getLocalDate() {
-		return localDate;
+	public LocalDate getSaleDate() {
+		return saleDate;
 	}
 
 	/**
-	 * @param localDate the localDate to set
+	 * @param saleDate the saleDate to set
 	 */
-	public void setLocalDate(LocalDate localDate) {
-		this.localDate = localDate;
+	public void setSaleDate(LocalDate saleDate) {
+		this.saleDate = saleDate;
 	}
 
 	

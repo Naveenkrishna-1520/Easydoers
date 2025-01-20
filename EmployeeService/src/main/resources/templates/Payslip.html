@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payslip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .payslip-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px dashed black;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2, .header h3 {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .dashed-line {
+            border-top: 1px dashed black;
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px dashed black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .employee-details-table td {
+            border: none; /* Removes the border for the employee details table */
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .signature {
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="payslip-container">
+        <div class="header">
+            <h2 th:text="${companyName}"></h2>
+            <h3>Payslip For the Month of <span th:text="${month}"></span> <span th:text="${year}"></span></h3>
+        </div>
+
+        <div class="dashed-line"></div>
+
+        <table class="employee-details-table">
+            <tr>
+                <td>Employee NTID:</td>
+                <td th:text="${employeeNtid}"></td>
+                <td>Role:</td>
+                <td>Sales Representative </td>
+            </tr>
+            <tr>
+                <td>Name:</td>
+                <td th:text="${employeeName}"></td>
+                <td>Emp Status:</td>
+                <td th:text="Active"></td>
+            </tr>
+            <tr>
+                <td>Salary Grade:</td>
+                <td th:text="S1"></td>
+                <td>Paid Date:</td>
+                <td th:text="${paidDate}"></td>
+            </tr>
+        </table>
+		<div class="dashed-line"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Earnings</th>
+                    <th>Amount</th>
+                    <th>Deductions</th>
+                    <th>Amount</th>
+                    <th>Other Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Working Hours Pay</td>
+                    <td th:text="'$' + ${workingHoursPay}"></td>
+                    <td>Taxes</td>
+                    <td th:text="'$' + ${taxes}"></td>
+                    <td>No of Working Days: <span th:text="${noOfWorkingDays}"></span></td>
+                </tr>
+                <tr>
+                    <td>Boxes Commission</td>
+                    <td th:text="'$' + ${boxesCommission}"></td>
+                    <td>State Tax</td>
+                    <td th:text="'$' + ${stateTax}"></td>
+                    <td>Total Hours Worked: <span th:text="${hoursWorked}"></span></td>
+                </tr>
+                <tr>
+                    <td>Accessories Commission</td>
+                    <td th:text="'$' + ${accessoriesCommission}"></td>
+                    <td>Federal Tax</td>
+                    <td th:text="'$' + ${federalTax}"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Total Earnings</td>
+                    <td th:text="'$' + (${totalEarnings})"></td>
+                    <td>Total Deductions</td>
+                    <td th:text="'$' + (${totalDeductions})"></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Net Salary:</strong> <span th:text="'$' + ${netPay}"></span></p>
+        <p><strong>Payment Method:</strong> Bank Transfer, <strong>Account Number:</strong> XXXXXXXXXX</p>
+
+        <div class="signature">
+            <p>Manager Signature</p>
+            <p th:text="${managerName}"></p>
+        </div>
+        <div class="footer">
+            <p th:text="${companyName} + '; This is a computer-generated payslip and does not require a signature.'">This is a computer-generated payslip and does not require a signature.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.easydoers.employeeservice.entity;
 
+import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +20,11 @@ public class PayCheck {
 	private double boxesCommission;
 	private double accessoriesCommission;
 	private double totalEarnedByEmployee;
+	private LocalDate payCheckStartDate;
+	private LocalDate payCheckEndDate;
+	private int month;
+	private int year;
+	private LocalDate payGeneratedDate;
 
 	/**
 	 * 
@@ -34,15 +40,26 @@ public class PayCheck {
 	 * @param boxesCommission
 	 * @param accessoriesCommission
 	 * @param totalEarnedByEmployee
+	 * @param payCheckStartDate
+	 * @param payCheckEndDate
+	 * @param month
+	 * @param year
+	 * @param payGeneratedDate
 	 */
 	public PayCheck(Long payCheckId, Employee employee, double boxesCommission, double accessoriesCommission,
-			double totalEarnedByEmployee) {
+			double totalEarnedByEmployee, LocalDate payCheckStartDate, LocalDate payCheckEndDate, int month, int year,
+			LocalDate payGeneratedDate) {
 		super();
 		this.payCheckId = payCheckId;
 		this.employee = employee;
 		this.boxesCommission = boxesCommission;
 		this.accessoriesCommission = accessoriesCommission;
 		this.totalEarnedByEmployee = totalEarnedByEmployee;
+		this.payCheckStartDate = payCheckStartDate;
+		this.payCheckEndDate = payCheckEndDate;
+		this.month = month;
+		this.year = year;
+		this.payGeneratedDate = payGeneratedDate;
 	}
 
 	/**
@@ -115,11 +132,74 @@ public class PayCheck {
 		this.totalEarnedByEmployee = totalEarnedByEmployee;
 	}
 
-	@Override
-	public String toString() {
-		return "PayCheck [payCheckId=" + payCheckId + ", employee=" + employee + ", boxesCommission=" + boxesCommission
-				+ ", accessoriesCommission=" + accessoriesCommission + ", totalEarnedByEmployee="
-				+ totalEarnedByEmployee + "]";
+	/**
+	 * @return the payCheckStartDate
+	 */
+	public LocalDate getPayCheckStartDate() {
+		return payCheckStartDate;
+	}
+
+	/**
+	 * @param payCheckStartDate the payCheckStartDate to set
+	 */
+	public void setPayCheckStartDate(LocalDate payCheckStartDate) {
+		this.payCheckStartDate = payCheckStartDate;
+	}
+
+	/**
+	 * @return the payCheckEndDate
+	 */
+	public LocalDate getPayCheckEndDate() {
+		return payCheckEndDate;
+	}
+
+	/**
+	 * @param payCheckEndDate the payCheckEndDate to set
+	 */
+	public void setPayCheckEndDate(LocalDate payCheckEndDate) {
+		this.payCheckEndDate = payCheckEndDate;
+	}
+
+	/**
+	 * @return the month
+	 */
+	public int getMonth() {
+		return month;
+	}
+
+	/**
+	 * @param month the month to set
+	 */
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	/**
+	 * @return the year
+	 */
+	public int getYear() {
+		return year;
+	}
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	/**
+	 * @return the payGeneratedDate
+	 */
+	public LocalDate getPayGeneratedDate() {
+		return payGeneratedDate;
+	}
+
+	/**
+	 * @param payGeneratedDate the payGeneratedDate to set
+	 */
+	public void setPayGeneratedDate(LocalDate payGeneratedDate) {
+		this.payGeneratedDate = payGeneratedDate;
 	}
 
 }

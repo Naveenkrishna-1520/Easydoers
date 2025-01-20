@@ -29,6 +29,7 @@ public class Employee {
 	private Address address;
 	private int employeePayRatePerHour;
 	private int commissionPercentage;
+	private int perBoxCommission;
 
 	/**
 	 * 
@@ -48,9 +49,11 @@ public class Employee {
 	 * @param address
 	 * @param employeePayRatePerHour
 	 * @param commissionPercentage
+	 * @param perBoxCommission
 	 */
 	public Employee(Long employeeId, String employeeNtid, String employeeName, Long phoneNumber, String email,
-			Company company, Address address, int employeePayRatePerHour, int commissionPercentage) {
+			Company company, Address address, int employeePayRatePerHour, int commissionPercentage,
+			int perBoxCommission) {
 		super();
 		this.employeeId = employeeId;
 		this.employeeNtid = employeeNtid;
@@ -61,6 +64,7 @@ public class Employee {
 		this.address = address;
 		this.employeePayRatePerHour = employeePayRatePerHour;
 		this.commissionPercentage = commissionPercentage;
+		this.perBoxCommission = perBoxCommission;
 	}
 
 	/**
@@ -189,13 +193,18 @@ public class Employee {
 		this.commissionPercentage = commissionPercentage;
 	}
 
-	@Override
-	public String toString() {
-		return "Employee [employeeId=" + employeeId + ", employeeNtid=" + employeeNtid + ", employeeName="
-				+ employeeName + ", phoneNumber=" + phoneNumber + ", email=" + email + ", company=" + company
-				+ ", address=" + address + ", employeePayRatePerHour=" + employeePayRatePerHour
-				+ ", commissionPercentage=" + commissionPercentage + "]";
+	/**
+	 * @return the perBoxCommission
+	 */
+	public int getPerBoxCommission() {
+		return perBoxCommission;
 	}
 
-	
+	/**
+	 * @param perBoxCommission the perBoxCommission to set
+	 */
+	public void setPerBoxCommission(int perBoxCommission) {
+		this.perBoxCommission = perBoxCommission;
+	}
+
 }

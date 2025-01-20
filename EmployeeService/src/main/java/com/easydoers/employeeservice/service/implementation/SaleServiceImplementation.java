@@ -49,10 +49,10 @@ public class SaleServiceImplementation implements SaleService{
 			saveSaleDetails.setStore(store);
 			saveSaleDetails.setSystemAccessories(saleRequest.getSystemAccessories());
 			saveSaleDetails.setAccessories(calculateAccessoriesForEmployeee(saleRequest.getSystemCard(),
-					saleRequest.getSystemCash(), saleRequest.getActualCard(), saleRequest.getActualCash()));
+					saleRequest.getSystemCash(), saleRequest.getActualCard(), saleRequest.getActualCash(), saleRequest.getSystemAccessories()));
 			saveSaleDetails.setUpgradePhonesSold(saleRequest.getUpgradePhonesSold());
 			saveSaleDetails.setBoxesSold(saleRequest.getBoxesSold());
-			saveSaleDetails.setTabletsSold(saveSaleDetails.getTabletsSold());
+			saveSaleDetails.setTabletsSold(saleRequest.getTabletsSold());
 			saveSaleDetails.setHsiSold(saleRequest.getHsiSold());
 			saveSaleDetails.setWatchesSold(saleRequest.getWatchesSold());
 			saveSaleDetails.setSystemCash(saleRequest.getSystemCash());
@@ -61,7 +61,7 @@ public class SaleServiceImplementation implements SaleService{
 			saveSaleDetails.setActualCard(saleRequest.getActualCard());
 			saveSaleDetails.setCashExpense(saleRequest.getCashExpense());
 			saveSaleDetails.setExpenseReason(saleRequest.getExpenseReason());
-			saveSaleDetails.setLocalDate(LocalDate.now());
+			saveSaleDetails.setSaleDate(LocalDate.now());
 			saleRepository.save(saveSaleDetails);
 			workService.saveWorkForEmployee(employee.getEmployeeId(), LocalDate.now());
 			return employee.getEmployeeNtid() + " : Saved End Of The Day Report Successfully ";
@@ -77,8 +77,8 @@ public class SaleServiceImplementation implements SaleService{
 	}
 
 	private double calculateAccessoriesForEmployeee(double systemCard, double systemCash, double actualCard,
-			double actualCash) {
-		double totalAccessoriesByEmployeeInCashAndCard = (actualCard - systemCard) + (actualCash - systemCash);
+			double actualCash, double systemAccessories) {
+		double totalAccessoriesByEmployeeInCashAndCard = (actualCard - systemCard) + (actualCash - systemCash) +systemAccessories;
 		return totalAccessoriesByEmployeeInCashAndCard;
 	}
 
@@ -98,6 +98,11 @@ public class SaleServiceImplementation implements SaleService{
 		}
 		return salesByEmployee;
 		
+	}
+
+	@Override
+	public List<Sale> getEmployeeSales(Long employeeId, LocalDate start, LocalDate end) {
+		return saleRepository.findSalesByEmployeeIdAndDateRange(employeeId, start, end);
 	}
 
 }

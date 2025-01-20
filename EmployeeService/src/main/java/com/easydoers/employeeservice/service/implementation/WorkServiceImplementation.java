@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,12 @@ public class WorkServiceImplementation implements WorkService {
 
 	public Work checkClockinStatus(Long employeeId, LocalDate now) {
 		return workRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now());
+	}
+
+	@Override
+	public List<Work> getWorksByEmployeeAndDateRange(Long employeeId, LocalDate start, LocalDate end) {
+		List<Work> employeeWorkingDays = workRepository.findWorksByEmployeeIdAndDateRange(employeeId, start, end);
+		return employeeWorkingDays;
 	}
 
 }

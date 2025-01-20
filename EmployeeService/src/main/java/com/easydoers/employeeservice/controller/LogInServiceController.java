@@ -42,12 +42,11 @@ public class LogInServiceController {
                 .maxAge(0)
                 .sameSite("Strict")
                 .build();
-    	// Clear the refresh token cookie
         ResponseCookie clearCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
-                .secure(true) // Set true in production
+                .secure(true) 
                 .path("/")
-                .maxAge(0) // Expire immediately
+                .maxAge(0) 
                 .sameSite("Strict")
                 .build();
         return ResponseEntity.ok()

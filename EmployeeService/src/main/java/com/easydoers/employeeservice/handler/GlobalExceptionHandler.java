@@ -17,6 +17,7 @@ import com.easydoers.employeeservice.exception.SavingEmployeeWorkException;
 import com.easydoers.employeeservice.exception.SignatureExceptionFound;
 import com.easydoers.employeeservice.exception.StoreNotFoundException;
 import com.easydoers.employeeservice.exception.TokenInvalidException;
+import com.easydoers.employeeservice.exception.payCheckGenerationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -70,6 +71,13 @@ public class GlobalExceptionHandler {
         response.put("error", "Unauthorized");
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+	@ExceptionHandler(payCheckGenerationException.class)
+	public ResponseEntity<Map<String, Object>> handlepayCheckGenerationException(payCheckGenerationException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
 }

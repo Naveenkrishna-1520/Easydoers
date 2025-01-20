@@ -1,6 +1,7 @@
 package com.easydoers.employeeservice.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.SaleRequest;
@@ -13,5 +14,7 @@ public interface SaleService {
 	EmployeeSalesDTO getEmployeeSales(String employeeNtid);
 
 	Sale checkSaleSubmittedByEmployee(Long employeeId, LocalDate now);
+
+	List<Sale> getEmployeeSales(Long employeeId, LocalDate start,LocalDate end);
 
 }

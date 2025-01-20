@@ -18,7 +18,7 @@ public class SaleDTO {
 	private double actualCard;
 	private double cashExpense;
 	private String expenseReason;
-	private LocalDate localDate;
+	private LocalDate saleDate;
 	private StoreDTO store;
 	/**
 	 * 
@@ -42,12 +42,12 @@ public class SaleDTO {
 	 * @param actualCard
 	 * @param cashExpense
 	 * @param expenseReason
-	 * @param localDate
+	 * @param saleDate
 	 * @param store
 	 */
 	public SaleDTO(Long saleId, int boxesSold, double systemAccessories, double accessories, int upgradePhonesSold,
 			int tabletsSold, int hsiSold, int watchesSold, double systemCash, double systemCard, double actualCash,
-			double actualCard, double cashExpense, String expenseReason, LocalDate localDate, StoreDTO store) {
+			double actualCard, double cashExpense, String expenseReason, LocalDate saleDate, StoreDTO store) {
 		super();
 		this.saleId = saleId;
 		this.boxesSold = boxesSold;
@@ -63,7 +63,7 @@ public class SaleDTO {
 		this.actualCard = actualCard;
 		this.cashExpense = cashExpense;
 		this.expenseReason = expenseReason;
-		this.localDate = localDate;
+		this.saleDate = saleDate;
 		this.store = store;
 	}
 	/**
@@ -235,16 +235,16 @@ public class SaleDTO {
 		this.expenseReason = expenseReason;
 	}
 	/**
-	 * @return the localDate
+	 * @return the saleDate
 	 */
-	public LocalDate getLocalDate() {
-		return localDate;
+	public LocalDate getSaleDate() {
+		return saleDate;
 	}
 	/**
-	 * @param localDate the localDate to set
+	 * @param saleDate the saleDate to set
 	 */
-	public void setLocalDate(LocalDate localDate) {
-		this.localDate = localDate;
+	public void setSaleDate(LocalDate saleDate) {
+		this.saleDate = saleDate;
 	}
 	/**
 	 * @return the store
@@ -264,9 +264,8 @@ public class SaleDTO {
 				+ ", accessories=" + accessories + ", upgradePhonesSold=" + upgradePhonesSold + ", tabletsSold="
 				+ tabletsSold + ", hsiSold=" + hsiSold + ", watchesSold=" + watchesSold + ", systemCash=" + systemCash
 				+ ", systemCard=" + systemCard + ", actualCash=" + actualCash + ", actualCard=" + actualCard
-				+ ", cashExpense=" + cashExpense + ", expenseReason=" + expenseReason + ", localDate=" + localDate
+				+ ", cashExpense=" + cashExpense + ", expenseReason=" + expenseReason + ", saleDate=" + saleDate
 				+ ", store=" + store + "]";
 	}
-	
 	
 }
