@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.AssignTodosRequest;
 import com.easydoers.employeeservice.dto.GetAssignedTodosForStoreResponse;
+import com.easydoers.employeeservice.dto.TodoDTO;
 import com.easydoers.employeeservice.dto.TodosCompletedEmployeeRequest;
 import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Store;
@@ -41,17 +42,17 @@ public class TodosServiceImplementation implements TodosService {
 
 	@Override
 	public Map<String, Object> assignTodosToStore(AssignTodosRequest assignTodosRequest) {
-		
+
 		Map<String, Object> response = new HashMap<>();
 		Store store = storeService.checkStore(assignTodosRequest.getDealerStoreId());
-		for(String todo: assignTodosRequest.getTodos()) {
+		for (String todo : assignTodosRequest.getTodos()) {
 			StoreTodos storeTodos = new StoreTodos();
 			storeTodos.setStore(store);
 			storeTodos.setTodo(todo);
 			storeTodos.setTodosDate(LocalDate.now());
 			storeTodos.setCompleted(false);
 			storeTodosRepository.save(storeTodos);
-		}		
+		}
 		response.put("timestamp : ", LocalDateTime.now());
 		response.put("message", "todos assigned for store " + store.getDealerStoreId() + " is successfully done");
 		return response;
@@ -69,7 +70,7 @@ public class TodosServiceImplementation implements TodosService {
 			storeTodos.setEmployee(employee);
 			storeTodos.setCompleted(true);
 			storeTodosRepository.save(storeTodos);
-		}		
+		}
 		response.put("timestamp : ", LocalDateTime.now());
 		response.put("message", "todos assigned for store " + store.getDealerStoreId() + " is successfully done by : "
 				+ todosCompletedEmployeeRequest.getEmployeeNtid());
@@ -78,14 +79,19 @@ public class TodosServiceImplementation implements TodosService {
 
 	@Override
 	public GetAssignedTodosForStoreResponse getAssignTodosForStore(String dealerStoreId, LocalDate todosDate) {
-		List<String> todos = new ArrayList<>();
+		List<TodoDTO> todos = new ArrayList<>();
+		TodoDTO todo = new TodoDTO();
 		Store store = storeService.checkStore(dealerStoreId);
 		List<StoreTodos> getStoreTodos = storeTodosRepository.findByStoreAndTodosDate(store, todosDate);
 		for (StoreTodos storeTodos : getStoreTodos) {
-			todos.add(storeTodos.getTodo());
+			todo.setId(storeTodos.getId());
+			todo.setTodoDescription(storeTodos.getTodo());
+			todo.setCompleted(storeTodos.isCompleted());
+			todos.add(todo);
 		}
-		return new GetAssignedTodosForStoreResponse(dealerStoreId,todos);
-		
+
+		return new GetAssignedTodosForStoreResponse(todos);
+
 	}
 
 }

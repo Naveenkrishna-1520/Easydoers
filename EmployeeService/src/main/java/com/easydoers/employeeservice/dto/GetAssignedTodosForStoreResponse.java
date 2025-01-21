@@ -4,18 +4,9 @@ import java.util.List;
 
 public class GetAssignedTodosForStoreResponse {
 
-	private String dealerStoreId;
-	private List<String> todos;
 	
-	/**
-	 * @param dealerStoreId
-	 * @param todos
-	 */
-	public GetAssignedTodosForStoreResponse(String dealerStoreId, List<String> todos) {
-		super();
-		this.dealerStoreId = dealerStoreId;
-		this.todos = todos;
-	}
+	private List<TodoDTO> todos;
+
 	/**
 	 * 
 	 */
@@ -23,28 +14,26 @@ public class GetAssignedTodosForStoreResponse {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	/**
-	 * @return the dealerStoreId
+	 * @param todos
 	 */
-	public String getDealerStoreId() {
-		return dealerStoreId;
+	public GetAssignedTodosForStoreResponse(List<TodoDTO> todos) {
+		super();
+		this.todos = todos;
 	}
-	/**
-	 * @param dealerStoreId the dealerStoreId to set
-	 */
-	public void setDealerStoreId(String dealerStoreId) {
-		this.dealerStoreId = dealerStoreId;
-	}
+
 	/**
 	 * @return the todos
 	 */
-	public List<String> getTodos() {
+	public List<TodoDTO> getTodos() {
 		return todos;
 	}
+
 	/**
 	 * @param todos the todos to set
 	 */
-	public void setTodos(List<String> todos) {
+	public void setTodos(List<TodoDTO> todos) {
 		this.todos = todos;
 	}
 }
