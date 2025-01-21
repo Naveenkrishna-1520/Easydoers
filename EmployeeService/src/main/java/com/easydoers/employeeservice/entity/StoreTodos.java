@@ -1,7 +1,6 @@
 package com.easydoers.employeeservice.entity;
 
 import java.time.LocalDate;
-import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +20,7 @@ public class StoreTodos {
 	@ManyToOne
 	@JoinColumn(name = "employee_id")
 	private Employee employee;
-	private List<String> todos;
+	private String todo;
 	private LocalDate todosDate;
 	private boolean completed;
 	/**
@@ -35,17 +34,16 @@ public class StoreTodos {
 	 * @param id
 	 * @param store
 	 * @param employee
-	 * @param todos
+	 * @param todo
 	 * @param todosDate
 	 * @param completed
 	 */
-	public StoreTodos(Long id, Store store, Employee employee, List<String> todos, LocalDate todosDate,
-			boolean completed) {
+	public StoreTodos(Long id, Store store, Employee employee, String todo, LocalDate todosDate, boolean completed) {
 		super();
 		this.id = id;
 		this.store = store;
 		this.employee = employee;
-		this.todos = todos;
+		this.todo = todo;
 		this.todosDate = todosDate;
 		this.completed = completed;
 	}
@@ -86,16 +84,16 @@ public class StoreTodos {
 		this.employee = employee;
 	}
 	/**
-	 * @return the todos
+	 * @return the todo
 	 */
-	public List<String> getTodos() {
-		return todos;
+	public String getTodo() {
+		return todo;
 	}
 	/**
-	 * @param todos the todos to set
+	 * @param todo the todo to set
 	 */
-	public void setTodos(List<String> todos) {
-		this.todos = todos;
+	public void setTodo(String todo) {
+		this.todo = todo;
 	}
 	/**
 	 * @return the todosDate
@@ -120,6 +118,5 @@ public class StoreTodos {
 	 */
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
-	}
-	
+	}	
 }

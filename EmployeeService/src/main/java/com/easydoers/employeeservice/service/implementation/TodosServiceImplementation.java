@@ -2,6 +2,7 @@ package com.easydoers.employeeservice.service.implementation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,13 +41,17 @@ public class TodosServiceImplementation implements TodosService {
 
 	@Override
 	public Map<String, Object> assignTodosToStore(AssignTodosRequest assignTodosRequest) {
-		StoreTodos storeTodos = new StoreTodos();
+		
 		Map<String, Object> response = new HashMap<>();
 		Store store = storeService.checkStore(assignTodosRequest.getDealerStoreId());
-		storeTodos.setStore(store);
-		storeTodos.setTodos(assignTodosRequest.getTodos());
-		storeTodos.setTodosDate(LocalDate.now());
-		storeTodosRepository.save(storeTodos);
+		for(String todo: assignTodosRequest.getTodos()) {
+			StoreTodos storeTodos = new StoreTodos();
+			storeTodos.setStore(store);
+			storeTodos.setTodo(todo);
+			storeTodos.setTodosDate(LocalDate.now());
+			storeTodos.setCompleted(false);
+			storeTodosRepository.save(storeTodos);
+		}		
 		response.put("timestamp : ", LocalDateTime.now());
 		response.put("message", "todos assigned for store " + store.getDealerStoreId() + " is successfully done");
 		return response;
@@ -57,11 +62,14 @@ public class TodosServiceImplementation implements TodosService {
 			TodosCompletedEmployeeRequest todosCompletedEmployeeRequest) {
 		Map<String, Object> response = new HashMap<>();
 		Store store = storeService.checkStore(todosCompletedEmployeeRequest.getDealerStoreId());
-		StoreTodos storeTodos = new StoreTodos();
-		Employee employee = employeeService.checkEmployee(todosCompletedEmployeeRequest.getEmployeeNtid());
-		storeTodos = storeTodosRepository.findByStore(store);
-		storeTodos.setEmployee(employee);
-		storeTodosRepository.save(storeTodos);
+		for (String todo : todosCompletedEmployeeRequest.getTodos()) {
+			StoreTodos storeTodos = new StoreTodos();
+			Employee employee = employeeService.checkEmployee(todosCompletedEmployeeRequest.getEmployeeNtid());
+			storeTodos = storeTodosRepository.findByStoreAndTodo(store, todo);
+			storeTodos.setEmployee(employee);
+			storeTodos.setCompleted(true);
+			storeTodosRepository.save(storeTodos);
+		}		
 		response.put("timestamp : ", LocalDateTime.now());
 		response.put("message", "todos assigned for store " + store.getDealerStoreId() + " is successfully done by : "
 				+ todosCompletedEmployeeRequest.getEmployeeNtid());
@@ -69,10 +77,15 @@ public class TodosServiceImplementation implements TodosService {
 	}
 
 	@Override
-	public GetAssignedTodosForStoreResponse getAssignTodosForStore(String dealerStoreId, LocalDate TodosDate) {
+	public GetAssignedTodosForStoreResponse getAssignTodosForStore(String dealerStoreId, LocalDate todosDate) {
+		List<String> todos = new ArrayList<>();
 		Store store = storeService.checkStore(dealerStoreId);
-		GetAssignedTodosForStoreResponse getTodos = storeTodosRepository.findByStoreAndTodosDate(store, TodosDate);
-		return getTodos;
+		List<StoreTodos> getStoreTodos = storeTodosRepository.findByStoreAndTodosDate(store, todosDate);
+		for (StoreTodos storeTodos : getStoreTodos) {
+			todos.add(storeTodos.getTodo());
+		}
+		return new GetAssignedTodosForStoreResponse(dealerStoreId,todos);
+		
 	}
 
 }
