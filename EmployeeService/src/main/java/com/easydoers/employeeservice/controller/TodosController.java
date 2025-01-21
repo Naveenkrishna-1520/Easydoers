@@ -3,7 +3,6 @@ package com.easydoers.employeeservice.controller;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.AssignTodosRequest;
 import com.easydoers.employeeservice.dto.GetAssignedTodosForStoreResponse;
-import com.easydoers.employeeservice.dto.GetTodosForStoreRequest;
 import com.easydoers.employeeservice.dto.TodosCompletedEmployeeRequest;
 import com.easydoers.employeeservice.entity.ToDos;
 import com.easydoers.employeeservice.service.TodosService;
@@ -47,9 +46,8 @@ public class TodosController {
 	}
 	
 	@GetMapping("/getAssinedTodos")
-	public ResponseEntity<GetAssignedTodosForStoreResponse> getAssignTodosForStore(@RequestBody GetTodosForStoreRequest getTodosForStoreRequest){
-		LocalDate date = LocalDate.parse(getTodosForStoreRequest.getDate());
-		GetAssignedTodosForStoreResponse response = todosService.getAssignTodosForStore(getTodosForStoreRequest.getDealerStoreId(), date);
+	public ResponseEntity<GetAssignedTodosForStoreResponse> getAssignTodosForStore(@RequestParam("dealerStoreId") String dealerStoreId){
+		GetAssignedTodosForStoreResponse response = todosService.getAssignTodosForStore(dealerStoreId, LocalDate.now());
 		return new ResponseEntity<GetAssignedTodosForStoreResponse>(response, HttpStatus.OK);
 	}
 }
