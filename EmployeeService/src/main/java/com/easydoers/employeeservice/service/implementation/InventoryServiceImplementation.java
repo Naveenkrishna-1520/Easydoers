@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.easydoers.employeeservice.dto.AddMinimumInventoryRequest;
+import com.easydoers.employeeservice.dto.DeleteProductRequest;
 import com.easydoers.employeeservice.dto.ProductDTO;
 import com.easydoers.employeeservice.dto.StoreInventoryDTO;
 import com.easydoers.employeeservice.dto.UpdateInventoryRequest;
@@ -42,14 +43,14 @@ public class InventoryServiceImplementation implements InventoryService {
 
 	@Override
 	public Map<String, Object> addMinimumInventoryToStores(AddMinimumInventoryRequest inventoryRequest) {
-		Store store = storeService.checkStore(inventoryRequest.getDealerStoreId());
+		Store store = getStore(inventoryRequest.getDealerStoreId());
 		for (ProductDTO product : inventoryRequest.getProducts()) {
 			StoreInventory storeInventory = new StoreInventory();
-			Product getProduct = productService.checkProduct(product.getProductName());
-			StoreInventory checkStoreInventory = storeInventoryRepository.findByStoreAndProduct(store, getProduct);
+			Product productInfo = getProduct(product);
+			StoreInventory checkStoreInventory = getStoreAndProduct(store, productInfo);
 			if (checkStoreInventory == null) {
 				storeInventory.setStore(store);
-				storeInventory.setProduct(getProduct);
+				storeInventory.setProduct(productInfo);
 				storeInventory.setMinimumQuantity(product.getQuantity());
 				storeInventoryRepository.save(storeInventory);
 			} else {
@@ -67,10 +68,10 @@ public class InventoryServiceImplementation implements InventoryService {
 
 	@Override
 	public Map<String, Object> updateInventoryToStores(UpdateInventoryRequest inventoryRequest) {
-		Store store = storeService.checkStore(inventoryRequest.getDealerStoreId());
+		Store store = getStore(inventoryRequest.getDealerStoreId());
 		for (ProductDTO product : inventoryRequest.getProducts()) {
-			Product getProduct = productService.checkProduct(product.getProductName());
-			StoreInventory checkStoreInventory = storeInventoryRepository.findByStoreAndProduct(store, getProduct);
+			Product productInfo = getProduct(product);
+			StoreInventory checkStoreInventory = getStoreAndProduct(store, productInfo);
 			if (checkStoreInventory != null) {
 				checkStoreInventory.setQuantity(product.getQuantity());
 				storeInventoryRepository.save(checkStoreInventory);
@@ -83,4 +84,28 @@ public class InventoryServiceImplementation implements InventoryService {
 		return response;
 	}
 
+	@Override
+	public Map<String, Object> deleteInventoryfromStore(DeleteProductRequest deleteProductRequest) {
+		Store store = getStore(deleteProductRequest.getDealerStoreId());
+		Product productInfo = getProduct(deleteProductRequest.getProduct());
+		StoreInventory checkStoreInventory = getStoreAndProduct(store, productInfo);
+		storeInventoryRepository.delete(checkStoreInventory);
+		Map<String, Object> response = new HashMap<>();
+		response.put("timestamp : ", LocalDateTime.now());
+		response.put("message : ", "deleted " + productInfo.getProductName() + " inventory for store : "
+				+ deleteProductRequest.getDealerStoreId() + " is successfuly done");
+		return response;
+	}
+
+	private StoreInventory getStoreAndProduct(Store store, Product product) {
+		return storeInventoryRepository.findByStoreAndProduct(store, product);
+	}
+
+	private Product getProduct(ProductDTO product) {
+		return productService.checkProduct(product.getProductName());
+	}
+
+	private Store getStore(String dealerStoreId) {
+		return storeService.checkStore(dealerStoreId);
+	}
 }

@@ -19,10 +19,11 @@ public class StoreTodos {
 	@JoinColumn(name = "store_id", nullable = false)
 	private Store store;
 	@ManyToOne
-	@JoinColumn(name = "employee_id", nullable = false)
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
 	private List<String> todos;
 	private LocalDate todosDate;
+	private boolean completed;
 	/**
 	 * 
 	 */
@@ -36,14 +37,17 @@ public class StoreTodos {
 	 * @param employee
 	 * @param todos
 	 * @param todosDate
+	 * @param completed
 	 */
-	public StoreTodos(Long id, Store store, Employee employee, List<String> todos, LocalDate todosDate) {
+	public StoreTodos(Long id, Store store, Employee employee, List<String> todos, LocalDate todosDate,
+			boolean completed) {
 		super();
 		this.id = id;
 		this.store = store;
 		this.employee = employee;
 		this.todos = todos;
 		this.todosDate = todosDate;
+		this.completed = completed;
 	}
 	/**
 	 * @return the id
@@ -105,4 +109,17 @@ public class StoreTodos {
 	public void setTodosDate(LocalDate todosDate) {
 		this.todosDate = todosDate;
 	}
+	/**
+	 * @return the completed
+	 */
+	public boolean isCompleted() {
+		return completed;
+	}
+	/**
+	 * @param completed the completed to set
+	 */
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+	
 }

@@ -15,11 +15,11 @@ public class StoreServiceImplementation implements StoreService{
 	private StoreRepository storeRepository;
 
 	@Override
-	public Store checkStore(String delaerStoreId) {
+	public Store checkStore(String dealerStoreId) {
 
-		Store store = storeRepository.findByDealerStoreId(delaerStoreId);
+		Store store = storeRepository.findByDealerStoreId(dealerStoreId);
 		if (store == null) {
-			throw new StoreNotFoundException("store with " + delaerStoreId + " not found");
+			throw new StoreNotFoundException("store with " + dealerStoreId + " not found");
 		}
 		return store;
 
