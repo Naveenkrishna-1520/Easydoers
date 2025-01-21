@@ -80,10 +80,10 @@ public class TodosServiceImplementation implements TodosService {
 	@Override
 	public GetAssignedTodosForStoreResponse getAssignTodosForStore(String dealerStoreId, LocalDate todosDate) {
 		List<TodoDTO> todos = new ArrayList<>();
-		TodoDTO todo = new TodoDTO();
 		Store store = storeService.checkStore(dealerStoreId);
 		List<StoreTodos> getStoreTodos = storeTodosRepository.findByStoreAndTodosDate(store, todosDate);
 		for (StoreTodos storeTodos : getStoreTodos) {
+			TodoDTO todo = new TodoDTO();
 			todo.setId(storeTodos.getId());
 			todo.setTodoDescription(storeTodos.getTodo());
 			todo.setCompleted(storeTodos.isCompleted());
