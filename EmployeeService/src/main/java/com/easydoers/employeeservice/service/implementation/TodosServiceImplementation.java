@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.AssignTodosRequest;
@@ -59,21 +61,16 @@ public class TodosServiceImplementation implements TodosService {
 	}
 
 	@Override
-	public Map<String, Object> assignTodosCompletedByEmployee(
+	public Map<String, Object> assignedTodosCompletedByEmployee(
 			TodosCompletedEmployeeRequest todosCompletedEmployeeRequest) {
-		Map<String, Object> response = new HashMap<>();
-		Store store = storeService.checkStore(todosCompletedEmployeeRequest.getDealerStoreId());
-		for (String todo : todosCompletedEmployeeRequest.getTodos()) {
-			StoreTodos storeTodos = new StoreTodos();
+		Map<String, Object> response = new HashMap<>();		 
 			Employee employee = employeeService.checkEmployee(todosCompletedEmployeeRequest.getEmployeeNtid());
-			storeTodos = storeTodosRepository.findByStoreAndTodo(store, todo);
-			storeTodos.setEmployee(employee);
-			storeTodos.setCompleted(true);
-			storeTodosRepository.save(storeTodos);
-		}
-		response.put("timestamp : ", LocalDateTime.now());
-		response.put("message", "todos assigned for store " + store.getDealerStoreId() + " is successfully done by : "
-				+ todosCompletedEmployeeRequest.getEmployeeNtid());
+			Optional<StoreTodos> storeTodos  = storeTodosRepository.findById(todosCompletedEmployeeRequest.getId());
+			storeTodos.get().setEmployee(employee);
+			storeTodos.get().setCompleted(todosCompletedEmployeeRequest.isCompleted());
+			storeTodosRepository.save(storeTodos.get());
+		response.put("message : ", "todo "+todosCompletedEmployeeRequest.getId()+" is updated");
+		
 		return response;
 	}
 

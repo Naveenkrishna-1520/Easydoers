@@ -1,12 +1,13 @@
 package com.easydoers.employeeservice.dto;
 
-import java.util.List;
+
 
 public class TodosCompletedEmployeeRequest {
 
-	private String dealerStoreId;
+	private Long id;
+	private boolean completed;
 	private String employeeNtid;
-	private List<String> todos;
+	
 
 	/**
 	 * 
@@ -16,31 +17,51 @@ public class TodosCompletedEmployeeRequest {
 		// TODO Auto-generated constructor stub
 	}
 
+
 	/**
-	 * @param dealerStoreId
+	 * @param id
+	 * @param completed
 	 * @param employeeNtid
-	 * @param todos
 	 */
-	public TodosCompletedEmployeeRequest(String dealerStoreId, String employeeNtid, List<String> todos) {
+	public TodosCompletedEmployeeRequest(Long id, boolean completed, String employeeNtid) {
 		super();
-		this.dealerStoreId = dealerStoreId;
+		this.id = id;
+		this.completed = completed;
 		this.employeeNtid = employeeNtid;
-		this.todos = todos;
 	}
 
-	/**
-	 * @return the dealerStoreId
-	 */
-	public String getDealerStoreId() {
-		return dealerStoreId;
-	}
 
 	/**
-	 * @param dealerStoreId the dealerStoreId to set
+	 * @return the id
 	 */
-	public void setDealerStoreId(String dealerStoreId) {
-		this.dealerStoreId = dealerStoreId;
+	public Long getId() {
+		return id;
 	}
+
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	/**
+	 * @return the completed
+	 */
+	public boolean isCompleted() {
+		return completed;
+	}
+
+
+	/**
+	 * @param completed the completed to set
+	 */
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+
 
 	/**
 	 * @return the employeeNtid
@@ -49,25 +70,11 @@ public class TodosCompletedEmployeeRequest {
 		return employeeNtid;
 	}
 
+
 	/**
 	 * @param employeeNtid the employeeNtid to set
 	 */
 	public void setEmployeeNtid(String employeeNtid) {
 		this.employeeNtid = employeeNtid;
 	}
-
-	/**
-	 * @return the todos
-	 */
-	public List<String> getTodos() {
-		return todos;
-	}
-
-	/**
-	 * @param todos the todos to set
-	 */
-	public void setTodos(List<String> todos) {
-		this.todos = todos;
-	}
-
 }

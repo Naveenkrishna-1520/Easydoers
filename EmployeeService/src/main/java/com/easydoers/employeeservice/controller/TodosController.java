@@ -38,10 +38,10 @@ public class TodosController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 
-	@PutMapping("/assignedTodosCompletedByEmployee")
+	@PutMapping("/updateStatus")
 	public ResponseEntity<Map<String, Object>> assignedTodosCompletedByEmployee(
 			@RequestBody TodosCompletedEmployeeRequest todosCompletedEmployeeRequest) {
-		Map<String, Object> response = todosService.assignTodosCompletedByEmployee(todosCompletedEmployeeRequest);
+		Map<String, Object> response = todosService.assignedTodosCompletedByEmployee(todosCompletedEmployeeRequest);
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 	

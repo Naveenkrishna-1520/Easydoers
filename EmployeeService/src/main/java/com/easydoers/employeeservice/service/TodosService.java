@@ -14,7 +14,7 @@ public interface TodosService {
 
 	Map<String, Object> assignTodosToStore(AssignTodosRequest assignTodosRequest);
 
-	Map<String, Object> assignTodosCompletedByEmployee(TodosCompletedEmployeeRequest todosCompletedEmployeeRequest);
+	Map<String, Object> assignedTodosCompletedByEmployee(TodosCompletedEmployeeRequest todosCompletedEmployeeRequest);
 
 	GetAssignedTodosForStoreResponse getAssignTodosForStore(String dealerStoreId, LocalDate date);
 
