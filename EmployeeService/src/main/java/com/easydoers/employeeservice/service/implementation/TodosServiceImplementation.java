@@ -89,9 +89,7 @@ public class TodosServiceImplementation implements TodosService {
 			todo.setCompleted(storeTodos.isCompleted());
 			todos.add(todo);
 		}
-
 		return new GetAssignedTodosForStoreResponse(todos);
-
 	}
 
 }
