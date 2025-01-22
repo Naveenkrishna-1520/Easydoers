@@ -141,12 +141,12 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	@Override
 	public List<UpgradePhonesInStoresResponse> getUpgradePhones(String employeeNtid) {
 		List<UpgradePhonesInStoresResponse> response = new ArrayList<>();
-		UpgradePhonesInStoresResponse setUpResponse = new UpgradePhonesInStoresResponse();
-		List<UpgradePhonesDTO> products = new ArrayList<>();
 		Employee employee = employeeService.checkEmployee(employeeNtid);
 		Company company = companyService.getCompany(employee.getCompany().getCompanyId());
 		List<Store> stores = storeService.getStoresUnderCompany(company);
 		for (Store store : stores) {
+			List<UpgradePhonesDTO> products = new ArrayList<>();
+			UpgradePhonesInStoresResponse setUpResponse = new UpgradePhonesInStoresResponse();
 			List<UpgradePhones> upgradePhones = upgradePhonesRepository.findByStore(store);
 			StoreDTO setStore = new StoreDTO();
 			setStore.setDealerStoreId(store.getDealerStoreId());
@@ -163,11 +163,10 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 					products.add(product);
 					
 				}
-
-			}
-			setUpResponse.setProducts(products);
-		}
-		response.add(setUpResponse);
+				setUpResponse.setProducts(products);
+			}	
+			response.add(setUpResponse);
+		}		
 		return response;
 	}
 
