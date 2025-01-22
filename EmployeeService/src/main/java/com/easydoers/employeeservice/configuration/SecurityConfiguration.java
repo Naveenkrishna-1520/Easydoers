@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -36,14 +37,25 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		
 		return http
-			.csrf(customizer -> customizer.disable())
-			.authorizeHttpRequests(request -> request.requestMatchers("/v1/auth/logout","/v1/auth/login","/v1/auth/refreshToken").permitAll()
-					.anyRequest().authenticated())
-			.httpBasic(Customizer.withDefaults())
-			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-			.build();
+	            .csrf(csrf -> csrf.disable())
+	            .authorizeHttpRequests(auth -> 
+	                auth.requestMatchers("/v1/auth/login", "/v1/auth/refreshToken").permitAll()
+	                    .anyRequest().authenticated())
+	            .formLogin(form -> 
+	                form.loginPage("/login")
+	                    .defaultSuccessUrl("/dashboard", true)
+	                    .permitAll())
+	            .logout(logout -> 
+	                logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+	                      .logoutSuccessUrl("/login")
+	                      .permitAll())
+	            .httpBasic(Customizer.withDefaults())
+	            .sessionManagement(session -> 
+	                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	            .cors(cors -> 
+	                cors.configurationSource(corsConfigurationSource()))
+	            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+	            .build();
 		
 	}
 	@Bean

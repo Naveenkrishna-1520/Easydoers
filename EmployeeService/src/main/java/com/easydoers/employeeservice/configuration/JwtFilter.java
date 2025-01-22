@@ -1,6 +1,7 @@
 package com.easydoers.employeeservice.configuration;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,6 +54,7 @@ public class JwtFilter extends OncePerRequestFilter{
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 			}
 		}
+	    response.setHeader("Last-Activity", Instant.now().toString());
 		filterChain.doFilter(request, response);
 	}
 

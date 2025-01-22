@@ -1,6 +1,8 @@
 package com.easydoers.employeeservice.controller;
 
 
+import java.time.Instant;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ public class LogInServiceController {
 		return ResponseEntity.ok()
                 .header("Set-Cookie", response.getToken())
                 .header("Set-Cookie", response.getRefreshToken())
+                .header("Activity-Start", Instant.now().toString())
                 .body(response);
     	
     }
