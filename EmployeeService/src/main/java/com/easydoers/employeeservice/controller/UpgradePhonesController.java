@@ -1,5 +1,6 @@
 package com.easydoers.employeeservice.controller;
 
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,10 +53,9 @@ public class UpgradePhonesController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 	
-	@GetMapping("/inStore/{dealerStoreId}")
-	public ResponseEntity<UpgradePhonesInStoresResponse> getAvailableUpgradePhones(@PathVariable String dealerStoreId){
-		UpgradePhonesInStoresResponse response = upgradePhonesService.getUpgradePhones(dealerStoreId);
-		return new ResponseEntity<UpgradePhonesInStoresResponse>(response, HttpStatus.OK);
-		
+	@GetMapping("/inStores/{employeeNtid}")
+	public ResponseEntity<List<UpgradePhonesInStoresResponse>> getAvailableUpgradePhones(@PathVariable String employeeNtid){
+		List<UpgradePhonesInStoresResponse> response = upgradePhonesService.getUpgradePhones(employeeNtid);
+		return new ResponseEntity<List<UpgradePhonesInStoresResponse>>(response, HttpStatus.OK);
 	}
 }

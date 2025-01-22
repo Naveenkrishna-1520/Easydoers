@@ -1,8 +1,11 @@
 package com.easydoers.employeeservice.service.implementation;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.exception.StoreNotFoundException;
 import com.easydoers.employeeservice.repository.StoreRepository;
@@ -23,6 +26,11 @@ public class StoreServiceImplementation implements StoreService{
 		}
 		return store;
 
+	}
+
+	@Override
+	public List<Store> getStoresUnderCompany(Company company) {
+		return storeRepository.findByCompany(company);
 	}
 
 }

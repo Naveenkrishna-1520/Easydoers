@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.UpgradePhoneTransfer;
-import com.easydoers.employeeservice.dto.ProductDTO;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
+import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
+import com.easydoers.employeeservice.dto.UpgradePhonesDTO;
 import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
 import com.easydoers.employeeservice.dto.UpgradePhonesInvoiceRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesProductDTO;
 import com.easydoers.employeeservice.dto.UpgradePhonesSoldRequest;
+import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Product;
 import com.easydoers.employeeservice.entity.Store;
@@ -27,6 +28,7 @@ import com.easydoers.employeeservice.repository.UpgradePhonesInvoiceRepository;
 import com.easydoers.employeeservice.repository.UpgradePhonesRepository;
 import com.easydoers.employeeservice.repository.UpgradePhonesSaleRepository;
 import com.easydoers.employeeservice.repository.UpgradePhonesTranferRepostiory;
+import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.service.UpgradePhonesService;
@@ -48,6 +50,8 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	private StoreService storeService;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private CompanyService companyService;
 
 	@Override
 	public Map<String, Object> saveUpgradePhonesInvoice(UpgradePhonesInvoiceRequest upgradePhonesInvoiceRequest) {
@@ -106,11 +110,11 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		upgradePhones = upgradePhonesRepository.findByImei(transferUpgradePhoneRequest.getImei());
 		Employee employee = employeeService.checkEmployee(transferUpgradePhoneRequest.getEmployeeNtid());
 		Store store = storeService.checkStore(transferUpgradePhoneRequest.getDealerStoreId());
-		UpgradePhoneTransfer  phoneTransfer = new UpgradePhoneTransfer();
+		UpgradePhoneTransfer phoneTransfer = new UpgradePhoneTransfer();
 		phoneTransfer.setTransferDate(LocalDate.now());
 		phoneTransfer.setTransferedEmployee(employee);
 		phoneTransfer.setTransferedStore(store);
-		phoneTransfer=  upgradePhonesTranferRepostiory.save(phoneTransfer);
+		phoneTransfer = upgradePhonesTranferRepostiory.save(phoneTransfer);
 		upgradePhones.setTransfer(phoneTransfer);
 		upgradePhonesRepository.save(upgradePhones);
 		response.put("message :", "transfered successfully");
@@ -122,8 +126,9 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		Map<String, Object> response = new HashMap<>();
 		Store store = storeService.checkStore(receiveUpgradePhoneRequest.getDealerStoreId());
 		UpgradePhones upgradePhones = upgradePhonesRepository.findByImei(receiveUpgradePhoneRequest.getImei());
-		if(upgradePhones.getTransfer()!=null) {
-			UpgradePhoneTransfer  receivePhone = upgradePhonesTranferRepostiory.findByTransferId(upgradePhones.getTransfer().getTransferId());
+		if (upgradePhones.getTransfer() != null) {
+			UpgradePhoneTransfer receivePhone = upgradePhonesTranferRepostiory
+					.findByTransferId(upgradePhones.getTransfer().getTransferId());
 			receivePhone.setReceivedEmployeeNtid(receiveUpgradePhoneRequest.getEmployeeNtid());
 			upgradePhones.setStore(store);
 			upgradePhonesRepository.save(upgradePhones);
@@ -134,22 +139,34 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	}
 
 	@Override
-	public UpgradePhonesInStoresResponse getUpgradePhones(String dealerStoreId) {
-		UpgradePhonesInStoresResponse response = new UpgradePhonesInStoresResponse();
-		List<ProductDTO> products = new ArrayList<>();
-		Store store = storeService.checkStore(dealerStoreId);
-		List<UpgradePhones> upgradePhones = upgradePhonesRepository.findByStore(store);
-		for (UpgradePhones phones : upgradePhones) {
-			if(phones.getSoldInfo()==null) {
-				ProductDTO productDTO = new ProductDTO();
-				Product product = productRepository.findByProductId(phones.getProduct().getProductId());
-				productDTO.setId(phones.getId());
-				productDTO.setProductName(product.getProductName());
-				productDTO.setQuantity(1);
-				products.add(productDTO);
-			}		
+	public List<UpgradePhonesInStoresResponse> getUpgradePhones(String employeeNtid) {
+		List<UpgradePhonesInStoresResponse> response = new ArrayList<>();
+		List<UpgradePhonesDTO> products = new ArrayList<>();
+		Employee employee = employeeService.checkEmployee(employeeNtid);
+		Company company = companyService.getCompany(employee.getCompany().getCompanyId());
+		List<Store> stores = storeService.getStoresUnderCompany(company);
+		for (Store store : stores) {
+			List<UpgradePhones> upgradePhones = upgradePhonesRepository.findByStore(store);
+			UpgradePhonesInStoresResponse setUpResponse = new UpgradePhonesInStoresResponse();
+			StoreDTO setStore = new StoreDTO();
+			setStore.setDealerStoreId(store.getDealerStoreId());
+			setStore.setStoreName(store.getStoreName());
+			setUpResponse.setStore(setStore);
+			for (UpgradePhones upgradePhone : upgradePhones) {
+				if (upgradePhone.getSoldInfo() == null) {
+					Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());				
+					UpgradePhonesDTO product = new UpgradePhonesDTO();
+					product.setId(upgradePhone.getId());
+					product.setProductName(productInfo.getProductName());
+					product.setImei(upgradePhone.getImei());
+					product.setQuantity(1);
+					products.add(product);
+					setUpResponse.setProducts(products);
+					response.add(setUpResponse);
+				}
+
+			}
 		}
-		response.setProducts(products);
 		return response;
 	}
 

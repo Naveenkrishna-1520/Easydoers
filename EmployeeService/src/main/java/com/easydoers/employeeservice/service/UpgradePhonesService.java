@@ -1,5 +1,6 @@
 package com.easydoers.employeeservice.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
@@ -18,6 +19,6 @@ public interface UpgradePhonesService {
 
 	Map<String, Object> receiveUpgradePhone(ReceiveUpgradePhoneRequest receiveUpgradePhoneRequest);
 
-	UpgradePhonesInStoresResponse getUpgradePhones(String dealerStoreId);
+	List<UpgradePhonesInStoresResponse> getUpgradePhones(String employeeNtid);
 
 }

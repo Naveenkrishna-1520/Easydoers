@@ -4,7 +4,8 @@ import java.util.List;
 
 public class UpgradePhonesInStoresResponse {
 	
-	List<ProductDTO> products;
+	private StoreDTO store;
+	List<UpgradePhonesDTO> products;
 
 	/**
 	 * 
@@ -15,27 +16,41 @@ public class UpgradePhonesInStoresResponse {
 	}
 
 	/**
+	 * @param store
 	 * @param products
 	 */
-	public UpgradePhonesInStoresResponse(List<ProductDTO> products) {
+	public UpgradePhonesInStoresResponse(StoreDTO store, List<UpgradePhonesDTO> products) {
 		super();
+		this.store = store;
 		this.products = products;
+	}
+
+	/**
+	 * @return the store
+	 */
+	public StoreDTO getStore() {
+		return store;
+	}
+
+	/**
+	 * @param store the store to set
+	 */
+	public void setStore(StoreDTO store) {
+		this.store = store;
 	}
 
 	/**
 	 * @return the products
 	 */
-	public List<ProductDTO> getProducts() {
+	public List<UpgradePhonesDTO> getProducts() {
 		return products;
 	}
 
 	/**
 	 * @param products the products to set
 	 */
-	public void setProducts(List<ProductDTO> products) {
+	public void setProducts(List<UpgradePhonesDTO> products) {
 		this.products = products;
 	}
-	
-	
 
 }
