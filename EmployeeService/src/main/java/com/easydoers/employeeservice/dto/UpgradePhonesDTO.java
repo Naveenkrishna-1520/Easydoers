@@ -5,7 +5,7 @@ public class UpgradePhonesDTO {
 	private Long id;
 	private String productName;
 	private String imei;
-	private int quantity;
+	private String phoneNumber;
 	/**
 	 * 
 	 */
@@ -17,14 +17,14 @@ public class UpgradePhonesDTO {
 	 * @param id
 	 * @param productName
 	 * @param imei
-	 * @param quantity
+	 * @param phoneNumber
 	 */
-	public UpgradePhonesDTO(Long id, String productName, String imei, int quantity) {
+	public UpgradePhonesDTO(Long id, String productName, String imei, String phoneNumber) {
 		super();
 		this.id = id;
 		this.productName = productName;
 		this.imei = imei;
-		this.quantity = quantity;
+		this.phoneNumber = phoneNumber;
 	}
 	/**
 	 * @return the id
@@ -63,16 +63,15 @@ public class UpgradePhonesDTO {
 		this.imei = imei;
 	}
 	/**
-	 * @return the quantity
+	 * @return the phoneNumber
 	 */
-	public int getQuantity() {
-		return quantity;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 	/**
-	 * @param quantity the quantity to set
+	 * @param phoneNumber the phoneNumber to set
 	 */
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
-	
 }

@@ -159,7 +159,7 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 					product.setId(upgradePhone.getId());
 					product.setProductName(productInfo.getProductName());
 					product.setImei(upgradePhone.getImei());
-					product.setQuantity(1);
+					product.setPhoneNumber(upgradePhone.getPhoneNumber());
 					products.add(product);
 					setUpResponse.setProducts(products);
 					response.add(setUpResponse);
