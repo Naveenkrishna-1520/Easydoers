@@ -154,7 +154,7 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 			setStore.setStoreName(store.getStoreName());
 			setUpResponse.setStore(setStore);
 			for (UpgradePhones upgradePhone : upgradePhones) {
-				if (upgradePhone.getSoldInfo() == null) {
+				if (upgradePhone.getSoldInfo() == null && upgradePhone.getTransfer() ==null) {
 					Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());
 					UpgradePhonesInvoice invoice = upgradePhonesInvoiceRepository.findByInvoiceId(upgradePhone.getInvoice().getInvoiceId());
 					UpgradePhonesDTO product = new UpgradePhonesDTO();
