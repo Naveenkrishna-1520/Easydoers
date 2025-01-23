@@ -37,25 +37,39 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		
 		return http
-	            .csrf(csrf -> csrf.disable())
-	            .authorizeHttpRequests(auth -> 
-	                auth.requestMatchers("/v1/auth/login", "/v1/auth/refreshToken").permitAll()
-	                    .anyRequest().authenticated())
-	            .formLogin(form -> 
-	                form.loginPage("/login")
-	                    .defaultSuccessUrl("/dashboard", true)
-	                    .permitAll())
-	            .logout(logout -> 
-	                logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	                      .logoutSuccessUrl("/login")
-	                      .permitAll())
-	            .httpBasic(Customizer.withDefaults())
-	            .sessionManagement(session -> 
-	                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	            .cors(cors -> 
-	                cors.configurationSource(corsConfigurationSource()))
-	            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-	            .build();
+			    .csrf(csrf -> csrf.disable())
+			    .authorizeHttpRequests(auth -> 
+			        auth.requestMatchers("/v1/auth/login", "/v1/auth/refreshToken").permitAll()
+			            .anyRequest().authenticated())
+			    .formLogin(form -> 
+			        form.loginPage("/login")
+			            .defaultSuccessUrl("/dashboard", true)
+			            .permitAll())
+			    .logout(logout -> 
+			        logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			              .logoutSuccessUrl("/login")
+			              .permitAll())
+			    .httpBasic(Customizer.withDefaults())
+			    .sessionManagement(session -> 
+			        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			    .cors(cors -> 
+			        cors.configurationSource(corsConfigurationSource()))
+			    .headers(headers -> headers
+			        .contentSecurityPolicy(csp -> csp
+			            .policyDirectives("default-src 'self'; script-src 'self'; object-src 'none'; connect-src 'self'; img-src 'self'; style-src 'self';"))
+			        .frameOptions(frameOptions -> frameOptions
+			            .deny()) 
+			        .referrerPolicy(referrer -> referrer
+			            .policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER))
+			        .httpStrictTransportSecurity(hsts -> hsts
+			            .maxAgeInSeconds(31536000) 
+			            .includeSubDomains(true))
+			        .addHeaderWriter((request, response) -> 
+			            response.setHeader("X-XSS-Protection", "1; mode=block"))			    )
+			    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+			    .build();
+
+
 		
 	}
 	@Bean

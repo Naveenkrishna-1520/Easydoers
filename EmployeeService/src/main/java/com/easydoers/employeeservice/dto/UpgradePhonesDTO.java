@@ -6,6 +6,8 @@ public class UpgradePhonesDTO {
 	private String productName;
 	private String imei;
 	private String phoneNumber;
+	private String activationDate;
+	private Long daysOld;
 	/**
 	 * 
 	 */
@@ -18,13 +20,18 @@ public class UpgradePhonesDTO {
 	 * @param productName
 	 * @param imei
 	 * @param phoneNumber
+	 * @param activationDate
+	 * @param daysOld
 	 */
-	public UpgradePhonesDTO(Long id, String productName, String imei, String phoneNumber) {
+	public UpgradePhonesDTO(Long id, String productName, String imei, String phoneNumber, String activationDate,
+			Long daysOld) {
 		super();
 		this.id = id;
 		this.productName = productName;
 		this.imei = imei;
 		this.phoneNumber = phoneNumber;
+		this.activationDate = activationDate;
+		this.daysOld = daysOld;
 	}
 	/**
 	 * @return the id
@@ -74,4 +81,29 @@ public class UpgradePhonesDTO {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	/**
+	 * @return the activationDate
+	 */
+	public String getActivationDate() {
+		return activationDate;
+	}
+	/**
+	 * @param activationDate the activationDate to set
+	 */
+	public void setActivationDate(String activationDate) {
+		this.activationDate = activationDate;
+	}
+	/**
+	 * @return the daysOld
+	 */
+	public Long getDaysOld() {
+		return daysOld;
+	}
+	/**
+	 * @param daysOld the daysOld to set
+	 */
+	public void setDaysOld(Long daysOld) {
+		this.daysOld = daysOld;
+	}
+	
 }

@@ -1,6 +1,7 @@
 package com.easydoers.employeeservice.service.implementation;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,12 +155,15 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 			setUpResponse.setStore(setStore);
 			for (UpgradePhones upgradePhone : upgradePhones) {
 				if (upgradePhone.getSoldInfo() == null) {
-					Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());				
+					Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());
+					UpgradePhonesInvoice invoice = upgradePhonesInvoiceRepository.findByInvoiceId(upgradePhone.getInvoice().getInvoiceId());
 					UpgradePhonesDTO product = new UpgradePhonesDTO();
 					product.setId(upgradePhone.getId());
 					product.setProductName(productInfo.getProductName());
 					product.setImei(upgradePhone.getImei());
 					product.setPhoneNumber(upgradePhone.getPhoneNumber());
+					product.setActivationDate(invoice.getActivatedDate().toString());
+					product.setDaysOld(getNumberDaysFromActivationDate(invoice.getActivatedDate()));
 					products.add(product);
 					
 				}
@@ -168,6 +172,11 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 			response.add(setUpResponse);
 		}		
 		return response;
+	}
+
+	private long getNumberDaysFromActivationDate(LocalDate activatedDate) {
+	
+		return ChronoUnit.DAYS.between(activatedDate, LocalDate.now());
 	}
 
 }

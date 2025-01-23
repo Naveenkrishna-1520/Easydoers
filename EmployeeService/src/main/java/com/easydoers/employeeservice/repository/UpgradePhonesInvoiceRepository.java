@@ -15,4 +15,6 @@ public interface UpgradePhonesInvoiceRepository extends JpaRepository<UpgradePho
 	UpgradePhonesInvoice findByEmployeeAndStoreAndActivatedDate(Employee employee, Store store,
 			LocalDate activatedDate);
 
+	UpgradePhonesInvoice findByInvoiceId(Long invoiceId);
+
 }
