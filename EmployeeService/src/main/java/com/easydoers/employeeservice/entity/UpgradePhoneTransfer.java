@@ -17,12 +17,11 @@ public class UpgradePhoneTransfer {
 	private Long transferId;
 	private LocalDate transferDate;
 	@ManyToOne
-	@JoinColumn(name = "store_id", nullable = false)
+	@JoinColumn(name = "transferred_to", nullable = false)
 	private Store transferedStore;
 	@ManyToOne
-	@JoinColumn(name = "employee_id", nullable = false) 
-	private Employee transferedEmployee;
-	private String receivedEmployeeNtid;
+	@JoinColumn(name = "transferred_by", nullable = false) 
+	private Employee transferredEmployee;
 	/**
 	 * 
 	 */
@@ -34,17 +33,15 @@ public class UpgradePhoneTransfer {
 	 * @param transferId
 	 * @param transferDate
 	 * @param transferedStore
-	 * @param transferedEmployee
-	 * @param receivedEmployeeNtid
+	 * @param transferredEmployee
 	 */
 	public UpgradePhoneTransfer(Long transferId, LocalDate transferDate, Store transferedStore,
-			Employee transferedEmployee, String receivedEmployeeNtid) {
+			Employee transferredEmployee) {
 		super();
 		this.transferId = transferId;
 		this.transferDate = transferDate;
 		this.transferedStore = transferedStore;
-		this.transferedEmployee = transferedEmployee;
-		this.receivedEmployeeNtid = receivedEmployeeNtid;
+		this.transferredEmployee = transferredEmployee;
 	}
 	/**
 	 * @return the transferId
@@ -83,28 +80,15 @@ public class UpgradePhoneTransfer {
 		this.transferedStore = transferedStore;
 	}
 	/**
-	 * @return the transferedEmployee
+	 * @return the transferredEmployee
 	 */
-	public Employee getTransferedEmployee() {
-		return transferedEmployee;
+	public Employee getTransferredEmployee() {
+		return transferredEmployee;
 	}
 	/**
-	 * @param transferedEmployee the transferedEmployee to set
+	 * @param transferredEmployee the transferredEmployee to set
 	 */
-	public void setTransferedEmployee(Employee transferedEmployee) {
-		this.transferedEmployee = transferedEmployee;
+	public void setTransferredEmployee(Employee transferredEmployee) {
+		this.transferredEmployee = transferredEmployee;
 	}
-	/**
-	 * @return the receivedEmployeeNtid
-	 */
-	public String getReceivedEmployeeNtid() {
-		return receivedEmployeeNtid;
-	}
-	/**
-	 * @param receivedEmployeeNtid the receivedEmployeeNtid to set
-	 */
-	public void setReceivedEmployeeNtid(String receivedEmployeeNtid) {
-		this.receivedEmployeeNtid = receivedEmployeeNtid;
-	}
-	
 }

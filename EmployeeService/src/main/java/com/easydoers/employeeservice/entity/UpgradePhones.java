@@ -28,6 +28,9 @@ public class UpgradePhones {
 	@OneToOne
 	@JoinColumn(name = "transfer_id")
 	private UpgradePhoneTransfer transfer;
+	@OneToOne
+	@JoinColumn(name = "receive_id")
+	private UpgradePhoneReceive receive;
 	@ManyToOne
 	@JoinColumn(name = "store_id", nullable = false)
 	private Store store;
@@ -48,10 +51,11 @@ public class UpgradePhones {
 	 * @param phoneNumber
 	 * @param soldInfo
 	 * @param transfer
+	 * @param receive
 	 * @param store
 	 */
 	public UpgradePhones(Long id, UpgradePhonesInvoice invoice, Product product, String imei, String phoneNumber,
-			UpgradePhonesSale soldInfo, UpgradePhoneTransfer transfer, Store store) {
+			UpgradePhonesSale soldInfo, UpgradePhoneTransfer transfer, UpgradePhoneReceive receive, Store store) {
 		super();
 		this.id = id;
 		this.invoice = invoice;
@@ -60,6 +64,7 @@ public class UpgradePhones {
 		this.phoneNumber = phoneNumber;
 		this.soldInfo = soldInfo;
 		this.transfer = transfer;
+		this.receive = receive;
 		this.store = store;
 	}
 
@@ -162,6 +167,20 @@ public class UpgradePhones {
 	}
 
 	/**
+	 * @return the receive
+	 */
+	public UpgradePhoneReceive getReceive() {
+		return receive;
+	}
+
+	/**
+	 * @param receive the receive to set
+	 */
+	public void setReceive(UpgradePhoneReceive receive) {
+		this.receive = receive;
+	}
+
+	/**
 	 * @return the store
 	 */
 	public Store getStore() {
@@ -174,5 +193,4 @@ public class UpgradePhones {
 	public void setStore(Store store) {
 		this.store = store;
 	}
-
 }

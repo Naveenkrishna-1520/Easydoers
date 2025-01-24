@@ -9,6 +9,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.UpgradePhoneTransfer;
+import com.easydoers.employeeservice.dto.PendingReceivesResponse;
+import com.easydoers.employeeservice.dto.PendingTranfersResponse;
+import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
@@ -21,11 +24,13 @@ import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Product;
 import com.easydoers.employeeservice.entity.Store;
+import com.easydoers.employeeservice.entity.UpgradePhoneReceive;
 import com.easydoers.employeeservice.entity.UpgradePhones;
 import com.easydoers.employeeservice.entity.UpgradePhonesInvoice;
 import com.easydoers.employeeservice.entity.UpgradePhonesSale;
 import com.easydoers.employeeservice.repository.ProductRepository;
 import com.easydoers.employeeservice.repository.UpgradePhonesInvoiceRepository;
+import com.easydoers.employeeservice.repository.UpgradePhonesReceiveRepository;
 import com.easydoers.employeeservice.repository.UpgradePhonesRepository;
 import com.easydoers.employeeservice.repository.UpgradePhonesSaleRepository;
 import com.easydoers.employeeservice.repository.UpgradePhonesTranferRepostiory;
@@ -45,6 +50,8 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	private UpgradePhonesSaleRepository upgradePhonesSaleRepository;
 	@Autowired
 	private UpgradePhonesTranferRepostiory upgradePhonesTranferRepostiory;
+	@Autowired
+	private UpgradePhonesReceiveRepository upgradePhonesReceiveRepository;
 	@Autowired
 	private EmployeeService employeeService;
 	@Autowired
@@ -113,7 +120,7 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		Store store = storeService.checkStore(transferUpgradePhoneRequest.getDealerStoreId());
 		UpgradePhoneTransfer phoneTransfer = new UpgradePhoneTransfer();
 		phoneTransfer.setTransferDate(LocalDate.now());
-		phoneTransfer.setTransferedEmployee(employee);
+		phoneTransfer.setTransferredEmployee(employee);
 		phoneTransfer.setTransferedStore(store);
 		phoneTransfer = upgradePhonesTranferRepostiory.save(phoneTransfer);
 		upgradePhones.setTransfer(phoneTransfer);
@@ -125,15 +132,19 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	@Override
 	public Map<String, Object> receiveUpgradePhone(ReceiveUpgradePhoneRequest receiveUpgradePhoneRequest) {
 		Map<String, Object> response = new HashMap<>();
+		UpgradePhoneReceive receiveDevice = new UpgradePhoneReceive();
 		Store store = storeService.checkStore(receiveUpgradePhoneRequest.getDealerStoreId());
-		UpgradePhones upgradePhones = upgradePhonesRepository.findByImei(receiveUpgradePhoneRequest.getImei());
+		Employee employee = employeeService.checkEmployee(receiveUpgradePhoneRequest.getEmployeeNtid());
+		UpgradePhones upgradePhones = upgradePhonesRepository.findByImeiAndTransferIsNotNullAndReceiveIsNull(receiveUpgradePhoneRequest.getImei());
 		if (upgradePhones.getTransfer() != null) {
-			UpgradePhoneTransfer receivePhone = upgradePhonesTranferRepostiory
-					.findByTransferId(upgradePhones.getTransfer().getTransferId());
-			receivePhone.setReceivedEmployeeNtid(receiveUpgradePhoneRequest.getEmployeeNtid());
 			upgradePhones.setStore(store);
+			receiveDevice.setReceiveDate(LocalDate.now());
+			receiveDevice.setTransferedEmployee(employee);
+			receiveDevice.setTransferedStore(store);
+			upgradePhones.setReceive(receiveDevice);
+			upgradePhonesReceiveRepository.save(receiveDevice);
 			upgradePhonesRepository.save(upgradePhones);
-			upgradePhonesTranferRepostiory.save(receivePhone);
+			
 		}
 		response.put("message :", "received successfully");
 		return response;
@@ -148,35 +159,53 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		for (Store store : stores) {
 			List<UpgradePhonesDTO> products = new ArrayList<>();
 			UpgradePhonesInStoresResponse setUpResponse = new UpgradePhonesInStoresResponse();
-			List<UpgradePhones> upgradePhones = upgradePhonesRepository.findByStore(store);
+			List<UpgradePhones> upgradePhones = upgradePhonesRepository
+					.findByStoreAndTransferIsNullAndSoldInfoIsNull(store);
 			StoreDTO setStore = new StoreDTO();
 			setStore.setDealerStoreId(store.getDealerStoreId());
 			setStore.setStoreName(store.getStoreName());
 			setUpResponse.setStore(setStore);
 			for (UpgradePhones upgradePhone : upgradePhones) {
-				if (upgradePhone.getSoldInfo() == null && upgradePhone.getTransfer() ==null) {
-					Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());
-					UpgradePhonesInvoice invoice = upgradePhonesInvoiceRepository.findByInvoiceId(upgradePhone.getInvoice().getInvoiceId());
-					UpgradePhonesDTO product = new UpgradePhonesDTO();
-					product.setId(upgradePhone.getId());
-					product.setProductName(productInfo.getProductName());
-					product.setImei(upgradePhone.getImei());
-					product.setPhoneNumber(upgradePhone.getPhoneNumber());
-					product.setActivationDate(invoice.getActivatedDate().toString());
-					product.setDaysOld(getNumberDaysFromActivationDate(invoice.getActivatedDate()));
-					products.add(product);
-					
-				}
-				setUpResponse.setProducts(products);
-			}	
+				Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());
+				UpgradePhonesInvoice invoice = upgradePhonesInvoiceRepository
+						.findByInvoiceId(upgradePhone.getInvoice().getInvoiceId());
+				UpgradePhonesDTO product = new UpgradePhonesDTO();
+				product.setId(upgradePhone.getId());
+				product.setProductName(productInfo.getProductName());
+				product.setImei(upgradePhone.getImei());
+				product.setPhoneNumber(upgradePhone.getPhoneNumber());
+				product.setActivationDate(invoice.getActivatedDate().toString());
+				product.setDaysOld(getNumberDaysFromActivationDate(invoice.getActivatedDate()));
+				products.add(product);
+			}
+			setUpResponse.setProducts(products);
 			response.add(setUpResponse);
-		}		
+		}
 		return response;
 	}
 
 	private long getNumberDaysFromActivationDate(LocalDate activatedDate) {
-	
+
 		return ChronoUnit.DAYS.between(activatedDate, LocalDate.now());
+	}
+
+	@Override
+	public PendingTransfersAndReceivesResponse getPendingTransfersAndReceivesInStore(String dealerStoreId) {
+		List<PendingTranfersResponse> pendingTransfers = new ArrayList<>();
+		List<PendingReceivesResponse> pendingReceives = new ArrayList<>();
+		Store store = storeService.checkStore(dealerStoreId);
+		List<UpgradePhones> upgradePhones = upgradePhonesRepository
+				.findByStoreAndTransferIsNotNullAndSoldInfoIsNullAndReceiveIsNull(store);
+		for (UpgradePhones upgradePhone : upgradePhones) {
+			PendingTranfersResponse transfer = new PendingTranfersResponse();
+			transfer.setDeviceName(upgradePhone.getProduct().getProductName());
+			transfer.setImei(upgradePhone.getImei());
+			transfer.setDate(upgradePhone.getTransfer().getTransferDate().toString());
+			transfer.setTransferedBy(upgradePhone.getTransfer().getTransferredEmployee().getEmployeeNtid().toString());
+			transfer.setTransferTo(upgradePhone.getTransfer().getTransferedStore().getDealerStoreId().toString());
+			pendingTransfers.add(transfer);
+		}
+		return new PendingTransfersAndReceivesResponse(pendingTransfers, pendingReceives);
 	}
 
 }

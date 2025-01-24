@@ -11,8 +11,14 @@ import com.easydoers.employeeservice.entity.UpgradePhones;
 @Repository
 public interface UpgradePhonesRepository extends JpaRepository<UpgradePhones, Long>{
 
-	UpgradePhones findByImei(String imei);
+	UpgradePhones findByImeiAndTransferIsNotNullAndReceiveIsNull(String imei);
 
 	List<UpgradePhones> findByStore(Store store);
+
+	List<UpgradePhones> findByStoreAndTransferIsNullAndSoldInfoIsNull(Store store);
+
+	List<UpgradePhones> findByStoreAndTransferIsNotNullAndSoldInfoIsNullAndReceiveIsNull(Store store);
+
+	UpgradePhones findByImei(String imei);
 
 }

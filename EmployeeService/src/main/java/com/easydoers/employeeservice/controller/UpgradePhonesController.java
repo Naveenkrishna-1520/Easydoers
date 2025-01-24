@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
@@ -58,5 +60,11 @@ public class UpgradePhonesController {
 	public ResponseEntity<List<UpgradePhonesInStoresResponse>> getAvailableUpgradePhones(@PathVariable String employeeNtid){
 		List<UpgradePhonesInStoresResponse> response = upgradePhonesService.getUpgradePhones(employeeNtid);
 		return new ResponseEntity<List<UpgradePhonesInStoresResponse>>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/pendings/{dealerStoreId}")
+	public ResponseEntity<PendingTransfersAndReceivesResponse> getPendingTransfersAndReceivesInStore(@PathVariable String dealerStoreId){
+		PendingTransfersAndReceivesResponse response = upgradePhonesService.getPendingTransfersAndReceivesInStore(dealerStoreId);
+		return new ResponseEntity<PendingTransfersAndReceivesResponse>(response,HttpStatus.OK);
 	}
 }
