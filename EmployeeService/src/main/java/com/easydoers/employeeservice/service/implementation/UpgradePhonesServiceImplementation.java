@@ -135,7 +135,8 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		UpgradePhoneReceive receiveDevice = new UpgradePhoneReceive();
 		Store store = storeService.checkStore(receiveUpgradePhoneRequest.getDealerStoreId());
 		Employee employee = employeeService.checkEmployee(receiveUpgradePhoneRequest.getEmployeeNtid());
-		UpgradePhones upgradePhones = upgradePhonesRepository.findByImeiAndTransferIsNotNullAndReceiveIsNull(receiveUpgradePhoneRequest.getImei());
+		UpgradePhones upgradePhones = upgradePhonesRepository
+				.findByImeiAndTransferIsNotNullAndReceiveIsNull(receiveUpgradePhoneRequest.getImei());
 		if (upgradePhones.getTransfer() != null) {
 			upgradePhones.setStore(store);
 			receiveDevice.setReceiveDate(LocalDate.now());
@@ -144,7 +145,7 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 			upgradePhones.setReceive(receiveDevice);
 			upgradePhonesReceiveRepository.save(receiveDevice);
 			upgradePhonesRepository.save(upgradePhones);
-			
+
 		}
 		response.put("message :", "received successfully");
 		return response;
@@ -193,17 +194,47 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	public PendingTransfersAndReceivesResponse getPendingTransfersAndReceivesInStore(String dealerStoreId) {
 		List<PendingTranfersResponse> pendingTransfers = new ArrayList<>();
 		List<PendingReceivesResponse> pendingReceives = new ArrayList<>();
+		List<UpgradePhones> fetchReceives = new ArrayList<>();
 		Store store = storeService.checkStore(dealerStoreId);
 		List<UpgradePhones> upgradePhones = upgradePhonesRepository
 				.findByStoreAndTransferIsNotNullAndSoldInfoIsNullAndReceiveIsNull(store);
-		for (UpgradePhones upgradePhone : upgradePhones) {
-			PendingTranfersResponse transfer = new PendingTranfersResponse();
-			transfer.setDeviceName(upgradePhone.getProduct().getProductName());
-			transfer.setImei(upgradePhone.getImei());
-			transfer.setDate(upgradePhone.getTransfer().getTransferDate().toString());
-			transfer.setTransferedBy(upgradePhone.getTransfer().getTransferredEmployee().getEmployeeNtid().toString());
-			transfer.setTransferTo(upgradePhone.getTransfer().getTransferedStore().getDealerStoreId().toString());
-			pendingTransfers.add(transfer);
+		List<UpgradePhoneTransfer> listOfTransfers = upgradePhonesTranferRepostiory.findByTransferedStore(store);
+
+		if (listOfTransfers != null && !listOfTransfers.isEmpty()) {
+		    for (UpgradePhoneTransfer upgradePhoneTransfer : listOfTransfers) {
+		        UpgradePhones receivePending = upgradePhonesRepository.findByTransfer_TransferIdAndReceiveIsNullAndSoldInfoIsNull(upgradePhoneTransfer.getTransferId());
+		        if (receivePending != null) {
+		            fetchReceives.add(receivePending);
+		        }
+		    }
+		}
+
+		if (fetchReceives != null && !fetchReceives.isEmpty()) {
+		    for (UpgradePhones getReceives : fetchReceives) {
+		        if (getReceives != null && getReceives.getTransfer() != null && dealerStoreId.equals(getReceives.getTransfer().getTransferedStore().getDealerStoreId())) {
+		            PendingReceivesResponse receive = new PendingReceivesResponse();
+		            receive.setDeviceName(getReceives.getProduct().getProductName());
+		            receive.setImei(getReceives.getImei());
+		            receive.setTransferFrom(getReceives.getStore().getDealerStoreId());
+		            receive.setTransferedBy(getReceives.getTransfer().getTransferredEmployee().getEmployeeNtid());
+		            receive.setDate(getReceives.getTransfer().getTransferDate().toString());
+		            pendingReceives.add(receive);
+		        }
+		    }
+		}
+
+
+		if (upgradePhones != null) {
+			for (UpgradePhones upgradePhone : upgradePhones) {
+				PendingTranfersResponse transfer = new PendingTranfersResponse();
+				transfer.setDeviceName(upgradePhone.getProduct().getProductName());
+				transfer.setImei(upgradePhone.getImei());
+				transfer.setDate(upgradePhone.getTransfer().getTransferDate().toString());
+				transfer.setTransferTo(upgradePhone.getTransfer().getTransferedStore().getDealerStoreId().toString());
+				transfer.setTransferedBy(
+						upgradePhone.getTransfer().getTransferredEmployee().getEmployeeNtid().toString());
+				pendingTransfers.add(transfer);
+			}
 		}
 		return new PendingTransfersAndReceivesResponse(pendingTransfers, pendingReceives);
 	}

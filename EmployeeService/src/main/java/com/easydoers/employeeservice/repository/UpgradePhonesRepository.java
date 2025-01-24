@@ -21,4 +21,6 @@ public interface UpgradePhonesRepository extends JpaRepository<UpgradePhones, Lo
 
 	UpgradePhones findByImei(String imei);
 
+	UpgradePhones findByTransfer_TransferIdAndReceiveIsNullAndSoldInfoIsNull(Long tramsferId);
+
 }
