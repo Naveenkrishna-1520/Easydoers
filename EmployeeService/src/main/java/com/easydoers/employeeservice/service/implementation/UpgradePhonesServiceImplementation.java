@@ -159,28 +159,36 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		List<Store> stores = storeService.getStoresUnderCompany(company);
 		for (Store store : stores) {
 			List<UpgradePhonesDTO> products = new ArrayList<>();
+			List<UpgradePhones> fetchAllUpgradePhones = new ArrayList<>();
 			UpgradePhonesInStoresResponse setUpResponse = new UpgradePhonesInStoresResponse();
 			List<UpgradePhones> upgradePhones = upgradePhonesRepository
-					.findByStoreAndTransferIsNullAndSoldInfoIsNull(store);
+					.findByStoreAndTransferIsNullAndSoldInfoIsNullAndReceiveIsNull(store);
+			List<UpgradePhones> fetchPhonesOnceTransferOrReceiving = upgradePhonesRepository
+					.findByStoreAndTransferIsNotNullAndSoldInfoIsNullAndReceiveIsNotNull(store);
+			fetchAllUpgradePhones.addAll(upgradePhones);
+			fetchAllUpgradePhones.addAll(fetchPhonesOnceTransferOrReceiving);
 			StoreDTO setStore = new StoreDTO();
 			setStore.setDealerStoreId(store.getDealerStoreId());
 			setStore.setStoreName(store.getStoreName());
 			setUpResponse.setStore(setStore);
-			for (UpgradePhones upgradePhone : upgradePhones) {
-				Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());
-				UpgradePhonesInvoice invoice = upgradePhonesInvoiceRepository
-						.findByInvoiceId(upgradePhone.getInvoice().getInvoiceId());
-				UpgradePhonesDTO product = new UpgradePhonesDTO();
-				product.setId(upgradePhone.getId());
-				product.setProductName(productInfo.getProductName());
-				product.setImei(upgradePhone.getImei());
-				product.setPhoneNumber(upgradePhone.getPhoneNumber());
-				product.setActivationDate(invoice.getActivatedDate().toString());
-				product.setDaysOld(getNumberDaysFromActivationDate(invoice.getActivatedDate()));
-				products.add(product);
+			if (fetchAllUpgradePhones != null) {
+				for (UpgradePhones upgradePhone : fetchAllUpgradePhones) {
+					Product productInfo = productRepository.findByProductId(upgradePhone.getProduct().getProductId());
+					UpgradePhonesInvoice invoice = upgradePhonesInvoiceRepository
+							.findByInvoiceId(upgradePhone.getInvoice().getInvoiceId());
+					UpgradePhonesDTO product = new UpgradePhonesDTO();
+					product.setId(upgradePhone.getId());
+					product.setProductName(productInfo.getProductName());
+					product.setImei(upgradePhone.getImei());
+					product.setPhoneNumber(upgradePhone.getPhoneNumber());
+					product.setActivationDate(invoice.getActivatedDate().toString());
+					product.setDaysOld(getNumberDaysFromActivationDate(invoice.getActivatedDate()));
+					products.add(product);
+				}
+				setUpResponse.setProducts(products);
+				response.add(setUpResponse);
 			}
-			setUpResponse.setProducts(products);
-			response.add(setUpResponse);
+
 		}
 		return response;
 	}
@@ -201,28 +209,30 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		List<UpgradePhoneTransfer> listOfTransfers = upgradePhonesTranferRepostiory.findByTransferedStore(store);
 
 		if (listOfTransfers != null && !listOfTransfers.isEmpty()) {
-		    for (UpgradePhoneTransfer upgradePhoneTransfer : listOfTransfers) {
-		        UpgradePhones receivePending = upgradePhonesRepository.findByTransfer_TransferIdAndReceiveIsNullAndSoldInfoIsNull(upgradePhoneTransfer.getTransferId());
-		        if (receivePending != null) {
-		            fetchReceives.add(receivePending);
-		        }
-		    }
+			for (UpgradePhoneTransfer upgradePhoneTransfer : listOfTransfers) {
+				UpgradePhones receivePending = upgradePhonesRepository
+						.findByTransfer_TransferIdAndReceiveIsNullAndSoldInfoIsNull(
+								upgradePhoneTransfer.getTransferId());
+				if (receivePending != null) {
+					fetchReceives.add(receivePending);
+				}
+			}
 		}
 
 		if (fetchReceives != null && !fetchReceives.isEmpty()) {
-		    for (UpgradePhones getReceives : fetchReceives) {
-		        if (getReceives != null && getReceives.getTransfer() != null && dealerStoreId.equals(getReceives.getTransfer().getTransferedStore().getDealerStoreId())) {
-		            PendingReceivesResponse receive = new PendingReceivesResponse();
-		            receive.setDeviceName(getReceives.getProduct().getProductName());
-		            receive.setImei(getReceives.getImei());
-		            receive.setTransferFrom(getReceives.getStore().getDealerStoreId());
-		            receive.setTransferedBy(getReceives.getTransfer().getTransferredEmployee().getEmployeeNtid());
-		            receive.setDate(getReceives.getTransfer().getTransferDate().toString());
-		            pendingReceives.add(receive);
-		        }
-		    }
+			for (UpgradePhones getReceives : fetchReceives) {
+				if (getReceives != null && getReceives.getTransfer() != null
+						&& dealerStoreId.equals(getReceives.getTransfer().getTransferedStore().getDealerStoreId())) {
+					PendingReceivesResponse receive = new PendingReceivesResponse();
+					receive.setDeviceName(getReceives.getProduct().getProductName());
+					receive.setImei(getReceives.getImei());
+					receive.setTransferFrom(getReceives.getStore().getDealerStoreId());
+					receive.setTransferedBy(getReceives.getTransfer().getTransferredEmployee().getEmployeeNtid());
+					receive.setDate(getReceives.getTransfer().getTransferDate().toString());
+					pendingReceives.add(receive);
+				}
+			}
 		}
-
 
 		if (upgradePhones != null) {
 			for (UpgradePhones upgradePhone : upgradePhones) {

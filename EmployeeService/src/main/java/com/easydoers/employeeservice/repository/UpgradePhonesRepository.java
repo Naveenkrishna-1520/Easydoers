@@ -15,12 +15,14 @@ public interface UpgradePhonesRepository extends JpaRepository<UpgradePhones, Lo
 
 	List<UpgradePhones> findByStore(Store store);
 
-	List<UpgradePhones> findByStoreAndTransferIsNullAndSoldInfoIsNull(Store store);
+	List<UpgradePhones> findByStoreAndTransferIsNullAndSoldInfoIsNullAndReceiveIsNull(Store store);
 
 	List<UpgradePhones> findByStoreAndTransferIsNotNullAndSoldInfoIsNullAndReceiveIsNull(Store store);
 
 	UpgradePhones findByImei(String imei);
 
 	UpgradePhones findByTransfer_TransferIdAndReceiveIsNullAndSoldInfoIsNull(Long tramsferId);
+
+	List<UpgradePhones> findByStoreAndTransferIsNotNullAndSoldInfoIsNullAndReceiveIsNotNull(Store store);
 
 }
