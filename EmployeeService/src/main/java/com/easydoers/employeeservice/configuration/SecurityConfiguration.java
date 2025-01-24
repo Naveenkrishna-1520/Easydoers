@@ -54,18 +54,6 @@ public class SecurityConfiguration {
 			        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			    .cors(cors -> 
 			        cors.configurationSource(corsConfigurationSource()))
-			    .headers(headers -> headers
-			        .contentSecurityPolicy(csp -> csp
-			            .policyDirectives("default-src 'self'; script-src 'self'; object-src 'none'; connect-src 'self'; img-src 'self'; style-src 'self';"))
-			        .frameOptions(frameOptions -> frameOptions
-			            .deny()) 
-			        .referrerPolicy(referrer -> referrer
-			            .policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER))
-			        .httpStrictTransportSecurity(hsts -> hsts
-			            .maxAgeInSeconds(31536000) 
-			            .includeSubDomains(true))
-			        .addHeaderWriter((request, response) -> 
-			            response.setHeader("X-XSS-Protection", "1; mode=block"))			    )
 			    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 			    .build();
 
