@@ -117,7 +117,7 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		UpgradePhones upgradePhones = new UpgradePhones();
 		upgradePhones = upgradePhonesRepository.findByImei(transferUpgradePhoneRequest.getImei());
 		Employee employee = employeeService.checkEmployee(transferUpgradePhoneRequest.getEmployeeNtid());
-		Store store = storeService.checkStore(transferUpgradePhoneRequest.getDealerStoreId());
+		Store store = storeService.checkStore(transferUpgradePhoneRequest.getTargetDealerStoreId());
 		UpgradePhoneTransfer phoneTransfer = new UpgradePhoneTransfer();
 		phoneTransfer.setTransferDate(LocalDate.now());
 		phoneTransfer.setTransferredEmployee(employee);

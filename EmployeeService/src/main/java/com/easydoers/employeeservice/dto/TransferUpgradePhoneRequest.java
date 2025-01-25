@@ -3,7 +3,7 @@ package com.easydoers.employeeservice.dto;
 public class TransferUpgradePhoneRequest {
 	
 	private String employeeNtid;
-	private String dealerStoreId;
+	private String targetDealerStoreId;
 	private String imei;
 	/**
 	 * 
@@ -14,13 +14,13 @@ public class TransferUpgradePhoneRequest {
 	}
 	/**
 	 * @param employeeNtid
-	 * @param dealerStoreId
+	 * @param targetDealerStoreId
 	 * @param imei
 	 */
-	public TransferUpgradePhoneRequest(String employeeNtid, String dealerStoreId, String imei) {
+	public TransferUpgradePhoneRequest(String employeeNtid, String targetDealerStoreId, String imei) {
 		super();
 		this.employeeNtid = employeeNtid;
-		this.dealerStoreId = dealerStoreId;
+		this.targetDealerStoreId = targetDealerStoreId;
 		this.imei = imei;
 	}
 	/**
@@ -36,16 +36,16 @@ public class TransferUpgradePhoneRequest {
 		this.employeeNtid = employeeNtid;
 	}
 	/**
-	 * @return the dealerStoreId
+	 * @return the targetDealerStoreId
 	 */
-	public String getDealerStoreId() {
-		return dealerStoreId;
+	public String getTargetDealerStoreId() {
+		return targetDealerStoreId;
 	}
 	/**
-	 * @param dealerStoreId the dealerStoreId to set
+	 * @param targetDealerStoreId the targetDealerStoreId to set
 	 */
-	public void setDealerStoreId(String dealerStoreId) {
-		this.dealerStoreId = dealerStoreId;
+	public void setTargetDealerStoreId(String targetDealerStoreId) {
+		this.targetDealerStoreId = targetDealerStoreId;
 	}
 	/**
 	 * @return the imei
@@ -59,5 +59,6 @@ public class TransferUpgradePhoneRequest {
 	public void setImei(String imei) {
 		this.imei = imei;
 	}
+	
 	
 }
