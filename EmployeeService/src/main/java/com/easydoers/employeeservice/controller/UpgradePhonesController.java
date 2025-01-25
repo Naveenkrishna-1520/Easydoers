@@ -1,6 +1,7 @@
 package com.easydoers.employeeservice.controller;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
@@ -19,6 +21,7 @@ import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
 import com.easydoers.employeeservice.dto.UpgradePhonesInvoiceRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesSoldRequest;
+import com.easydoers.employeeservice.dto.previouslySoldDevicesResponse;
 import com.easydoers.employeeservice.service.UpgradePhonesService;
 
 @RestController
@@ -67,4 +70,13 @@ public class UpgradePhonesController {
 		PendingTransfersAndReceivesResponse response = upgradePhonesService.getPendingTransfersAndReceivesInStore(dealerStoreId);
 		return new ResponseEntity<PendingTransfersAndReceivesResponse>(response,HttpStatus.OK);
 	}
+	
+	@GetMapping("/previouslySold/{dealerStoreId}")
+	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(@PathVariable String dealerStoreId,@RequestParam("start") String start, @RequestParam("end") String end){
+		LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+		List<previouslySoldDevicesResponse> response = upgradePhonesService.getPreviouslySoldDevicesInStore(dealerStoreId, startDate, endDate);
+		return new ResponseEntity<List<previouslySoldDevicesResponse>>(response,HttpStatus.OK);
+	}
+
 }

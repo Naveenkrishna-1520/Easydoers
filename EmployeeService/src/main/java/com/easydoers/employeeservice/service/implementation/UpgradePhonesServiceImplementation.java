@@ -20,6 +20,7 @@ import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
 import com.easydoers.employeeservice.dto.UpgradePhonesInvoiceRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesProductDTO;
 import com.easydoers.employeeservice.dto.UpgradePhonesSoldRequest;
+import com.easydoers.employeeservice.dto.previouslySoldDevicesResponse;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Product;
@@ -247,6 +248,27 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 			}
 		}
 		return new PendingTransfersAndReceivesResponse(pendingTransfers, pendingReceives);
+	}
+
+	@Override
+	public List<previouslySoldDevicesResponse> getPreviouslySoldDevicesInStore(String dealerStoreId,LocalDate startDate, LocalDate endDate) {
+
+		List<previouslySoldDevicesResponse> getSoldDevices = new ArrayList<>();
+		Store store = storeService.checkStore(dealerStoreId);
+		List<UpgradePhones> upgradePhones = upgradePhonesRepository.findBySoldInfo_SoldStoreAndSoldInfo_SoldDateBetween(store, startDate, endDate);
+		for (UpgradePhones upgradePhone : upgradePhones) {
+			previouslySoldDevicesResponse device = new previouslySoldDevicesResponse();
+			device.setProductName(upgradePhone.getProduct().getProductName());
+			device.setSoldTo(upgradePhone.getSoldInfo().getSoldTo());
+			device.setSoldPrice(upgradePhone.getSoldInfo().getSoldPrice());
+			device.setSoldBy(upgradePhone.getSoldInfo().getSoldEmployee().getEmployeeNtid());
+			device.setSoldAt(upgradePhone.getSoldInfo().getSoldStore().getDealerStoreId());
+			device.setSolddate(upgradePhone.getSoldInfo().getSoldDate().toString());
+			getSoldDevices.add(device);
+
+		}
+
+		return getSoldDevices;
 	}
 
 }

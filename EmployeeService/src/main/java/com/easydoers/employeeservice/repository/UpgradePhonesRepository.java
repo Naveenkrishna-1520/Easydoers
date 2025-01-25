@@ -1,5 +1,6 @@
 package com.easydoers.employeeservice.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +25,7 @@ public interface UpgradePhonesRepository extends JpaRepository<UpgradePhones, Lo
 	UpgradePhones findByTransfer_TransferIdAndReceiveIsNullAndSoldInfoIsNull(Long tramsferId);
 
 	List<UpgradePhones> findByStoreAndTransferIsNotNullAndSoldInfoIsNullAndReceiveIsNotNull(Store store);
+
+	List<UpgradePhones> findBySoldInfo_SoldStoreAndSoldInfo_SoldDateBetween(Store store, LocalDate startDate, LocalDate endDate);
 
 }

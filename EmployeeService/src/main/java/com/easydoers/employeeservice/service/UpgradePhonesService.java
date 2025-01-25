@@ -1,5 +1,6 @@
 package com.easydoers.employeeservice.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
 import com.easydoers.employeeservice.dto.UpgradePhonesInvoiceRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesSoldRequest;
+import com.easydoers.employeeservice.dto.previouslySoldDevicesResponse;
 
 public interface UpgradePhonesService {
 
@@ -23,5 +25,7 @@ public interface UpgradePhonesService {
 	List<UpgradePhonesInStoresResponse> getUpgradePhones(String employeeNtid);
 
 	PendingTransfersAndReceivesResponse getPendingTransfersAndReceivesInStore(String dealerStoreId);
+
+	List<previouslySoldDevicesResponse> getPreviouslySoldDevicesInStore(String dealerStoreId, LocalDate startDate, LocalDate endDate);
 
 }
