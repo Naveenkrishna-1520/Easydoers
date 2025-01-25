@@ -13,7 +13,7 @@ public class CookieSetupServiceImplementation implements CookieSetupService{
 		// Create an HttpOnly cookie
         ResponseCookie cookie = ResponseCookie.from("accessToken", jwtToken)
                 .httpOnly(true)
-                .secure(true) // Ensures the cookie is sent only over HTTPS
+                .secure(false) // Ensures the cookie is sent only over HTTPS
                 .path("/")
                 .maxAge(30 * 60) // 30 minutes
                 .sameSite("Strict") // Prevents CSRF attacks

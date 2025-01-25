@@ -23,75 +23,70 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-	
+
 	@Autowired
-	private UserDetailsService userDetailsService;	
+	private UserDetailsService userDetailsService;
 	@Autowired
 	private JwtFilter jwtFilter;
-	
+
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-		
-		return http
-			    .csrf(csrf -> csrf.disable())
-			    .authorizeHttpRequests(auth -> 
-			        auth.requestMatchers("/v1/auth/login", "/v1/auth/refreshToken").permitAll()
-			            .anyRequest().authenticated())
-			    .formLogin(form -> 
-			        form.loginPage("/login")
-			            .defaultSuccessUrl("/dashboard", true)
-			            .permitAll())
-			    .logout(logout -> 
-			        logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-			              .logoutSuccessUrl("/login")
-			              .permitAll())
-			    .httpBasic(Customizer.withDefaults())
-			    .sessionManagement(session -> 
-			        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			    .cors(cors -> 
-			        cors.configurationSource(corsConfigurationSource()))
-			    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-			    .build();
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+		return http.csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/v1/auth/login", "/v1/auth/refreshToken")
+						.permitAll().anyRequest().authenticated())
+				.logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+						.logoutSuccessUrl("/login").permitAll())
+				.httpBasic(Customizer.withDefaults())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.cors(cors -> cors.configurationSource(corsConfigurationSource())).exceptionHandling(
+						exception -> exception.authenticationEntryPoint((request, response, authException) -> {
+							response.setContentType("application/json");
+							response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+							response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Access denied\"}");
+						}))
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
 
-		
 	}
-	@Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow specific origins
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow HTTP methods
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allow specific headers
-        configuration.setAllowCredentials(true); // Allow cookies
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints
-        return source;
-	}
 	@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-	
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow specific origins
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow HTTP methods
+		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allow specific headers
+		configuration.setAllowCredentials(true); // Allow cookies
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints
+		return source;
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
-		
+
 		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 		daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(12));
 		daoAuthenticationProvider.setUserDetailsService(userDetailsService);
 		return daoAuthenticationProvider;
-		
+
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
-		
+
 	}
-	
-	
+
 }

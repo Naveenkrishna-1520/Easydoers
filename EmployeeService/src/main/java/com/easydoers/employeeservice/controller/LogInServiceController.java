@@ -40,14 +40,14 @@ public class LogInServiceController {
     public ResponseEntity<String> logout(){
     	ResponseCookie cookie = ResponseCookie.from("accessToken", null)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
                 .build();
         ResponseCookie clearCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
-                .secure(true) 
+                .secure(false) 
                 .path("/")
                 .maxAge(0) 
                 .sameSite("Strict")
@@ -60,8 +60,8 @@ public class LogInServiceController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<RefreshTokenResponse> refreshToken(@CookieValue("refreshToken") String refreshToken) {
-    	
+    public ResponseEntity<RefreshTokenResponse> refreshToken(@CookieValue(value="refreshToken", required=false) String refreshToken) {
+    	System.out.println("Received Refresh Token : "+refreshToken);
     	RefreshTokenResponse response = logInService.checkTokenRefresh(refreshToken);
     	return ResponseEntity.ok()
                 .header("Set-Cookie", response.getAccesstoken())
