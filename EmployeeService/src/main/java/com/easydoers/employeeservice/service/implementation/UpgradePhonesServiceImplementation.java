@@ -226,8 +226,8 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 					PendingReceivesResponse receive = new PendingReceivesResponse();
 					receive.setDeviceName(getReceives.getProduct().getProductName());
 					receive.setImei(getReceives.getImei());
-					receive.setTransferFrom(getReceives.getStore().getDealerStoreId());
-					receive.setTransferedBy(getReceives.getTransfer().getTransferredEmployee().getEmployeeNtid());
+					receive.setTransferredFrom(getReceives.getStore().getDealerStoreId());
+					receive.setTransferredBy(getReceives.getTransfer().getTransferredEmployee().getEmployeeNtid());
 					receive.setDate(getReceives.getTransfer().getTransferDate().toString());
 					pendingReceives.add(receive);
 				}

@@ -4,8 +4,8 @@ public class PendingReceivesResponse {
 	
 	private String deviceName;
 	private String imei;
-	private String transferedBy;
-	private String transferFrom;
+	private String transferredBy;
+	private String transferredFrom;
 	private String date;
 	/**
 	 * 
@@ -17,17 +17,17 @@ public class PendingReceivesResponse {
 	/**
 	 * @param deviceName
 	 * @param imei
-	 * @param transferedBy
-	 * @param transferFrom
+	 * @param transferredBy
+	 * @param transferredFrom
 	 * @param date
 	 */
-	public PendingReceivesResponse(String deviceName, String imei, String transferedBy, String transferFrom,
+	public PendingReceivesResponse(String deviceName, String imei, String transferredBy, String transferredFrom,
 			String date) {
 		super();
 		this.deviceName = deviceName;
 		this.imei = imei;
-		this.transferedBy = transferedBy;
-		this.transferFrom = transferFrom;
+		this.transferredBy = transferredBy;
+		this.transferredFrom = transferredFrom;
 		this.date = date;
 	}
 	/**
@@ -55,28 +55,28 @@ public class PendingReceivesResponse {
 		this.imei = imei;
 	}
 	/**
-	 * @return the transferedBy
+	 * @return the transferredBy
 	 */
-	public String getTransferedBy() {
-		return transferedBy;
+	public String getTransferredBy() {
+		return transferredBy;
 	}
 	/**
-	 * @param transferedBy the transferedBy to set
+	 * @param transferredBy the transferredBy to set
 	 */
-	public void setTransferedBy(String transferedBy) {
-		this.transferedBy = transferedBy;
+	public void setTransferredBy(String transferredBy) {
+		this.transferredBy = transferredBy;
 	}
 	/**
-	 * @return the transferFrom
+	 * @return the transferredFrom
 	 */
-	public String getTransferFrom() {
-		return transferFrom;
+	public String getTransferredFrom() {
+		return transferredFrom;
 	}
 	/**
-	 * @param transferFrom the transferFrom to set
+	 * @param transferredFrom the transferredFrom to set
 	 */
-	public void setTransferFrom(String transferFrom) {
-		this.transferFrom = transferFrom;
+	public void setTransferredFrom(String transferredFrom) {
+		this.transferredFrom = transferredFrom;
 	}
 	/**
 	 * @return the date
@@ -90,5 +90,4 @@ public class PendingReceivesResponse {
 	public void setDate(String date) {
 		this.date = date;
 	}
-
 }

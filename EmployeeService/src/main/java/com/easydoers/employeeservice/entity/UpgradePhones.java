@@ -1,4 +1,4 @@
-package com.easydoers.employeeservice.entity;
+ package com.easydoers.employeeservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
