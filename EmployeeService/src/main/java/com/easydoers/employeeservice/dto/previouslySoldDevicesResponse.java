@@ -2,9 +2,10 @@ package com.easydoers.employeeservice.dto;
 
 public class previouslySoldDevicesResponse {
 	
+	private String imei;
 	private String productName;
 	private String soldTo;
-	private String solddate;
+	private String soldDate;
 	private String soldBy;
 	private String soldAt;
 	private double soldPrice;
@@ -16,22 +17,36 @@ public class previouslySoldDevicesResponse {
 		// TODO Auto-generated constructor stub
 	}
 	/**
+	 * @param imei
 	 * @param productName
 	 * @param soldTo
-	 * @param solddate
+	 * @param soldDate
 	 * @param soldBy
 	 * @param soldAt
 	 * @param soldPrice
 	 */
-	public previouslySoldDevicesResponse(String productName, String soldTo, String solddate, String soldBy,
+	public previouslySoldDevicesResponse(String imei, String productName, String soldTo, String soldDate, String soldBy,
 			String soldAt, double soldPrice) {
 		super();
+		this.imei = imei;
 		this.productName = productName;
 		this.soldTo = soldTo;
-		this.solddate = solddate;
+		this.soldDate = soldDate;
 		this.soldBy = soldBy;
 		this.soldAt = soldAt;
 		this.soldPrice = soldPrice;
+	}
+	/**
+	 * @return the imei
+	 */
+	public String getImei() {
+		return imei;
+	}
+	/**
+	 * @param imei the imei to set
+	 */
+	public void setImei(String imei) {
+		this.imei = imei;
 	}
 	/**
 	 * @return the productName
@@ -58,16 +73,16 @@ public class previouslySoldDevicesResponse {
 		this.soldTo = soldTo;
 	}
 	/**
-	 * @return the solddate
+	 * @return the soldDate
 	 */
-	public String getSolddate() {
-		return solddate;
+	public String getSoldDate() {
+		return soldDate;
 	}
 	/**
-	 * @param solddate the solddate to set
+	 * @param soldDate the soldDate to set
 	 */
-	public void setSolddate(String solddate) {
-		this.solddate = solddate;
+	public void setSoldDate(String soldDate) {
+		this.soldDate = soldDate;
 	}
 	/**
 	 * @return the soldBy

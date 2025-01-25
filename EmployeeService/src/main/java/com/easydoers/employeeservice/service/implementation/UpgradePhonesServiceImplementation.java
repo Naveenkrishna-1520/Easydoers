@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.error.DefaultErrorViewResolver;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.UpgradePhoneTransfer;
 import com.easydoers.employeeservice.dto.PendingReceivesResponse;
@@ -258,12 +259,13 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		List<UpgradePhones> upgradePhones = upgradePhonesRepository.findBySoldInfo_SoldStoreAndSoldInfo_SoldDateBetween(store, startDate, endDate);
 		for (UpgradePhones upgradePhone : upgradePhones) {
 			previouslySoldDevicesResponse device = new previouslySoldDevicesResponse();
+			device.setImei(upgradePhone.getImei());
 			device.setProductName(upgradePhone.getProduct().getProductName());
 			device.setSoldTo(upgradePhone.getSoldInfo().getSoldTo());
 			device.setSoldPrice(upgradePhone.getSoldInfo().getSoldPrice());
 			device.setSoldBy(upgradePhone.getSoldInfo().getSoldEmployee().getEmployeeNtid());
 			device.setSoldAt(upgradePhone.getSoldInfo().getSoldStore().getDealerStoreId());
-			device.setSolddate(upgradePhone.getSoldInfo().getSoldDate().toString());
+			device.setSoldDate(upgradePhone.getSoldInfo().getSoldDate().toString());
 			getSoldDevices.add(device);
 
 		}
