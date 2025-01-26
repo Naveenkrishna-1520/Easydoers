@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.easydoers.employeeservice.dto.InvoiceDetailsResponse;
 import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
 import com.easydoers.employeeservice.dto.PreviouslySoldDevicesRequest;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
@@ -76,6 +78,13 @@ public class UpgradePhonesController {
         LocalDate endDate = LocalDate.parse(previouslySoldDevicesRequest.getEnd());
 		List<previouslySoldDevicesResponse> response = upgradePhonesService.getPreviouslySoldDevicesInStore(previouslySoldDevicesRequest.getDealerStoreId(), startDate, endDate);
 		return new ResponseEntity<List<previouslySoldDevicesResponse>>(response,HttpStatus.OK);
+	}
+	
+	@GetMapping("/fetchInvoice/{imei}")
+	public ResponseEntity<InvoiceDetailsResponse> getInvoiceByImei(@PathVariable String imei){
+		InvoiceDetailsResponse response = upgradePhonesService.getInvoiceDetailsByImei(imei);
+		return new ResponseEntity<InvoiceDetailsResponse>(response, HttpStatus.OK);
+		
 	}
 
 }

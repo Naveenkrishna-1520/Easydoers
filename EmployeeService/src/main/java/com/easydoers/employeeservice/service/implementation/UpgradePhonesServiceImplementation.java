@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.UpgradePhoneTransfer;
+import com.easydoers.employeeservice.dto.InvoiceDetailsResponse;
 import com.easydoers.employeeservice.dto.PendingReceivesResponse;
 import com.easydoers.employeeservice.dto.PendingTranfersResponse;
 import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
@@ -251,11 +252,13 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	}
 
 	@Override
-	public List<previouslySoldDevicesResponse> getPreviouslySoldDevicesInStore(String dealerStoreId,LocalDate startDate, LocalDate endDate) {
+	public List<previouslySoldDevicesResponse> getPreviouslySoldDevicesInStore(String dealerStoreId,
+			LocalDate startDate, LocalDate endDate) {
 
 		List<previouslySoldDevicesResponse> getSoldDevices = new ArrayList<>();
 		Store store = storeService.checkStore(dealerStoreId);
-		List<UpgradePhones> upgradePhones = upgradePhonesRepository.findBySoldInfo_SoldStoreAndSoldInfo_SoldDateBetween(store, startDate, endDate);
+		List<UpgradePhones> upgradePhones = upgradePhonesRepository
+				.findBySoldInfo_SoldStoreAndSoldInfo_SoldDateBetween(store, startDate, endDate);
 		for (UpgradePhones upgradePhone : upgradePhones) {
 			previouslySoldDevicesResponse device = new previouslySoldDevicesResponse();
 			device.setImei(upgradePhone.getImei());
@@ -270,6 +273,19 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 		}
 
 		return getSoldDevices;
+	}
+
+	@Override
+	public InvoiceDetailsResponse getInvoiceDetailsByImei(String imei) {
+		InvoiceDetailsResponse response = new InvoiceDetailsResponse();
+		UpgradePhones invoiceDetails = upgradePhonesRepository.findByImei(imei);
+		response.setCustomerAccountNumber(invoiceDetails.getInvoice().getAccountNumber().toString());
+		response.setInvoicedStore(invoiceDetails.getInvoice().getStore().getDealerStoreId());
+		response.setInvoicedEmployee(invoiceDetails.getInvoice().getEmployee().getEmployeeNtid());
+		response.setInvoicedDate(invoiceDetails.getInvoice().getActivatedDate().toString());
+		response.setInvoicedAmount(invoiceDetails.getInvoice().getAmount());
+
+		return response;
 	}
 
 }

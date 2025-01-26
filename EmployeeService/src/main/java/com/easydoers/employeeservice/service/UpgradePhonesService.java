@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import com.easydoers.employeeservice.dto.InvoiceDetailsResponse;
 import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
@@ -27,5 +28,7 @@ public interface UpgradePhonesService {
 	PendingTransfersAndReceivesResponse getPendingTransfersAndReceivesInStore(String dealerStoreId);
 
 	List<previouslySoldDevicesResponse> getPreviouslySoldDevicesInStore(String dealerStoreId, LocalDate startDate, LocalDate endDate);
+
+	InvoiceDetailsResponse getInvoiceDetailsByImei(String imei);
 
 }
