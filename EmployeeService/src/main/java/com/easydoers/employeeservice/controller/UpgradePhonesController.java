@@ -70,7 +70,7 @@ public class UpgradePhonesController {
 		return new ResponseEntity<PendingTransfersAndReceivesResponse>(response,HttpStatus.OK);
 	}
 	
-	@GetMapping("/previouslySold/{dealerStoreId}")
+	@GetMapping("/previouslySold")
 	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(PreviouslySoldDevicesRequest previouslySoldDevicesRequest){
 		LocalDate startDate = LocalDate.parse(previouslySoldDevicesRequest.getStart());
         LocalDate endDate = LocalDate.parse(previouslySoldDevicesRequest.getEnd());
