@@ -72,7 +72,7 @@ public class UpgradePhonesController {
 		return new ResponseEntity<PendingTransfersAndReceivesResponse>(response,HttpStatus.OK);
 	}
 	
-	@GetMapping("/previouslySold")
+	@PostMapping("/previouslySold")
 	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(@RequestBody PreviouslySoldDevicesRequest previouslySoldDevicesRequest){
 		LocalDate startDate = LocalDate.parse(previouslySoldDevicesRequest.getStart());
         LocalDate endDate = LocalDate.parse(previouslySoldDevicesRequest.getEnd());
