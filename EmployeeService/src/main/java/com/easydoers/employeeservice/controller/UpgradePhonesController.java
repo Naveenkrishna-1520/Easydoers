@@ -71,7 +71,7 @@ public class UpgradePhonesController {
 	}
 	
 	@GetMapping("/previouslySold")
-	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(PreviouslySoldDevicesRequest previouslySoldDevicesRequest){
+	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(@RequestBody PreviouslySoldDevicesRequest previouslySoldDevicesRequest){
 		LocalDate startDate = LocalDate.parse(previouslySoldDevicesRequest.getStart());
         LocalDate endDate = LocalDate.parse(previouslySoldDevicesRequest.getEnd());
 		List<previouslySoldDevicesResponse> response = upgradePhonesService.getPreviouslySoldDevicesInStore(previouslySoldDevicesRequest.getDealerStoreId(), startDate, endDate);
