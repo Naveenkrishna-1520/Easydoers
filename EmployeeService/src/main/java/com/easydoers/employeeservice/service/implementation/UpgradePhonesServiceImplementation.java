@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.error.DefaultErrorViewResolver;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.UpgradePhoneTransfer;
 import com.easydoers.employeeservice.dto.PendingReceivesResponse;

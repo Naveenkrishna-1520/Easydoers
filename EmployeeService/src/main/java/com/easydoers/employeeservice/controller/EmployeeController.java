@@ -1,11 +1,17 @@
 package com.easydoers.employeeservice.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.easydoers.employeeservice.dto.AuthorizedStoreAccessResponse;
 import com.easydoers.employeeservice.dto.ClockinRequest;
 import com.easydoers.employeeservice.dto.ClockinResponse;
 import com.easydoers.employeeservice.entity.Employee;
@@ -30,6 +36,12 @@ public class EmployeeController {
 				.saveClockInTimeForEmployee(clockinRequest.getEmployeeNtid(), clockinRequest.getDealerStoreId());
 		return ResponseEntity.ok(saveClockInTimeForEmployee);
 
+	}
+	
+	@GetMapping("/authorizedStores/{employeeNtid}")
+	public ResponseEntity<AuthorizedStoreAccessResponse> getAuthorizedStores(@PathVariable String employeeNtid){
+		AuthorizedStoreAccessResponse response = employeeService.getAuthorizedStores(employeeNtid);
+		return new ResponseEntity<AuthorizedStoreAccessResponse>(response, HttpStatus.OK);
 	}
 
 }

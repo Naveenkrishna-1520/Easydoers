@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
+import com.easydoers.employeeservice.dto.PreviouslySoldDevicesRequest;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
@@ -72,10 +71,10 @@ public class UpgradePhonesController {
 	}
 	
 	@GetMapping("/previouslySold/{dealerStoreId}")
-	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(@PathVariable String dealerStoreId,@RequestParam("start") String start, @RequestParam("end") String end){
-		LocalDate startDate = LocalDate.parse(start);
-        LocalDate endDate = LocalDate.parse(end);
-		List<previouslySoldDevicesResponse> response = upgradePhonesService.getPreviouslySoldDevicesInStore(dealerStoreId, startDate, endDate);
+	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(PreviouslySoldDevicesRequest previouslySoldDevicesRequest){
+		LocalDate startDate = LocalDate.parse(previouslySoldDevicesRequest.getStart());
+        LocalDate endDate = LocalDate.parse(previouslySoldDevicesRequest.getEnd());
+		List<previouslySoldDevicesResponse> response = upgradePhonesService.getPreviouslySoldDevicesInStore(previouslySoldDevicesRequest.getDealerStoreId(), startDate, endDate);
 		return new ResponseEntity<List<previouslySoldDevicesResponse>>(response,HttpStatus.OK);
 	}
 

@@ -2,6 +2,9 @@ package com.easydoers.employeeservice.service.implementation;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,8 +12,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.easydoers.employeeservice.dto.AuthorizedStoreAccessResponse;
 import com.easydoers.employeeservice.dto.ClockinResponse;
 import com.easydoers.employeeservice.dto.LogInRequest;
+import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
@@ -22,6 +28,7 @@ import com.easydoers.employeeservice.repository.AddressRepository;
 import com.easydoers.employeeservice.repository.CompanyRepository;
 import com.easydoers.employeeservice.repository.EmployeeRepository;
 import com.easydoers.employeeservice.repository.UserRepository;
+import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.service.WorkService;
@@ -47,7 +54,8 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private JWTTokenService tokenService;
-
+@Autowired
+private CompanyService companyService;
 	@Override
 	public Employee saveEmployee(Employee employee) {
 		if (checkEmployee(employee.getEmployeeNtid()) != null) {
@@ -124,5 +132,21 @@ public class EmployeeServiceImplementation implements EmployeeService {
 			throw new EmployeeNotFoundException("employee with " + employeeNtid + " not found");
 		}
 		return employee;
+	}
+
+	@Override
+	public AuthorizedStoreAccessResponse getAuthorizedStores(String employeeNtid) {
+		List<StoreDTO> storeList = new ArrayList<>();
+		Employee employee = checkEmployee(employeeNtid);
+		Company company = companyService.getCompany(employee.getCompany().getCompanyId());
+		List<Store> stores = storeService.getStoresUnderCompany(company);
+		for (Store store : stores) {
+			StoreDTO storeDTO = new StoreDTO();
+			storeDTO.setDealerStoreId(store.getDealerStoreId());
+			storeDTO.setStoreName(store.getStoreName());
+			storeList.add(storeDTO);
+			
+		}
+		return new AuthorizedStoreAccessResponse(storeList);
 	}
 }
