@@ -37,12 +37,14 @@ public class SecurityConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		return http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/v1/auth/login", "/v1/auth/refreshToken")
-						.permitAll().anyRequest().authenticated())
+		return http
+				.csrf(csrf -> csrf
+						.disable())
+				.authorizeHttpRequests(
+						auth -> auth.requestMatchers("/v1/auth/login", "/v1/auth/refreshToken", "/logout", "/static/**",
+								"/index.html", "/dashboard/**").permitAll().anyRequest().authenticated())
 				.logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 						.logoutSuccessUrl("/login").permitAll())
-				.httpBasic(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.cors(cors -> cors.configurationSource(corsConfigurationSource())).exceptionHandling(
 						exception -> exception.authenticationEntryPoint((request, response, authException) -> {
@@ -72,15 +74,17 @@ public class SecurityConfiguration {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	public AuthenticationProvider authenticationProvider() {
-
-		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-		daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(12));
-		daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-		return daoAuthenticationProvider;
-
-	}
+	/*
+	 * @Bean public AuthenticationProvider authenticationProvider() {
+	 * 
+	 * DaoAuthenticationProvider daoAuthenticationProvider = new
+	 * DaoAuthenticationProvider(); daoAuthenticationProvider.setPasswordEncoder(new
+	 * BCryptPasswordEncoder(12));
+	 * daoAuthenticationProvider.setUserDetailsService(userDetailsService); return
+	 * daoAuthenticationProvider;
+	 * 
+	 * }
+	 */
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)

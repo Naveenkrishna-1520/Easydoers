@@ -24,7 +24,6 @@ public class Sale {
 	private int boxesSold;
 	private double systemAccessories;
 	private double accessories;
-	private int upgradePhonesSold;
 	private int tabletsSold;
 	private int hsiSold;
 	private int watchesSold;
@@ -51,7 +50,6 @@ public class Sale {
 	 * @param boxesSold
 	 * @param systemAccessories
 	 * @param accessories
-	 * @param upgradePhonesSold
 	 * @param tabletsSold
 	 * @param hsiSold
 	 * @param watchesSold
@@ -64,9 +62,8 @@ public class Sale {
 	 * @param saleDate
 	 */
 	public Sale(Long saleId, Employee employee, Store store, int boxesSold, double systemAccessories,
-			double accessories, int upgradePhonesSold, int tabletsSold, int hsiSold, int watchesSold, double systemCash,
-			double systemCard, double actualCash, double actualCard, double cashExpense, String expenseReason,
-			LocalDate saleDate) {
+			double accessories, int tabletsSold, int hsiSold, int watchesSold, double systemCash, double systemCard,
+			double actualCash, double actualCard, double cashExpense, String expenseReason, LocalDate saleDate) {
 		super();
 		this.saleId = saleId;
 		this.employee = employee;
@@ -74,7 +71,6 @@ public class Sale {
 		this.boxesSold = boxesSold;
 		this.systemAccessories = systemAccessories;
 		this.accessories = accessories;
-		this.upgradePhonesSold = upgradePhonesSold;
 		this.tabletsSold = tabletsSold;
 		this.hsiSold = hsiSold;
 		this.watchesSold = watchesSold;
@@ -169,20 +165,6 @@ public class Sale {
 	 */
 	public void setAccessories(double accessories) {
 		this.accessories = accessories;
-	}
-
-	/**
-	 * @return the upgradePhonesSold
-	 */
-	public int getUpgradePhonesSold() {
-		return upgradePhonesSold;
-	}
-
-	/**
-	 * @param upgradePhonesSold the upgradePhonesSold to set
-	 */
-	public void setUpgradePhonesSold(int upgradePhonesSold) {
-		this.upgradePhonesSold = upgradePhonesSold;
 	}
 
 	/**
@@ -324,6 +306,4 @@ public class Sale {
 	public void setSaleDate(LocalDate saleDate) {
 		this.saleDate = saleDate;
 	}
-
-	
 }

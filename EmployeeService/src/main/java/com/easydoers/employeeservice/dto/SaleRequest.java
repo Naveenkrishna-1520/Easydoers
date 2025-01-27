@@ -7,7 +7,6 @@ public class SaleRequest {
     private int boxesSold;
     private double systemAccessories;
     private double accessories;
-    private int upgradePhonesSold;
     private int tabletsSold;
     private int hsiSold;
     private int watchesSold;
@@ -67,18 +66,6 @@ public class SaleRequest {
 	 */
 	public void setAccessories(double accessories) {
 		this.accessories = accessories;
-	}
-	/**
-	 * @return the upgradePhonesSold
-	 */
-	public int getUpgradePhonesSold() {
-		return upgradePhonesSold;
-	}
-	/**
-	 * @param upgradePhonesSold the upgradePhonesSold to set
-	 */
-	public void setUpgradePhonesSold(int upgradePhonesSold) {
-		this.upgradePhonesSold = upgradePhonesSold;
 	}
 	/**
 	 * @return the tabletsSold

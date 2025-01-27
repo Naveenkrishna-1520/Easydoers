@@ -12,6 +12,7 @@ public class LogInResponse {
 	@JsonIgnore
 	private String refreshToken;
 	private boolean isClockin;
+	private String clockinLocation;
 	private boolean isSaleSubmit;
 	private LocalTime clockinTime;
 
@@ -29,17 +30,19 @@ public class LogInResponse {
 	 * @param token
 	 * @param refreshToken
 	 * @param isClockin
+	 * @param clockinLocation
 	 * @param isSaleSubmit
 	 * @param clockinTime
 	 */
 	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, String refreshToken, boolean isClockin,
-			boolean isSaleSubmit, LocalTime clockinTime) {
+			String clockinLocation, boolean isSaleSubmit, LocalTime clockinTime) {
 		super();
 		this.employee = employee;
 		this.store = store;
 		this.token = token;
 		this.refreshToken = refreshToken;
 		this.isClockin = isClockin;
+		this.clockinLocation = clockinLocation;
 		this.isSaleSubmit = isSaleSubmit;
 		this.clockinTime = clockinTime;
 	}
@@ -115,6 +118,20 @@ public class LogInResponse {
 	}
 
 	/**
+	 * @return the clockinLocation
+	 */
+	public String getClockinLocation() {
+		return clockinLocation;
+	}
+
+	/**
+	 * @param clockinLocation the clockinLocation to set
+	 */
+	public void setClockinLocation(String clockinLocation) {
+		this.clockinLocation = clockinLocation;
+	}
+
+	/**
 	 * @return the isSaleSubmit
 	 */
 	public boolean isSaleSubmit() {
@@ -142,4 +159,5 @@ public class LogInResponse {
 		this.clockinTime = clockinTime;
 	}
 
+	
 }
