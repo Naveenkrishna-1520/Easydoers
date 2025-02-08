@@ -2,7 +2,9 @@ package com.easydoers.employeeservice.dto;
 
 import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LogInResponse {
 
 	private EmployeeDTO employee;
@@ -11,10 +13,12 @@ public class LogInResponse {
 	private String token;
 	@JsonIgnore
 	private String refreshToken;
-	private boolean isClockin;
+	private String isClockin;
 	private String clockinLocation;
-	private boolean isSaleSubmit;
+	private String isSaleSubmit;
 	private LocalTime clockinTime;
+	private String loginEmail;
+	private String loginPerson;
 
 	/**
 	 * 
@@ -33,9 +37,11 @@ public class LogInResponse {
 	 * @param clockinLocation
 	 * @param isSaleSubmit
 	 * @param clockinTime
+	 * @param loginEmail
+	 * @param loginPerson
 	 */
-	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, String refreshToken, boolean isClockin,
-			String clockinLocation, boolean isSaleSubmit, LocalTime clockinTime) {
+	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, String refreshToken, String isClockin,
+			String clockinLocation, String isSaleSubmit, LocalTime clockinTime, String loginEmail, String loginPerson) {
 		super();
 		this.employee = employee;
 		this.store = store;
@@ -45,6 +51,8 @@ public class LogInResponse {
 		this.clockinLocation = clockinLocation;
 		this.isSaleSubmit = isSaleSubmit;
 		this.clockinTime = clockinTime;
+		this.loginEmail = loginEmail;
+		this.loginPerson = loginPerson;
 	}
 
 	/**
@@ -106,14 +114,14 @@ public class LogInResponse {
 	/**
 	 * @return the isClockin
 	 */
-	public boolean isClockin() {
+	public String getIsClockin() {
 		return isClockin;
 	}
 
 	/**
 	 * @param isClockin the isClockin to set
 	 */
-	public void setClockin(boolean isClockin) {
+	public void setIsClockin(String isClockin) {
 		this.isClockin = isClockin;
 	}
 
@@ -134,14 +142,14 @@ public class LogInResponse {
 	/**
 	 * @return the isSaleSubmit
 	 */
-	public boolean isSaleSubmit() {
+	public String getIsSaleSubmit() {
 		return isSaleSubmit;
 	}
 
 	/**
 	 * @param isSaleSubmit the isSaleSubmit to set
 	 */
-	public void setSaleSubmit(boolean isSaleSubmit) {
+	public void setIsSaleSubmit(String isSaleSubmit) {
 		this.isSaleSubmit = isSaleSubmit;
 	}
 
@@ -159,5 +167,31 @@ public class LogInResponse {
 		this.clockinTime = clockinTime;
 	}
 
-	
+	/**
+	 * @return the loginEmail
+	 */
+	public String getLoginEmail() {
+		return loginEmail;
+	}
+
+	/**
+	 * @param loginEmail the loginEmail to set
+	 */
+	public void setLoginEmail(String loginEmail) {
+		this.loginEmail = loginEmail;
+	}
+
+	/**
+	 * @return the loginPerson
+	 */
+	public String getLoginPerson() {
+		return loginPerson;
+	}
+
+	/**
+	 * @param loginPerson the loginPerson to set
+	 */
+	public void setLoginPerson(String loginPerson) {
+		this.loginPerson = loginPerson;
+	}
 }

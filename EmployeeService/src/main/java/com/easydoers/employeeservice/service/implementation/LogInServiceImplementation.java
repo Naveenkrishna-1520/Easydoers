@@ -50,32 +50,34 @@ public class LogInServiceImplementation implements LogInService {
 
 		LogInResponse response = new LogInResponse();
 		String role = null;
-		Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
-		Store store = storeService.checkStore(logInRequest.getUserName());
-		if (store != null && employee != null) {
-			role = "EMPLOYEE";
-			EmployeeDTO employeeDTO = new EmployeeDTO();
-			StoreDTO storeDTO = new StoreDTO();
-			employeeDTO.setEmployeeNtid(employee.getEmployeeNtid());
-			employeeDTO.setEmployeeName(employee.getEmployeeName());
-			storeDTO.setDealerStoreId(store.getDealerStoreId());
-			storeDTO.setStoreName(store.getStoreName());
-			response.setEmployee(employeeDTO);
-			response.setStore(storeDTO);
-			Work checkClockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
-			if (checkClockinStatus != null) {
-				response.setClockin(true);
-				response.setClockinTime(checkClockinStatus.getClockInTime());
-			}
-			Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
-			if (sale != null) {
-				response.setSaleSubmit(true);
-
-			}
-		} else {
+		if (logInRequest.getUserName().contains("@")) {
 			Users user = userService.findByUserName(logInRequest.getUserName());
 			if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
 				role = user.getRole();
+				response.setLoginEmail(user.getUserName());
+			}
+		} else {
+			Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
+			Store store = storeService.checkStore(logInRequest.getUserName());
+			if (store != null && employee != null) {
+				role = "EMPLOYEE";
+				EmployeeDTO employeeDTO = new EmployeeDTO();
+				StoreDTO storeDTO = new StoreDTO();
+				employeeDTO.setEmployeeNtid(employee.getEmployeeNtid());
+				employeeDTO.setEmployeeName(employee.getEmployeeName());
+				storeDTO.setDealerStoreId(store.getDealerStoreId());
+				storeDTO.setStoreName(store.getStoreName());
+				response.setEmployee(employeeDTO);
+				response.setStore(storeDTO);
+				Work checkClockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
+				if (checkClockinStatus != null) {
+					response.setIsClockin("true");
+					response.setClockinTime(checkClockinStatus.getClockInTime());
+				}
+				Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
+				if (sale != null) {
+					response.setIsSaleSubmit("true");
+				}
 			}
 		}
 
@@ -85,7 +87,6 @@ public class LogInServiceImplementation implements LogInService {
 		ResponseCookie refreshCookie = cookieSetupService.setupRefreshJwtCookie(refreshJwtToken);
 		response.setToken(cookie.toString());
 		response.setRefreshToken(refreshCookie.toString());
-
 		return response;
 
 	}
