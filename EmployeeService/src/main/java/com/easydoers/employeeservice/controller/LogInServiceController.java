@@ -61,7 +61,6 @@ public class LogInServiceController {
 
     @PostMapping("/refreshToken")
     public ResponseEntity<RefreshTokenResponse> refreshToken(@CookieValue("refreshToken") String refreshToken) {
-    	System.out.println("Received Refresh Token : "+refreshToken);
     	RefreshTokenResponse response = logInService.checkTokenRefresh(refreshToken);
     	return ResponseEntity.ok()
                 .header("Set-Cookie", response.getAccesstoken())

@@ -10,6 +10,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.Store;
+import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.exception.NoSuchAlgorithmFoundException;
 import com.easydoers.employeeservice.exception.SignatureExceptionFound;
 import com.easydoers.employeeservice.exception.TokenInvalidException;
@@ -42,16 +43,17 @@ public class JWTTokenService {
         }
     }
 
-	public String generateToken(String userName) {
+	public String generateToken(String userName, String role) {
 		Map<String, Object> claims = new HashMap<>();
+		claims.put("ROLE",role);
 
 		return Jwts.builder().claims().add(claims).subject(userName).issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)).and().signWith(getKey()).compact();
 	}
 	
-	public String generateRefreshToken(String userName) {
+	public String generateRefreshToken(String userName, String role) {
 		Map<String, Object> claims = new HashMap<>();
-
+		claims.put("ROLE",role);
 		return Jwts.builder().claims().add(claims).subject(userName).issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)).and().signWith(getRefreshKey()).compact();
 	}
@@ -137,5 +139,32 @@ public class JWTTokenService {
                 .parseSignedClaims(refreshToken)
                 .getPayload().getSubject();	
 	}
+	
+	public String getRoleFromToken(String token) {
+		   
+        return (String) Jwts.parser()
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("ROLE");
+    
+}
+	
+	public String getRoleFromRefershToken(String refreshToken) {
+	   
+	        return (String) Jwts.parser()
+	                .verifyWith(getRefreshKey())
+	                .build()
+	                .parseSignedClaims(refreshToken)
+	                .getPayload()
+	                .get("ROLE");
+	    
+	}
+
+	public boolean validateToken(String token, Users user) {
+		String username = extractUserName(token);
+        return (username != null && !isTokenExpired(token));
+    }
 
 }

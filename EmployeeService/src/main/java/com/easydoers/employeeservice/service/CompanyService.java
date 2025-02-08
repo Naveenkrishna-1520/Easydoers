@@ -8,5 +8,7 @@ public interface CompanyService {
 
 	Company getCompany(int companyId);
 
+	String createCompany(Company company);
+
 
 }

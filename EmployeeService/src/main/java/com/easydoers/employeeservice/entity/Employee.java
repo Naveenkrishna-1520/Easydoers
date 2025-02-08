@@ -1,7 +1,5 @@
 package com.easydoers.employeeservice.entity;
 
-
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +22,9 @@ public class Employee {
 	@ManyToOne
 	@JoinColumn(name = "company_id")
 	private Company company;
+	@ManyToOne
+	@JoinColumn(name = "manager_id")
+	private Manager manager;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id")
 	private Address address;
@@ -46,13 +47,14 @@ public class Employee {
 	 * @param phoneNumber
 	 * @param email
 	 * @param company
+	 * @param manager
 	 * @param address
 	 * @param employeePayRatePerHour
 	 * @param commissionPercentage
 	 * @param perBoxCommission
 	 */
 	public Employee(Long employeeId, String employeeNtid, String employeeName, Long phoneNumber, String email,
-			Company company, Address address, int employeePayRatePerHour, int commissionPercentage,
+			Company company, Manager manager, Address address, int employeePayRatePerHour, int commissionPercentage,
 			int perBoxCommission) {
 		super();
 		this.employeeId = employeeId;
@@ -61,6 +63,7 @@ public class Employee {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.company = company;
+		this.manager = manager;
 		this.address = address;
 		this.employeePayRatePerHour = employeePayRatePerHour;
 		this.commissionPercentage = commissionPercentage;
@@ -149,6 +152,20 @@ public class Employee {
 	 */
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	/**
+	 * @return the manager
+	 */
+	public Manager getManager() {
+		return manager;
+	}
+
+	/**
+	 * @param manager the manager to set
+	 */
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 
 	/**

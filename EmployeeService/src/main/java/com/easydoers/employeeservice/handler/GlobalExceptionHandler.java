@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.easydoers.employeeservice.dto.ErrorResponse;
+import com.easydoers.employeeservice.exception.DuplicateCompanyFoundException;
 import com.easydoers.employeeservice.exception.DuplicateUserFoundException;
 import com.easydoers.employeeservice.exception.EmployeeNotFoundException;
 import com.easydoers.employeeservice.exception.NoSalesFound;
@@ -42,6 +43,12 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(DuplicateUserFoundException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateUserFoundException(DuplicateUserFoundException ex) {
+        ErrorResponse response = new ErrorResponse(false, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+	
+	@ExceptionHandler(DuplicateCompanyFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateCompanyFoundException(DuplicateCompanyFoundException ex) {
         ErrorResponse response = new ErrorResponse(false, ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }

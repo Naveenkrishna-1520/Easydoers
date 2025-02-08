@@ -8,4 +8,6 @@ import com.easydoers.employeeservice.entity.Manager;
 @Repository
 public interface ManagerRepository extends JpaRepository<Manager, Long>{
 
+	Manager findByManagerNtid(String managerNtid);
+
 }

@@ -117,16 +117,28 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	public Map<String, Object> transferUpgradePhone(TransferUpgradePhoneRequest transferUpgradePhoneRequest) {
 		Map<String, Object> response = new HashMap<>();
 		UpgradePhones upgradePhones = new UpgradePhones();
+		UpgradePhoneTransfer phoneTransfer = new UpgradePhoneTransfer();
 		upgradePhones = upgradePhonesRepository.findByImei(transferUpgradePhoneRequest.getImei());
 		Employee employee = employeeService.checkEmployee(transferUpgradePhoneRequest.getEmployeeNtid());
 		Store store = storeService.checkStore(transferUpgradePhoneRequest.getTargetDealerStoreId());
-		UpgradePhoneTransfer phoneTransfer = new UpgradePhoneTransfer();
-		phoneTransfer.setTransferDate(LocalDate.now());
-		phoneTransfer.setTransferredEmployee(employee);
-		phoneTransfer.setTransferedStore(store);
-		phoneTransfer = upgradePhonesTranferRepostiory.save(phoneTransfer);
-		upgradePhones.setTransfer(phoneTransfer);
-		upgradePhonesRepository.save(upgradePhones);
+		if (upgradePhones.getTransfer() != null) {
+			phoneTransfer.setTransferDate(LocalDate.now());
+			phoneTransfer.setTransferredEmployee(employee);
+			phoneTransfer.setTransferedStore(store);
+			phoneTransfer = upgradePhonesTranferRepostiory.save(phoneTransfer);
+			upgradePhones.setTransfer(phoneTransfer);
+			upgradePhones.setReceive(null);
+			upgradePhonesRepository.save(upgradePhones);
+			
+		} else {
+			phoneTransfer.setTransferDate(LocalDate.now());
+			phoneTransfer.setTransferredEmployee(employee);
+			phoneTransfer.setTransferedStore(store);
+			phoneTransfer = upgradePhonesTranferRepostiory.save(phoneTransfer);
+			upgradePhones.setTransfer(phoneTransfer);
+			upgradePhonesRepository.save(upgradePhones);
+		}
+
 		response.put("message :", "transfered successfully");
 		return response;
 	}
@@ -144,8 +156,8 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 			receiveDevice.setReceiveDate(LocalDate.now());
 			receiveDevice.setTransferedEmployee(employee);
 			receiveDevice.setTransferedStore(store);
+			receiveDevice = upgradePhonesReceiveRepository.save(receiveDevice);
 			upgradePhones.setReceive(receiveDevice);
-			upgradePhonesReceiveRepository.save(receiveDevice);
 			upgradePhonesRepository.save(upgradePhones);
 
 		}

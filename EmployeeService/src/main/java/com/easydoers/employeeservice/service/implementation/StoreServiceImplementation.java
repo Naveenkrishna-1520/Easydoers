@@ -12,8 +12,8 @@ import com.easydoers.employeeservice.repository.StoreRepository;
 import com.easydoers.employeeservice.service.StoreService;
 
 @Service
-public class StoreServiceImplementation implements StoreService{
-	
+public class StoreServiceImplementation implements StoreService {
+
 	@Autowired
 	private StoreRepository storeRepository;
 
@@ -21,9 +21,12 @@ public class StoreServiceImplementation implements StoreService{
 	public Store checkStore(String dealerStoreId) {
 
 		Store store = storeRepository.findByDealerStoreId(dealerStoreId);
-		if (store == null) {
-			throw new StoreNotFoundException("store with " + dealerStoreId + " not found");
-		}
+
+		/*
+		 * if (store == null) { throw new StoreNotFoundException("store with " +
+		 * dealerStoreId + " not found"); }
+		 */
+
 		return store;
 
 	}

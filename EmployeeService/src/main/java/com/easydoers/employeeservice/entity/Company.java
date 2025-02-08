@@ -1,6 +1,7 @@
 package com.easydoers.employeeservice.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,11 +18,12 @@ public class Company {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int companyId;
 	private String companyName;
+	private String email;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address CompanyAddress;
     private String updatedPersonName;
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 	/**
 	 * 
 	 */
@@ -32,15 +34,17 @@ public class Company {
 	/**
 	 * @param companyId
 	 * @param companyName
+	 * @param email
 	 * @param companyAddress
 	 * @param updatedPersonName
 	 * @param updateTime
 	 */
-	public Company(int companyId, String companyName, Address companyAddress, String updatedPersonName,
-			LocalDate updateTime) {
+	public Company(int companyId, String companyName, String email, Address companyAddress, String updatedPersonName,
+			LocalDateTime updateTime) {
 		super();
 		this.companyId = companyId;
 		this.companyName = companyName;
+		this.email = email;
 		CompanyAddress = companyAddress;
 		this.updatedPersonName = updatedPersonName;
 		this.updateTime = updateTime;
@@ -70,6 +74,18 @@ public class Company {
 		this.companyName = companyName;
 	}
 	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	/**
 	 * @return the companyAddress
 	 */
 	public Address getCompanyAddress() {
@@ -96,21 +112,14 @@ public class Company {
 	/**
 	 * @return the updateTime
 	 */
-	public LocalDate getUpdateTime() {
+	public LocalDateTime getUpdateTime() {
 		return updateTime;
 	}
 	/**
 	 * @param updateTime the updateTime to set
 	 */
-	public void setUpdateTime(LocalDate updateTime) {
+	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
-	@Override
-	public String toString() {
-		return "Company [companyId=" + companyId + ", companyName=" + companyName + ", CompanyAddress=" + CompanyAddress
-				+ ", updatedPersonName=" + updatedPersonName + ", updateTime=" + updateTime + "]";
-	}
-	
-	
 	
 }

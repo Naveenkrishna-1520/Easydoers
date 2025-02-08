@@ -1,8 +1,5 @@
 package com.easydoers.employeeservice.entity;
 
-
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +20,11 @@ public class Store {
 	private Address address;;
 	private Long storeContactNumber;
 	@ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
-
+	@JoinColumn(name = "company_id")
+	private Company company;
+	@ManyToOne
+	@JoinColumn(name = "manager_id")
+	private Manager manager;
 
 	/**
 	 * 
@@ -35,7 +34,6 @@ public class Store {
 		// TODO Auto-generated constructor stub
 	}
 
-
 	/**
 	 * @param storeId
 	 * @param dealerStoreId
@@ -43,9 +41,10 @@ public class Store {
 	 * @param address
 	 * @param storeContactNumber
 	 * @param company
+	 * @param manager
 	 */
 	public Store(Long storeId, String dealerStoreId, String storeName, Address address, Long storeContactNumber,
-			Company company) {
+			Company company, Manager manager) {
 		super();
 		this.storeId = storeId;
 		this.dealerStoreId = dealerStoreId;
@@ -53,8 +52,8 @@ public class Store {
 		this.address = address;
 		this.storeContactNumber = storeContactNumber;
 		this.company = company;
+		this.manager = manager;
 	}
-
 
 	/**
 	 * @return the storeId
@@ -63,14 +62,12 @@ public class Store {
 		return storeId;
 	}
 
-
 	/**
 	 * @param storeId the storeId to set
 	 */
 	public void setStoreId(Long storeId) {
 		this.storeId = storeId;
 	}
-
 
 	/**
 	 * @return the dealerStoreId
@@ -79,14 +76,12 @@ public class Store {
 		return dealerStoreId;
 	}
 
-
 	/**
 	 * @param dealerStoreId the dealerStoreId to set
 	 */
 	public void setDealerStoreId(String dealerStoreId) {
 		this.dealerStoreId = dealerStoreId;
 	}
-
 
 	/**
 	 * @return the storeName
@@ -95,14 +90,12 @@ public class Store {
 		return storeName;
 	}
 
-
 	/**
 	 * @param storeName the storeName to set
 	 */
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
 	}
-
 
 	/**
 	 * @return the address
@@ -111,14 +104,12 @@ public class Store {
 		return address;
 	}
 
-
 	/**
 	 * @param address the address to set
 	 */
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-
 
 	/**
 	 * @return the storeContactNumber
@@ -127,14 +118,12 @@ public class Store {
 		return storeContactNumber;
 	}
 
-
 	/**
 	 * @param storeContactNumber the storeContactNumber to set
 	 */
 	public void setStoreContactNumber(Long storeContactNumber) {
 		this.storeContactNumber = storeContactNumber;
 	}
-
 
 	/**
 	 * @return the company
@@ -143,7 +132,6 @@ public class Store {
 		return company;
 	}
 
-
 	/**
 	 * @param company the company to set
 	 */
@@ -151,12 +139,18 @@ public class Store {
 		this.company = company;
 	}
 
-
-	@Override
-	public String toString() {
-		return "Store [storeId=" + storeId + ", dealerStoreId=" + dealerStoreId + ", storeName=" + storeName
-				+ ", address=" + address + ", storeContactNumber=" + storeContactNumber + ", company=" + company + "]";
+	/**
+	 * @return the manager
+	 */
+	public Manager getManager() {
+		return manager;
 	}
 
-	
+	/**
+	 * @param manager the manager to set
+	 */
+	public void setManager(Manager manager) {
+		this.manager = manager;
+	}
+
 }

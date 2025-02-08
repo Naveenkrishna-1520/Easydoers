@@ -1,21 +1,14 @@
 package com.easydoers.employeeservice.service.implementation;
 
-import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.easydoers.employeeservice.dto.AuthorizedStoreAccessResponse;
 import com.easydoers.employeeservice.dto.ClockinResponse;
-import com.easydoers.employeeservice.dto.LogInRequest;
 import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
@@ -32,6 +25,7 @@ import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.service.WorkService;
+import com.easydoers.employeeservice.util.PasswordCreatorUtil;
 
 @Service
 public class EmployeeServiceImplementation implements EmployeeService {
@@ -51,11 +45,10 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	@Autowired(required = true)
 	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 	@Autowired
-	private AuthenticationManager authenticationManager;
+	private CompanyService companyService;
 	@Autowired
-	private JWTTokenService tokenService;
-@Autowired
-private CompanyService companyService;
+	private PasswordCreatorUtil passwordCreatorUtil;
+
 	@Override
 	public Employee saveEmployee(Employee employee) {
 		if (checkEmployee(employee.getEmployeeNtid()) != null) {
@@ -65,7 +58,8 @@ private CompanyService companyService;
 		employeeAddress = addressRepository.save(employeeAddress);
 		Users user = new Users();
 		user.setUserName(employee.getEmail());
-		user.setPassword(passwordEncoder.encode(createPassword()));
+		user.setPassword(passwordEncoder.encode(passwordCreatorUtil.createPassword(employee.getEmail())));
+		user.setRole("EMPLOYEE");
 		userRepository.save(user);
 		Company employeeCompany = companyRepository.findByCompanyName(employee.getCompany().getCompanyName());
 		employee.setCompany(employeeCompany);
@@ -75,62 +69,22 @@ private CompanyService companyService;
 
 	@Override
 	public ClockinResponse saveClockInTimeForEmployee(String employeeNtid, String dealerStoreId) {
-			Employee employee = checkEmployee(employeeNtid);
-			Store store = storeService.checkStore(dealerStoreId);
-			 ClockinResponse response = workService.findByEmployeeInWork(employee, LocalDate.now(), store);
-			return response;
+		Employee employee = checkEmployee(employeeNtid);
+		Store store = storeService.checkStore(dealerStoreId);
+		ClockinResponse response = workService.findByEmployeeInWork(employee, LocalDate.now(), store);
+		return response;
 
-	}
-
-
-	private CharSequence createPassword() {
-		String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String lowerCase = "abcdefghijklmnopqrstuvwxyz";
-		String digits = "0123456789";
-		String symbols = "!@#$%^&*()-_+=<>?";
-		String allChars = upperCase + lowerCase + digits + symbols;
-		SecureRandom random = new SecureRandom();
-		StringBuilder password = new StringBuilder();
-		password.append(upperCase.charAt(random.nextInt(upperCase.length())));
-		password.append(lowerCase.charAt(random.nextInt(lowerCase.length())));
-		password.append(digits.charAt(random.nextInt(digits.length())));
-		password.append(symbols.charAt(random.nextInt(symbols.length())));
-
-		for (int i = 4; i < 10; i++) {
-			password.append(allChars.charAt(random.nextInt(allChars.length())));
-		}
-
-		return shuffleString(password.toString(), random);
-	}
-
-	private static String shuffleString(String input, SecureRandom random) {
-		char[] chars = input.toCharArray();
-		for (int i = chars.length - 1; i > 0; i--) {
-			int j = random.nextInt(i + 1);
-			char temp = chars[i];
-			chars[i] = chars[j];
-			chars[j] = temp;
-		}
-		return new String(chars);
-	}
-
-	@Override
-	public String validateUser(LogInRequest logInRequest) {
-
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(logInRequest.getUserName(), logInRequest.getPassword()));
-		if (authentication.isAuthenticated()) {
-			return tokenService.generateToken(logInRequest.getUserName());
-		}
-		return "failure";
 	}
 
 	public Employee checkEmployee(String employeeNtid) {
 
 		Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
-		if (employee == null) {
-			throw new EmployeeNotFoundException("employee with " + employeeNtid + " not found");
-		}
+
+		/*
+		 * if (employee == null) { throw new EmployeeNotFoundException("employee with "
+		 * + employeeNtid + " not found"); }
+		 */
+
 		return employee;
 	}
 
@@ -145,7 +99,7 @@ private CompanyService companyService;
 			storeDTO.setDealerStoreId(store.getDealerStoreId());
 			storeDTO.setStoreName(store.getStoreName());
 			storeList.add(storeDTO);
-			
+
 		}
 		return new AuthorizedStoreAccessResponse(storeList);
 	}

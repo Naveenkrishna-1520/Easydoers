@@ -13,19 +13,26 @@ public class Users {
 	private Long userId;
 	private String userName;
 	private String password;
+	private String role;
+	/**
+	 * 
+	 */
+	public Users() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * @param userId
 	 * @param userName
 	 * @param password
+	 * @param role
 	 */
-	public Users(Long userId, String userName, String password) {
+	public Users(Long userId, String userName, String password, String role) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.password = password;
-	}
-	public Users() {
-		// TODO Auto-generated constructor stub
+		this.role = role;
 	}
 	/**
 	 * @return the userId
@@ -63,7 +70,17 @@ public class Users {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
 	
-	
-
 }
