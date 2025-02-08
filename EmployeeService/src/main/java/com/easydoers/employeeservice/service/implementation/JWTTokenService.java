@@ -1,20 +1,17 @@
 package com.easydoers.employeeservice.service.implementation;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.Users;
-import com.easydoers.employeeservice.exception.NoSuchAlgorithmFoundException;
 import com.easydoers.employeeservice.exception.SignatureExceptionFound;
 import com.easydoers.employeeservice.exception.TokenInvalidException;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,21 +23,12 @@ import io.jsonwebtoken.security.SignatureException;
 @Service
 public class JWTTokenService {
 	
-	private String secretKey = "";
-	private String refreshSecretKey ="";
+	private final String secretKey;
+    private final String refreshSecretKey;
 
-    public JWTTokenService() {
-
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey accessKey = keyGen.generateKey();
-            SecretKey refreshKey = keyGen.generateKey();
-
-            secretKey = Base64.getEncoder().encodeToString(accessKey.getEncoded());
-            refreshSecretKey = Base64.getEncoder().encodeToString(refreshKey.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new NoSuchAlgorithmFoundException("no algorithm found to generate token");
-        }
+    public JWTTokenService(Environment env) {
+        this.secretKey = env.getProperty("jwt.secret.key");
+        this.refreshSecretKey = env.getProperty("jwt.refresh.secret.key");
     }
 
 	public String generateToken(String userName, String role) {

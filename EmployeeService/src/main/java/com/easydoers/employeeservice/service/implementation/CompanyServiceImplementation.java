@@ -49,14 +49,17 @@ public class CompanyServiceImplementation implements CompanyService{
 		if (checkCompany(company.getCompanyName()) != null) {
 			throw new DuplicateCompanyFoundException("Company already exists with : " + company.getCompanyName());
 		}
+		Users user = new Users();
+		CharSequence password = null;
 		Address companyAddress = company.getCompanyAddress();
 		companyAddress = addressRepository.save(companyAddress);
-		Users user = new Users();
-		user.setUserName(company.getEmail());
-		CharSequence password =passwordCreatorUtil.createPassword(company.getEmail());
-		user.setPassword(passwordEncoder.encode(password));
-		user.setRole("OWNER");
-		userRepository.save(user);
+		if(userRepository.findByUserName(company.getEmail()) == null) {		
+			user.setUserName(company.getEmail());
+			password =passwordCreatorUtil.createPassword(company.getEmail());
+			user.setPassword(passwordEncoder.encode(password));
+			user.setRole("OWNER");
+			userRepository.save(user);
+		}	
 		company.setCompanyAddress(companyAddress);
 		company.setUpdatedPerson(company.getUpdatedPerson());
 		company.setUpdateTime(LocalDateTime.now());

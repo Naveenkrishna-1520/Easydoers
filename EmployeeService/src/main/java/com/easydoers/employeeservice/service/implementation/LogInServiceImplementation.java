@@ -55,6 +55,8 @@ public class LogInServiceImplementation implements LogInService {
 			if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
 				role = user.getRole();
 				response.setLoginEmail(user.getUserName());
+			}else {
+				response.setMessage("User not found "+logInRequest.getUserName());
 			}
 		} else {
 			Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
