@@ -80,10 +80,9 @@ public class EmployeeServiceImplementation implements EmployeeService {
 
 		Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
 
-		/*
-		 * if (employee == null) { throw new EmployeeNotFoundException("employee with "
-		 * + employeeNtid + " not found"); }
-		 */
+		if (employee == null) {
+			throw new EmployeeNotFoundException("employee with " + employeeNtid + " not found");
+		}
 
 		return employee;
 	}

@@ -22,10 +22,9 @@ public class StoreServiceImplementation implements StoreService {
 
 		Store store = storeRepository.findByDealerStoreId(dealerStoreId);
 
-		/*
-		 * if (store == null) { throw new StoreNotFoundException("store with " +
-		 * dealerStoreId + " not found"); }
-		 */
+		if (store == null) {
+			throw new StoreNotFoundException("store with " + dealerStoreId + " not found");
+		}
 
 		return store;
 

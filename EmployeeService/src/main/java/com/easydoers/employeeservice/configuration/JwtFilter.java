@@ -60,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter{
 	            if (store != null && jwtTokenService.validateToken(token, store)) {
 	                setAuthentication(store, role, request);
 	            }
-	        } else if ("MANAGER".equals(role) || "OWNER".equals(role)) {
+	        } else if ("MANAGER".equals(role) || "OWNER".equals(role) || "ADMIN".equals(role)) {
 	            Users user = userService.findByUserName(userName);
 	            if (user != null && jwtTokenService.validateToken(token, user)) {
 	                setAuthentication(user, role, request);

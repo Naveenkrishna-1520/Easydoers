@@ -22,7 +22,7 @@ public class Company {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address CompanyAddress;
-    private String updatedPersonName;
+    private String updatedPerson;
     private LocalDateTime updateTime;
 	/**
 	 * 
@@ -36,17 +36,17 @@ public class Company {
 	 * @param companyName
 	 * @param email
 	 * @param companyAddress
-	 * @param updatedPersonName
+	 * @param updatedPerson
 	 * @param updateTime
 	 */
-	public Company(int companyId, String companyName, String email, Address companyAddress, String updatedPersonName,
+	public Company(int companyId, String companyName, String email, Address companyAddress, String updatedPerson,
 			LocalDateTime updateTime) {
 		super();
 		this.companyId = companyId;
 		this.companyName = companyName;
 		this.email = email;
 		CompanyAddress = companyAddress;
-		this.updatedPersonName = updatedPersonName;
+		this.updatedPerson = updatedPerson;
 		this.updateTime = updateTime;
 	}
 	/**
@@ -98,16 +98,16 @@ public class Company {
 		CompanyAddress = companyAddress;
 	}
 	/**
-	 * @return the updatedPersonName
+	 * @return the updatedPerson
 	 */
-	public String getUpdatedPersonName() {
-		return updatedPersonName;
+	public String getUpdatedPerson() {
+		return updatedPerson;
 	}
 	/**
-	 * @param updatedPersonName the updatedPersonName to set
+	 * @param updatedPerson the updatedPerson to set
 	 */
-	public void setUpdatedPersonName(String updatedPersonName) {
-		this.updatedPersonName = updatedPersonName;
+	public void setUpdatedPerson(String updatedPerson) {
+		this.updatedPerson = updatedPerson;
 	}
 	/**
 	 * @return the updateTime

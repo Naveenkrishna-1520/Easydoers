@@ -58,7 +58,7 @@ public class CompanyServiceImplementation implements CompanyService{
 		user.setRole("OWNER");
 		userRepository.save(user);
 		company.setCompanyAddress(companyAddress);
-		company.setUpdatedPersonName(company.getUpdatedPersonName());
+		company.setUpdatedPerson(company.getUpdatedPerson());
 		company.setUpdateTime(LocalDateTime.now());
 		companyRepository.save(company);
 		// Trigger the email after creating the company
