@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.AuthorizedStoreAccessResponse;
 import com.easydoers.employeeservice.dto.ClockinResponse;
@@ -13,25 +11,22 @@ import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
+import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Store;
-import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.exception.DuplicateUserFoundException;
 import com.easydoers.employeeservice.exception.EmployeeNotFoundException;
 import com.easydoers.employeeservice.repository.AddressRepository;
-import com.easydoers.employeeservice.repository.CompanyRepository;
 import com.easydoers.employeeservice.repository.EmployeeRepository;
-import com.easydoers.employeeservice.repository.UserRepository;
 import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.EmployeeService;
+import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.service.WorkService;
-import com.easydoers.employeeservice.util.PasswordCreatorUtil;
 
 @Service
 public class EmployeeServiceImplementation implements EmployeeService {
 
-	@Autowired
-	private CompanyRepository companyRepository;
+	
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	@Autowired
@@ -41,29 +36,22 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	@Autowired
 	private StoreService storeService;
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired(required = true)
-	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
-	@Autowired
 	private CompanyService companyService;
 	@Autowired
-	private PasswordCreatorUtil passwordCreatorUtil;
-
+	private ManagerService managerService;
+	
 	@Override
 	public Employee saveEmployee(Employee employee) {
-		if (checkEmployee(employee.getEmployeeNtid()) != null) {
+		if (checkEmployeeWhileRegistration(employee.getEmployeeNtid()) != null) {
 			throw new DuplicateUserFoundException("Employee already exists with : " + employee.getEmployeeNtid());
 		}
 		Address employeeAddress = employee.getAddress();
 		employeeAddress = addressRepository.save(employeeAddress);
-		Users user = new Users();
-		user.setUserName(employee.getEmail());
-		user.setPassword(passwordEncoder.encode(passwordCreatorUtil.createPassword(employee.getEmail())));
-		user.setRole("EMPLOYEE");
-		userRepository.save(user);
-		Company employeeCompany = companyRepository.findByCompanyName(employee.getCompany().getCompanyName());
+		Company employeeCompany = companyService.checkCompany(employee.getCompany().getCompanyName());
+		Manager employeeManager = managerService.checkManager(employee.getManager().getManagerName());
 		employee.setCompany(employeeCompany);
 		employee.setAddress(employeeAddress);
+		employee.setManager(employeeManager);
 		return employeeRepository.save(employee);
 	}
 
@@ -87,6 +75,12 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		return employee;
 	}
 
+	public Employee checkEmployeeWhileRegistration(String employeeNtid) {
+
+		Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
+
+		return employee;
+	}
 	@Override
 	public AuthorizedStoreAccessResponse getAuthorizedStores(String employeeNtid) {
 		List<StoreDTO> storeList = new ArrayList<>();

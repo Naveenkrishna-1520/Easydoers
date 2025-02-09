@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.easydoers.employeeservice.dto.AuthorizedStoreAccessResponse;
 import com.easydoers.employeeservice.dto.ClockinRequest;
 import com.easydoers.employeeservice.dto.ClockinResponse;
-import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.service.EmployeeService;
 
 @RestController
@@ -23,12 +21,6 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
-
-	@PostMapping("/saveEmployee")
-	public ResponseEntity<String> saveEmployee(@RequestBody Employee employee) {
-		Employee savedEmployee = employeeService.saveEmployee(employee);
-		return ResponseEntity.ok("Employee '" + savedEmployee.getEmployeeNtid() + "' saved successfully!");
-	}
 
 	@PostMapping("/clockin")
 	public ResponseEntity<ClockinResponse> saveClockInTimeForEmployee(@RequestBody ClockinRequest clockinRequest) {

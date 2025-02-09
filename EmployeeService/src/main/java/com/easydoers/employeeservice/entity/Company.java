@@ -16,7 +16,7 @@ public class Company {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int companyId;
+	private Long companyId;
 	private String companyName;
 	private String email;
     @OneToOne(cascade = CascadeType.ALL)
@@ -39,7 +39,7 @@ public class Company {
 	 * @param updatedPerson
 	 * @param updateTime
 	 */
-	public Company(int companyId, String companyName, String email, Address companyAddress, String updatedPerson,
+	public Company(Long companyId, String companyName, String email, Address companyAddress, String updatedPerson,
 			LocalDateTime updateTime) {
 		super();
 		this.companyId = companyId;
@@ -52,13 +52,13 @@ public class Company {
 	/**
 	 * @return the companyId
 	 */
-	public int getCompanyId() {
+	public Long getCompanyId() {
 		return companyId;
 	}
 	/**
 	 * @param companyId the companyId to set
 	 */
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
 	}
 	/**
@@ -121,5 +121,6 @@ public class Company {
 	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
+	
 	
 }

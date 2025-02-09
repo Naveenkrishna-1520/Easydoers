@@ -10,4 +10,6 @@ public interface ManagerRepository extends JpaRepository<Manager, Long>{
 
 	Manager findByManagerNtid(String managerNtid);
 
+	Manager findByManagerName(String managerName);
+
 }

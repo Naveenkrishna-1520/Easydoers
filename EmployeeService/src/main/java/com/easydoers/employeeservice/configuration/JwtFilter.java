@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-
+import static com.easydoers.employeeservice.constants.RoleConstants.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +30,7 @@ public class JwtFilter extends OncePerRequestFilter{
 	@Autowired
 	private JWTTokenService jwtTokenService;
 	@Autowired
+	@Lazy
 	private StoreService storeService;
 	@Autowired
 	private UserService userService;
@@ -55,12 +57,12 @@ public class JwtFilter extends OncePerRequestFilter{
 		
 		if(userName != null && SecurityContextHolder.getContext().getAuthentication()==null) {
 			
-			if ("EMPLOYEE".equals(role)) {
+			if (EMPLOYEE.equals(role)) {
 	            Store store = storeService.checkStore(userName);
 	            if (store != null && jwtTokenService.validateToken(token, store)) {
 	                setAuthentication(store, role, request);
 	            }
-	        } else if ("MANAGER".equals(role) || "OWNER".equals(role) || "ADMIN".equals(role)) {
+	        } else if (MANAGER.equals(role) || OWNER.equals(role) || ADMIN.equals(role)) {
 	            Users user = userService.findByUserName(userName);
 	            if (user != null && jwtTokenService.validateToken(token, user)) {
 	                setAuthentication(user, role, request);
@@ -73,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter{
 	}
 
 	private void setAuthentication(Object principal, String role, HttpServletRequest request) {
-	    List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+	    List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
 	    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
 	            principal, null, authorities);
 	    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

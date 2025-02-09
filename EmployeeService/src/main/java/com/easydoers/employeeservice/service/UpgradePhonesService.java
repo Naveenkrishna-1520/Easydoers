@@ -6,12 +6,12 @@ import java.util.Map;
 
 import com.easydoers.employeeservice.dto.InvoiceDetailsResponse;
 import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
+import com.easydoers.employeeservice.dto.PreviouslySoldDevicesResponse;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
 import com.easydoers.employeeservice.dto.UpgradePhonesInvoiceRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesSoldRequest;
-import com.easydoers.employeeservice.dto.previouslySoldDevicesResponse;
 
 public interface UpgradePhonesService {
 
@@ -27,7 +27,7 @@ public interface UpgradePhonesService {
 
 	PendingTransfersAndReceivesResponse getPendingTransfersAndReceivesInStore(String dealerStoreId);
 
-	List<previouslySoldDevicesResponse> getPreviouslySoldDevicesInStore(String dealerStoreId, LocalDate startDate, LocalDate endDate);
+	List<PreviouslySoldDevicesResponse> getPreviouslySoldDevicesInStore(String dealerStoreId, LocalDate startDate, LocalDate endDate);
 
 	InvoiceDetailsResponse getInvoiceDetailsByImei(String imei);
 

@@ -2,7 +2,6 @@ package com.easydoers.employeeservice.controller;
 
 import java.time.LocalDate;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,25 +13,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.PayslipRequest;
 import com.easydoers.employeeservice.dto.PayslipResponse;
-import com.easydoers.employeeservice.entity.Manager;
-import com.easydoers.employeeservice.service.ManagerService;
+import com.easydoers.employeeservice.entity.Employee;
+import com.easydoers.employeeservice.entity.Expense;
+import com.easydoers.employeeservice.service.EmployeeService;
+import com.easydoers.employeeservice.service.ExpenseService;
 import com.easydoers.employeeservice.service.PayslipService;
 
 @RestController
 @RequestMapping("v1/manager")
 public class ManagerController {
 
-	@Autowired
-	private ManagerService managerService;
+
 	@Autowired
 	private PayslipService payslipService;
+	@Autowired
+	private EmployeeService employeeService;
+	@Autowired
+	private ExpenseService expenseService;
 
-	@PostMapping("/registration")
-	public ResponseEntity<String> createManager(@RequestBody Manager manager) {
-
-		String message = managerService.createManager(manager);
-		return new ResponseEntity<String>(message, HttpStatus.OK);
-
+	@PostMapping("/employeeRegistration")
+	public ResponseEntity<String> saveEmployee(@RequestBody Employee employee) {
+		Employee savedEmployee = employeeService.saveEmployee(employee);
+		return ResponseEntity.ok("Employee '" + savedEmployee.getEmployeeNtid() + "' saved successfully!");
+	}
+	
+	@PostMapping("/recordStoreExpenses")
+	public ResponseEntity<Expense> recordStoreExpenses(@RequestBody Expense expense){
+		
+	Expense expenses = expenseService.saveExpense(expense);
+		return new ResponseEntity<Expense>(expenses, HttpStatus.OK);
+		
 	}
 
 	@GetMapping("/payslip")

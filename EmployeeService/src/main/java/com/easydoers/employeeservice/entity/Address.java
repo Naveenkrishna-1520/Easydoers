@@ -17,16 +17,6 @@ public class Address {
 	private String state;
 	private int zipcode;
 	
-	/**
-	@OneToOne(mappedBy = "address")
-	private Company company;
-	@OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
-    private Manager manager;
-    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
-    private Owner owner;
-	@OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
-    private Employee employee; */
-	
 	
 	/**
 	 * 

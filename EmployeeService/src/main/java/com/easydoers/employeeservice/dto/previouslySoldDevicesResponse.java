@@ -1,6 +1,6 @@
 package com.easydoers.employeeservice.dto;
 
-public class previouslySoldDevicesResponse {
+public class PreviouslySoldDevicesResponse {
 	
 	private String imei;
 	private String productName;
@@ -12,7 +12,7 @@ public class previouslySoldDevicesResponse {
 	/**
 	 * 
 	 */
-	public previouslySoldDevicesResponse() {
+	public PreviouslySoldDevicesResponse() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -25,7 +25,7 @@ public class previouslySoldDevicesResponse {
 	 * @param soldAt
 	 * @param soldPrice
 	 */
-	public previouslySoldDevicesResponse(String imei, String productName, String soldTo, String soldDate, String soldBy,
+	public PreviouslySoldDevicesResponse(String imei, String productName, String soldTo, String soldDate, String soldBy,
 			String soldAt, double soldPrice) {
 		super();
 		this.imei = imei;

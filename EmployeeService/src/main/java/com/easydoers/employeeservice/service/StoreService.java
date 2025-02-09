@@ -11,4 +11,6 @@ public interface StoreService {
 
 	List<Store> getStoresUnderCompany(Company company);
 
+	String createStore(Store store);
+
 }

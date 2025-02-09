@@ -60,4 +60,28 @@ public class EmailServiceImplementation implements EmailService {
 		return companyDetails;
 	}
 
+	@Override
+	public void sendManagerCredentialsEmail(String companyName,String managerName,String email, String password) {
+		Map<String, Object> companyDetails = getManagerDetails(companyName, managerName, email, password);
+		Context context = new Context();
+		context.setVariables(companyDetails);
+		String htmlContent = templateEngine.process("ManagerCredentialsEmail", context);
+		// Send email
+		try {
+			sendHtmlEmail(email, "Your Manager Account Has Been Created", htmlContent);
+		} catch (MessagingException e) {
+
+		}
+		
+	}
+
+	private Map<String, Object> getManagerDetails(String companyName,String managerName,String email, String password) {
+		Map<String, Object> managerDetails = new HashMap<>();
+		managerDetails.put("companyName", companyName);
+		managerDetails.put("managerName", managerName);
+		managerDetails.put("username", email);
+		managerDetails.put("password", password);
+		return managerDetails;
+	}
+
 }

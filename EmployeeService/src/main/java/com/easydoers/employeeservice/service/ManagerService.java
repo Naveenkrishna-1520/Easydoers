@@ -8,4 +8,6 @@ public interface ManagerService {
 
 	String createManager(Manager manager);
 
+	Manager checkManager(String managerName);
+
 }

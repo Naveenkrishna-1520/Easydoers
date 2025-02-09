@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.easydoers.employeeservice.dto.InvoiceDetailsResponse;
 import com.easydoers.employeeservice.dto.PendingTransfersAndReceivesResponse;
 import com.easydoers.employeeservice.dto.PreviouslySoldDevicesRequest;
+import com.easydoers.employeeservice.dto.PreviouslySoldDevicesResponse;
 import com.easydoers.employeeservice.dto.ReceiveUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.TransferUpgradePhoneRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesInStoresResponse;
 import com.easydoers.employeeservice.dto.UpgradePhonesInvoiceRequest;
 import com.easydoers.employeeservice.dto.UpgradePhonesSoldRequest;
-import com.easydoers.employeeservice.dto.previouslySoldDevicesResponse;
 import com.easydoers.employeeservice.service.UpgradePhonesService;
 
 @RestController
@@ -73,11 +72,11 @@ public class UpgradePhonesController {
 	}
 	
 	@PostMapping("/previouslySold")
-	public ResponseEntity<List<previouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(@RequestBody PreviouslySoldDevicesRequest previouslySoldDevicesRequest){
+	public ResponseEntity<List<PreviouslySoldDevicesResponse>> getPreviouslySoldDevicesInStore(@RequestBody PreviouslySoldDevicesRequest previouslySoldDevicesRequest){
 		LocalDate startDate = LocalDate.parse(previouslySoldDevicesRequest.getStart());
         LocalDate endDate = LocalDate.parse(previouslySoldDevicesRequest.getEnd());
-		List<previouslySoldDevicesResponse> response = upgradePhonesService.getPreviouslySoldDevicesInStore(previouslySoldDevicesRequest.getDealerStoreId(), startDate, endDate);
-		return new ResponseEntity<List<previouslySoldDevicesResponse>>(response,HttpStatus.OK);
+		List<PreviouslySoldDevicesResponse> response = upgradePhonesService.getPreviouslySoldDevicesInStore(previouslySoldDevicesRequest.getDealerStoreId(), startDate, endDate);
+		return new ResponseEntity<List<PreviouslySoldDevicesResponse>>(response,HttpStatus.OK);
 	}
 	
 	@GetMapping("/fetchInvoice/{imei}")

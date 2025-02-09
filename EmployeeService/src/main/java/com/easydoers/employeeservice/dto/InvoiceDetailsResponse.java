@@ -7,6 +7,25 @@ public class InvoiceDetailsResponse {
 	private String invoicedEmployee;
 	private String invoicedDate;
 	private double invoicedAmount;
+	
+	
+	
+	/**
+	 * @param customerAccountNumber
+	 * @param invoicedStore
+	 * @param invoicedEmployee
+	 * @param invoicedDate
+	 * @param invoicedAmount
+	 */
+	public InvoiceDetailsResponse(String customerAccountNumber, String invoicedStore, String invoicedEmployee,
+			String invoicedDate, double invoicedAmount) {
+		super();
+		this.customerAccountNumber = customerAccountNumber;
+		this.invoicedStore = invoicedStore;
+		this.invoicedEmployee = invoicedEmployee;
+		this.invoicedDate = invoicedDate;
+		this.invoicedAmount = invoicedAmount;
+	}
 	/**
 	 * @return the customerAccountNumber
 	 */
