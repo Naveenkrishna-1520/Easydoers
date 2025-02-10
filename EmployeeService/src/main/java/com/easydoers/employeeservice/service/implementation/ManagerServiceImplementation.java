@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import static com.easydoers.employeeservice.constants.RoleConstants.*;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Manager;
@@ -51,7 +51,7 @@ public class ManagerServiceImplementation implements ManagerService {
 			user.setUserName(manager.getEmail());
 			password = passwordCreatorUtil.createPassword(manager.getEmail());
 			user.setPassword(passwordEncoder.encode(password));
-			user.setRole("MANAGER");
+			user.setRole(MANAGER);
 			userRepository.save(user);
 		}
 		manager.setAddress(managerAddress);

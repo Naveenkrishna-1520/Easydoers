@@ -2,7 +2,7 @@ package com.easydoers.employeeservice.service.implementation;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import static com.easydoers.employeeservice.constants.RoleConstants.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -65,7 +65,7 @@ public class CompanyServiceImplementation implements CompanyService {
 			user.setUserName(company.getEmail());
 			password = passwordCreatorUtil.createPassword(company.getEmail());
 			user.setPassword(passwordEncoder.encode(password));
-			user.setRole("OWNER");
+			user.setRole(OWNER);
 			userRepository.save(user);
 		}
 		company.setCompanyAddress(companyAddress);
