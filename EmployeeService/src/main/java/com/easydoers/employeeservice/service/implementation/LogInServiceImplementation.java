@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import static com.easydoers.employeeservice.constants.RoleConstants.*;
 import com.easydoers.employeeservice.dto.EmployeeDTO;
 import com.easydoers.employeeservice.dto.LogInRequest;
 import com.easydoers.employeeservice.dto.LogInResponse;
@@ -47,47 +48,75 @@ public class LogInServiceImplementation implements LogInService {
 
 	@Override
 	public LogInResponse loginUser(LogInRequest logInRequest) {
+	    LogInResponse response = new LogInResponse();
 
+	    if (logInRequest.getUserName().contains("@")) {
+	        response = handleUserLogin(logInRequest);
+	    } else {
+	        response = handleEmployeeLogin(logInRequest);
+	    }
+
+	    return response;
+	}
+
+	private LogInResponse handleUserLogin(LogInRequest logInRequest) {
+	    LogInResponse response = new LogInResponse();
+	    Users user = userService.findByUserName(logInRequest.getUserName());
+
+	    if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
+	        response = generateToken(logInRequest, user.getRole());
+	        response.setLoginEmail(user.getUserName());
+	    } else {
+	        response.setMessage("User not found " + logInRequest.getUserName());
+	    }
+
+	    return response;
+	}
+
+	private LogInResponse handleEmployeeLogin(LogInRequest logInRequest) {
+	    LogInResponse response = new LogInResponse();
+	    Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
+	    Store store = storeService.checkStore(logInRequest.getUserName());
+
+	    if (employee != null && store != null) {
+	        response = setupEmployeeResponse(employee, store, logInRequest);
+	    }
+
+	    return response;
+	}
+
+	private LogInResponse setupEmployeeResponse(Employee employee, Store store, LogInRequest logInRequest) {
+	    LogInResponse response = new LogInResponse();
+
+	    // Set employee and store information
+	    EmployeeDTO employeeDTO = new EmployeeDTO(employee.getEmployeeNtid(), employee.getEmployeeName());
+	    StoreDTO storeDTO = new StoreDTO(store.getDealerStoreId(), store.getStoreName());
+	    response.setEmployee(employeeDTO);
+	    response.setStore(storeDTO);
+
+	    // Generate token
+	    response = generateToken(logInRequest, EMPLOYEE);
+
+	    // Set clock-in status
+	    Work clockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
+	    if (clockinStatus != null) {
+	        response.setIsClockin("true");
+	        response.setClockinTime(clockinStatus.getClockInTime());
+	        response.setClockinLocation(clockinStatus.getStore().getStoreName());
+	    } else {
+	        response.setIsClockin("false");
+	    }
+
+	    // Set sale submission status
+	    Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
+	    response.setIsSaleSubmit(sale != null ? "true" : "false");
+
+	    return response;
+	}
+
+
+	private LogInResponse generateToken(LogInRequest logInRequest, String role) {
 		LogInResponse response = new LogInResponse();
-		String role = null;
-		if (logInRequest.getUserName().contains("@")) {
-			Users user = userService.findByUserName(logInRequest.getUserName());
-			if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
-				role = user.getRole();
-				response.setLoginEmail(user.getUserName());
-			}else {
-				response.setMessage("User not found "+logInRequest.getUserName());
-			}
-		} else {
-			Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
-			Store store = storeService.checkStore(logInRequest.getUserName());
-			if (store != null && employee != null) {
-				role = "EMPLOYEE";
-				EmployeeDTO employeeDTO = new EmployeeDTO();
-				StoreDTO storeDTO = new StoreDTO();
-				employeeDTO.setEmployeeNtid(employee.getEmployeeNtid());
-				employeeDTO.setEmployeeName(employee.getEmployeeName());
-				storeDTO.setDealerStoreId(store.getDealerStoreId());
-				storeDTO.setStoreName(store.getStoreName());
-				response.setEmployee(employeeDTO);
-				response.setStore(storeDTO);
-				Work checkClockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
-				if (checkClockinStatus != null) {
-					response.setIsClockin("true");
-					response.setClockinTime(checkClockinStatus.getClockInTime());
-					response.setClockinLocation(checkClockinStatus.getStore().getStoreName());
-				}else {
-					response.setIsClockin("false");
-				}
-				Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
-				if (sale != null) {
-					response.setIsSaleSubmit("true");
-				}else {
-					response.setIsSaleSubmit("false");
-				}
-			}
-		}
-
 		String jwtToken = tokenService.generateToken(logInRequest.getUserName(), role);
 		String refreshJwtToken = tokenService.generateRefreshToken(logInRequest.getUserName(), role);
 		ResponseCookie cookie = cookieSetupService.setupJwtCookie(jwtToken);
@@ -95,7 +124,7 @@ public class LogInServiceImplementation implements LogInService {
 		response.setToken(cookie.toString());
 		response.setRefreshToken(refreshCookie.toString());
 		return response;
-
+		
 	}
 
 	@Override

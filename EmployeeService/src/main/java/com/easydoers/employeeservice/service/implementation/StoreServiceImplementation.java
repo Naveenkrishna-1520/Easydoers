@@ -1,21 +1,17 @@
 package com.easydoers.employeeservice.service.implementation;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
-import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.exception.DuplicateUserFoundException;
 import com.easydoers.employeeservice.exception.StoreNotFoundException;
 import com.easydoers.employeeservice.repository.AddressRepository;
 import com.easydoers.employeeservice.repository.StoreRepository;
 import com.easydoers.employeeservice.service.CompanyService;
-import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.StoreService;
 
 @Service
@@ -28,8 +24,7 @@ public class StoreServiceImplementation implements StoreService {
 	@Autowired
 	@Lazy
 	private CompanyService companyService;
-	@Autowired
-	private ManagerService managerService;
+
 
 	@Override
 	public Store checkStore(String dealerStoreId) {
@@ -57,10 +52,8 @@ public class StoreServiceImplementation implements StoreService {
 
 		Address storeAddress = addressRepository.save(store.getAddress());
 		Company company = companyService.checkCompany(store.getCompany().getCompanyName());
-		Manager manager = managerService.checkManager(store.getManager().getManagerName());
 		store.setAddress(storeAddress);
 		store.setCompany(company);
-		store.setManager(manager);
 		storeRepository.save(store);
 		return "Store created successfully";
 	}

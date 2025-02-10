@@ -46,9 +46,9 @@ public class EmployeeServiceImplementation implements EmployeeService {
 			throw new DuplicateUserFoundException("Employee already exists with : " + employee.getEmployeeNtid());
 		}
 		Address employeeAddress = employee.getAddress();
-		employeeAddress = addressRepository.save(employeeAddress);
-		Company employeeCompany = companyService.checkCompany(employee.getCompany().getCompanyName());
+		employeeAddress = addressRepository.save(employeeAddress);		
 		Manager employeeManager = managerService.checkManager(employee.getManager().getManagerName());
+		Company employeeCompany = companyService.checkCompany(employeeManager.getCompany().getCompanyName());
 		employee.setCompany(employeeCompany);
 		employee.setAddress(employeeAddress);
 		employee.setManager(employeeManager);

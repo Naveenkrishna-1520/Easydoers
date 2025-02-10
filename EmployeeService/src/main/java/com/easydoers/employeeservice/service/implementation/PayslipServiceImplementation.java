@@ -93,8 +93,7 @@ public class PayslipServiceImplementation implements PayslipService {
 			payCheckRepository.save(payCheck);
 		} else {
 			for (PayCheck payCheckValidation : checkPayGenerated) {
-				
-				
+
 				if (start.getDayOfMonth() > payCheckValidation.getPayCheckEndDate().getDayOfMonth()
 						&& end.getDayOfMonth() < payCheckValidation.getPayCheckStartDate().getDayOfMonth()) {
 					payCheck.setAccessoriesCommission(accessoriesCommisionEarnedByEmployee);
@@ -106,16 +105,17 @@ public class PayslipServiceImplementation implements PayslipService {
 					payCheck.setMonth(start.getMonthValue());
 					payCheck.setYear(start.getYear());
 					payCheck.setPayGeneratedDate(LocalDate.now());
-				}else if (start.getDayOfMonth()==payCheckValidation.getPayCheckStartDate().getDayOfMonth() && end.getDayOfMonth()==payCheckValidation.getPayCheckEndDate().getDayOfMonth()) {
+				} else if (start.getDayOfMonth() == payCheckValidation.getPayCheckStartDate().getDayOfMonth()
+						&& end.getDayOfMonth() == payCheckValidation.getPayCheckEndDate().getDayOfMonth()) {
 					continue;
-				}else {
+				} else {
 				}
-					throw new payCheckGenerationException(
-							"Employee with "+employee.getEmployeeNtid()+" last pay generated :" + payCheckValidation.getPayGeneratedDate() + " form date :"
-									+ payCheckValidation.getPayCheckStartDate() + " to "
-									+ payCheckValidation.getPayCheckEndDate() + " modify the dates and generate again");
-				}
+				throw new payCheckGenerationException("Employee with " + employee.getEmployeeNtid()
+						+ " last pay generated :" + payCheckValidation.getPayGeneratedDate() + " form date :"
+						+ payCheckValidation.getPayCheckStartDate() + " to " + payCheckValidation.getPayCheckEndDate()
+						+ " modify the dates and generate again");
 			}
+		}
 		Map<String, Object> payslipDetails = getPayslipDetails(employee.getEmployeeName(), employeeNtid,
 				numberOfBoxesSold, numberOfHoursWorked, netPay, company.getCompanyName(), start.getMonth(),
 				start.getYear(), boxesCommissionEarnedByEmployee, accessoriesCommisionEarnedByEmployee, workingHoursPay,

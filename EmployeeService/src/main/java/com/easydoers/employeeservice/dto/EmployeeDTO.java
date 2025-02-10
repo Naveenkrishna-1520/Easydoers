@@ -4,6 +4,17 @@ public class EmployeeDTO {
 	
 	private String employeeNtid;
 	private String employeeName;
+	
+	
+	/**
+	 * @param employeeNtid
+	 * @param employeeName
+	 */
+	public EmployeeDTO(String employeeNtid, String employeeName) {
+		super();
+		this.employeeNtid = employeeNtid;
+		this.employeeName = employeeName;
+	}
 	/**
 	 * @return the employeeNtid
 	 */
