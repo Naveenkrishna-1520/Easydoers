@@ -53,7 +53,7 @@ public class CompanyServiceImplementation implements CompanyService {
 
 	@Override
 	public String createCompany(Company company) {
-		if (isCompanyAvailable(company.getCompanyName()) != null) {
+		if (checkCompanyWhileRegistration(company.getCompanyName()) != null) {
 			throw new DuplicateCompanyFoundException("Company already exists with : " + company.getCompanyName());
 		}
 		Users user = new Users();
@@ -77,7 +77,7 @@ public class CompanyServiceImplementation implements CompanyService {
 		return "Company created successfully";
 	}
 
-	public Company isCompanyAvailable(String companyName) {
+	private Company checkCompanyWhileRegistration(String companyName) {
 		Company company = companyRepository.findByCompanyName(companyName);
 		return company;
 	}
@@ -113,6 +113,12 @@ public class CompanyServiceImplementation implements CompanyService {
 		if(company == null) {
 			throw new CompanyNotFoundException("company with " + companyName + " not found");
 		}
+		return company;
+	}
+
+	@Override
+	public Company isCompanyAvailable(String userName) {
+		Company company = companyRepository.findByEmail(userName);
 		return company;
 	}
 	

@@ -10,4 +10,6 @@ public interface CompanyRepository extends JpaRepository<Company, Integer>{
 
 	Company findBycompanyId(long companyId);
 
+	Company findByEmail(String userName);
+
 }
