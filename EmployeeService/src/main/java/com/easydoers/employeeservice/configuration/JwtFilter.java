@@ -25,8 +25,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter{
-	
+public class JwtFilter extends OncePerRequestFilter {
+
 	@Autowired
 	private JWTTokenService jwtTokenService;
 	@Autowired
@@ -38,47 +38,48 @@ public class JwtFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
+
 		String token = null;
 		String role = null;
 		String userName = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("accessToken".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        if (token != null && !token.isEmpty()) {
-            userName = jwtTokenService.extractUserName(token);
-            role = jwtTokenService.getRoleFromToken(token);
-        }
-		
-		if(userName != null && SecurityContextHolder.getContext().getAuthentication()==null) {
-			
-			if (EMPLOYEE.equals(role)) {
-	            Store store = storeService.checkStore(userName);
-	            if (store != null && jwtTokenService.validateToken(token, store)) {
-	                setAuthentication(store, role, request);
-	            }
-	        } else if (MANAGER.equals(role) || OWNER.equals(role) || ADMIN.equals(role)) {
-	            Users user = userService.findByUserName(userName);
-	            if (user != null && jwtTokenService.validateToken(token, user)) {
-	                setAuthentication(user, role, request);
-	            }
-	        }
-	    }
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if ("accessToken".equals(cookie.getName())) {
+					token = cookie.getValue();
+					break;
+				}
+			}
+		}
+		if (token != null && !token.isEmpty()) {
+			userName = jwtTokenService.extractUserName(token);
+			role = jwtTokenService.getRoleFromToken(token);
+		}
 
-	    response.setHeader("Last-Activity", Instant.now().toString());
-	    filterChain.doFilter(request, response);
+		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+			if (EMPLOYEE.equals(role)) {
+				Store store = storeService.checkStore(userName);
+				if (store != null && jwtTokenService.validateToken(token, store)) {
+					setAuthentication(store, role, request);
+				}
+			} else if (MANAGER.equals(role) || OWNER.equals(role) || ADMIN.equals(role)) {
+				Users user = userService.findByUserName(userName);
+				if (user != null && jwtTokenService.validateToken(token, user)) {
+					setAuthentication(user, role, request);
+				}
+			}
+		}
+
+		response.setHeader("Last-Activity", Instant.now().toString());
+		filterChain.doFilter(request, response);
 	}
 
 	private void setAuthentication(Object principal, String role, HttpServletRequest request) {
-	    List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
-	    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-	            principal, null, authorities);
-	    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-	    SecurityContextHolder.getContext().setAuthentication(authToken);
+		List<SimpleGrantedAuthority> authorities = Collections
+				.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(principal, null,
+				authorities);
+		authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+		SecurityContextHolder.getContext().setAuthentication(authToken);
 	}
 }

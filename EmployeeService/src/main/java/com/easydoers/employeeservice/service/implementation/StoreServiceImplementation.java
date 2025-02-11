@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
+import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.exception.DuplicateUserFoundException;
 import com.easydoers.employeeservice.exception.StoreNotFoundException;
 import com.easydoers.employeeservice.repository.AddressRepository;
 import com.easydoers.employeeservice.repository.StoreRepository;
 import com.easydoers.employeeservice.service.CompanyService;
+import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.StoreService;
 
 @Service
@@ -24,6 +26,8 @@ public class StoreServiceImplementation implements StoreService {
 	@Autowired
 	@Lazy
 	private CompanyService companyService;
+	@Autowired
+	private ManagerService managerService;
 
 
 	@Override
@@ -61,6 +65,15 @@ public class StoreServiceImplementation implements StoreService {
 	private Store checkEmployeeWhileRegistration(String dealerStoreId) {
 		Store store = storeRepository.findByDealerStoreId(dealerStoreId);
 		return store;
+	}
+
+	@Override
+	public String assignManagerToStores(String dealerStoreId, String managerName) {
+		Store store = checkStore(dealerStoreId);
+		Manager manager = managerService.checkManager(managerName);
+		store.setManager(manager);
+		storeRepository.save(store);
+		return "Manager : "+ managerName+" is successfully assigned to store : "+store.getDealerStoreId();
 	}
 
 }

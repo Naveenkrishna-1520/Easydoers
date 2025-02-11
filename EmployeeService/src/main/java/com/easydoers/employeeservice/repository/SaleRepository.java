@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.easydoers.employeeservice.dto.SaleDTO;
 import com.easydoers.employeeservice.entity.Sale;
+import com.easydoers.employeeservice.entity.Store;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
@@ -35,6 +36,10 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 	List<Sale> findSalesByEmployeeIdAndDateRange(@Param("employeeId") Long employeeId,
 	                                             @Param("start") LocalDate start,
 	                                             @Param("end") LocalDate end);
+
+	Sale findByStore(Store store);
+
+	List<Sale> findByStoreAndSaleDateBetween(Store store, LocalDate start, LocalDate end);
 
 
 

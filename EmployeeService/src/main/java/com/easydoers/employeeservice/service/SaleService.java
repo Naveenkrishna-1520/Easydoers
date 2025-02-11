@@ -3,6 +3,7 @@ package com.easydoers.employeeservice.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.easydoers.employeeservice.dto.CashCollectionResponse;
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.SaleRequest;
 import com.easydoers.employeeservice.entity.Sale;
@@ -16,5 +17,7 @@ public interface SaleService {
 	Sale checkSaleSubmittedByEmployee(Long employeeId, LocalDate now);
 
 	List<Sale> getEmployeeSales(Long employeeId, LocalDate start,LocalDate end);
+
+	List<CashCollectionResponse> getTotalCashAndCard(String companyName,LocalDate start , LocalDate end);
 
 }

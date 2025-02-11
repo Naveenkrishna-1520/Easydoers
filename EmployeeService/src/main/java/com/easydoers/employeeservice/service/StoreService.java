@@ -13,4 +13,6 @@ public interface StoreService {
 
 	String createStore(Store store);
 
+	String assignManagerToStores(String dealerStoreId, String managerName);
+
 }

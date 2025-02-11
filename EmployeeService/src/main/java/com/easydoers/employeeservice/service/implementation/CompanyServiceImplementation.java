@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.easydoers.employeeservice.dto.CompanyDTO;
 import com.easydoers.employeeservice.dto.CompanyResponse;
 import com.easydoers.employeeservice.dto.StoreDTO;
@@ -116,5 +115,7 @@ public class CompanyServiceImplementation implements CompanyService {
 		}
 		return company;
 	}
+	
+	
 
 }
