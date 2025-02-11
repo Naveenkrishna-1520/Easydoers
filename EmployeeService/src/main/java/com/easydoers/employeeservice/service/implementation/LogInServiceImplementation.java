@@ -56,82 +56,83 @@ public class LogInServiceImplementation implements LogInService {
 
 	@Override
 	public LogInResponse loginUser(LogInRequest logInRequest) {
-	    LogInResponse response = new LogInResponse();
+		LogInResponse response = new LogInResponse();
 
-	    if (logInRequest.getUserName().contains("@")) {
-	        response = handleUserLogin(logInRequest);
-	    } else {
-	        response = handleEmployeeLogin(logInRequest);
-	    }
+		if (logInRequest.getUserName().contains("@")) {
+			response = handleUserLogin(logInRequest);
+		} else {
+			response = handleEmployeeLogin(logInRequest);
+		}
 
-	    return response;
+		return response;
 	}
 
 	private LogInResponse handleUserLogin(LogInRequest logInRequest) {
-	    LogInResponse response = new LogInResponse();
-	    Users user = userService.findByUserName(logInRequest.getUserName());
+		LogInResponse response = new LogInResponse();
+		Users user = userService.findByUserName(logInRequest.getUserName());
 
-	    if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
-	        response = generateToken(logInRequest, user.getRole());
-	        response.setLoginEmail(user.getUserName());
-	        response.setLoginPerson(setName(user.getUserName()));
-	    } else {
-	        response.setMessage("User not found " + logInRequest.getUserName());
-	    }
+		if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
+			response = generateToken(logInRequest, user.getRole());
+			response.setLoginEmail(user.getUserName());
+			if (user.getRole() != ADMIN) {
+				response.setLoginPerson(setName(user.getUserName()));
+			}
+		} else {
+			response.setMessage("User not found " + logInRequest.getUserName());
+		}
 
-	    return response;
+		return response;
 	}
 
 	private String setName(String userName) {
 		Manager manager = managerService.isManagerAvailable(userName);
 		Company company = companyService.isCompanyAvailable(userName);
-		if(manager!=null) {
+		if (manager != null) {
 			return manager.getManagerName();
 		}
 		return company.getCompanyName();
 	}
 
 	private LogInResponse handleEmployeeLogin(LogInRequest logInRequest) {
-	    LogInResponse response = new LogInResponse();
-	    Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
-	    Store store = storeService.checkStore(logInRequest.getUserName());
+		LogInResponse response = new LogInResponse();
+		Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
+		Store store = storeService.checkStore(logInRequest.getUserName());
 
-	    if (employee != null && store != null) {
-	        response = setupEmployeeResponse(employee, store, logInRequest);
-	    }
+		if (employee != null && store != null) {
+			response = setupEmployeeResponse(employee, store, logInRequest);
+		}
 
-	    return response;
+		return response;
 	}
 
 	private LogInResponse setupEmployeeResponse(Employee employee, Store store, LogInRequest logInRequest) {
-	    LogInResponse response = new LogInResponse();
+		LogInResponse response = new LogInResponse();
 
-	    // Set employee and store information
-	    EmployeeDTO employeeDTO = new EmployeeDTO(employee.getEmployeeNtid(), employee.getEmployeeName());
-	    StoreDTO storeDTO = new StoreDTO(store.getDealerStoreId(), store.getStoreName());
-	    response.setEmployee(employeeDTO);
-	    response.setStore(storeDTO);
+		// Set employee and store information
+		EmployeeDTO employeeDTO = new EmployeeDTO(employee.getEmployeeNtid(), employee.getEmployeeName());
+		StoreDTO storeDTO = new StoreDTO(store.getDealerStoreId(), store.getStoreName());
+		response.setEmployee(employeeDTO);
+		response.setStore(storeDTO);
 
-	    // Generate token
-	    response = generateToken(logInRequest, EMPLOYEE);
+		// Generate token
+		response = generateToken(logInRequest, EMPLOYEE);
 
-	    // Set clock-in status
-	    Work clockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
-	    if (clockinStatus != null) {
-	        response.setIsClockin("true");
-	        response.setClockinTime(clockinStatus.getClockInTime());
-	        response.setClockinLocation(clockinStatus.getStore().getStoreName());
-	    } else {
-	        response.setIsClockin("false");
-	    }
+		// Set clock-in status
+		Work clockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
+		if (clockinStatus != null) {
+			response.setIsClockin("true");
+			response.setClockinTime(clockinStatus.getClockInTime());
+			response.setClockinLocation(clockinStatus.getStore().getStoreName());
+		} else {
+			response.setIsClockin("false");
+		}
 
-	    // Set sale submission status
-	    Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
-	    response.setIsSaleSubmit(sale != null ? "true" : "false");
+		// Set sale submission status
+		Sale sale = saleService.checkSaleSubmittedByEmployee(employee.getEmployeeId(), LocalDate.now());
+		response.setIsSaleSubmit(sale != null ? "true" : "false");
 
-	    return response;
+		return response;
 	}
-
 
 	private LogInResponse generateToken(LogInRequest logInRequest, String role) {
 		LogInResponse response = new LogInResponse();
@@ -142,7 +143,7 @@ public class LogInServiceImplementation implements LogInService {
 		response.setToken(cookie.toString());
 		response.setRefreshToken(refreshCookie.toString());
 		return response;
-		
+
 	}
 
 	@Override
