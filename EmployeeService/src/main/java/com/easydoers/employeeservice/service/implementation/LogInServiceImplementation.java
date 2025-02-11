@@ -83,8 +83,8 @@ public class LogInServiceImplementation implements LogInService {
 	}
 
 	private String setName(String userName) {
-		Manager manager = managerService.checkManager(userName);
-		Company company = companyService.checkCompany(userName);
+		Manager manager = managerService.isManagerAvailable(userName);
+		Company company = companyService.isCompanyAvailable(userName);
 		if(manager!=null) {
 			return manager.getManagerName().toString();
 		}

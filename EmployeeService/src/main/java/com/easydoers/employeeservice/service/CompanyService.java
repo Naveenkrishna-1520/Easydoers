@@ -17,5 +17,7 @@ public interface CompanyService {
 
 	Company checkCompany(String companyName);
 
+	Company isCompanyAvailable(String userName);
+
 
 }

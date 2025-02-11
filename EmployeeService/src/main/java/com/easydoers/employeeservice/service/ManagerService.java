@@ -10,4 +10,6 @@ public interface ManagerService {
 
 	Manager checkManager(String managerName);
 
+	Manager isManagerAvailable(String userName);
+
 }

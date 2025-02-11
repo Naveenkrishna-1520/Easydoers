@@ -41,7 +41,7 @@ public class ManagerServiceImplementation implements ManagerService {
 	public String createManager(Manager manager) {
 		Users user = new Users();
 		CharSequence password = null;
-		if (checkManagerWhileRegistration(manager.getManagerNtid()) != null) {
+		if (isManagerAvailable(manager.getManagerNtid()) != null) {
 			throw new DuplicateUserFoundException("Manager already exists with : " + manager.getManagerNtid());
 		}
 		Company managerCompany = companyRepository.findByCompanyName(manager.getCompany().getCompanyName());
@@ -62,7 +62,7 @@ public class ManagerServiceImplementation implements ManagerService {
 		return "Manager created successfully";
 	}
 
-	private Object checkManagerWhileRegistration(String managerNtid) {
+	public Manager isManagerAvailable(String managerNtid) {
 		Manager manager = managerRepository.findByManagerNtid(managerNtid);
 		return manager;
 	}
