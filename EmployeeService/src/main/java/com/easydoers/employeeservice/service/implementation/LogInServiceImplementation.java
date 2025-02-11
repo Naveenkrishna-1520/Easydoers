@@ -74,7 +74,7 @@ public class LogInServiceImplementation implements LogInService {
 		if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
 			response = generateToken(logInRequest, user.getRole());
 			response.setLoginEmail(user.getUserName());
-			if (user.getRole() != ADMIN) {
+			if (!user.getRole().equals(ADMIN)) {
 				response.setLoginPerson(setName(user.getUserName()));
 			}
 		} else {
