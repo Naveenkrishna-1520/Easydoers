@@ -86,7 +86,7 @@ public class LogInServiceImplementation implements LogInService {
 		Manager manager = managerService.isManagerAvailable(userName);
 		Company company = companyService.isCompanyAvailable(userName);
 		if(manager!=null) {
-			return manager.getManagerName().toString();
+			return manager.getManagerName();
 		}
 		return company.getCompanyName();
 	}
