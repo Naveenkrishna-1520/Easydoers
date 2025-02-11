@@ -11,14 +11,18 @@ import com.easydoers.employeeservice.dto.LogInRequest;
 import com.easydoers.employeeservice.dto.LogInResponse;
 import com.easydoers.employeeservice.dto.RefreshTokenResponse;
 import com.easydoers.employeeservice.dto.StoreDTO;
+import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
+import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Sale;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.entity.Work;
+import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.CookieSetupService;
 import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.LogInService;
+import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.SaleService;
 import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.service.UserService;
@@ -45,6 +49,10 @@ public class LogInServiceImplementation implements LogInService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ManagerService managerService;
+	@Autowired
+	private CompanyService companyService;
 
 	@Override
 	public LogInResponse loginUser(LogInRequest logInRequest) {
@@ -66,11 +74,21 @@ public class LogInServiceImplementation implements LogInService {
 	    if (user != null && passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) {
 	        response = generateToken(logInRequest, user.getRole());
 	        response.setLoginEmail(user.getUserName());
+	        response.setLoginPerson(setName(user.getUserName()));
 	    } else {
 	        response.setMessage("User not found " + logInRequest.getUserName());
 	    }
 
 	    return response;
+	}
+
+	private String setName(String userName) {
+		Manager manager = managerService.checkManager(userName);
+		Company company = companyService.checkCompany(userName);
+		if(manager!=null) {
+			return manager.getManagerName().toString();
+		}
+		return company.getCompanyName();
 	}
 
 	private LogInResponse handleEmployeeLogin(LogInRequest logInRequest) {
