@@ -14,6 +14,7 @@ public interface EmployeeService {
 	Employee checkEmployee(String employeeNTId);
 	ClockinResponse saveClockInTimeForEmployee(String employeeNtid, String dealerStoreId);
 	AuthorizedStoreAccessResponse getAuthorizedStores(String employeeNtid);
+	String assignManagerToEmployee(String employeeNtid, String managerName);
 	
 
 }

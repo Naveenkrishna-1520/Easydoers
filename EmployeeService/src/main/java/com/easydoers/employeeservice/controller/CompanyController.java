@@ -21,6 +21,7 @@ import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.CompensationService;
+import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.SaleService;
 import com.easydoers.employeeservice.service.StoreService;
@@ -28,18 +29,19 @@ import com.easydoers.employeeservice.service.StoreService;
 @RestController
 @RequestMapping("v1/company")
 public class CompanyController {
-	
-	
+
 	@Autowired
 	private ManagerService managerService;
 	@Autowired
 	private StoreService storeService;
 	@Autowired
-	private CompensationService  compensationService;
+	private CompensationService compensationService;
 	@Autowired
 	private SaleService saleService;
 	@Autowired
-	private CompanyService  companyService;
+	private CompanyService companyService;
+	@Autowired
+	private EmployeeService employeeService;
 
 	@PostMapping("/managerRegistration")
 	public ResponseEntity<String> createManager(@RequestBody Manager manager) {
@@ -51,41 +53,52 @@ public class CompanyController {
 
 	@PostMapping("/storeRegistration")
 	public ResponseEntity<String> addStoreUnderThisCompany(@RequestBody Store store) {
-		
+
 		String message = storeService.createStore(store);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping("/recordCompensation")
-	public ResponseEntity<String> recordCompensation(@RequestBody Compensation compensation){
-		
+	public ResponseEntity<String> recordCompensation(@RequestBody Compensation compensation) {
+
 		String message = compensationService.saveCompensation(compensation);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
-		
+
 	}
-	
-	@PostMapping("/assignManagerToStores/{dealerStoreId}/{managerName}")
-	public ResponseEntity<String> assignManagerToStores(@PathVariable String dealerStoreId, @PathVariable String managerName){
+
+	@PostMapping("/assignManagerToStores")
+	public ResponseEntity<String> assignManagerToStores(@RequestParam("dealerStoreId") String dealerStoreId,
+			@RequestParam("managerName") String managerName) {
 		String message = storeService.assignManagerToStores(dealerStoreId, managerName);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
-		
+
 	}
-	
+
 	@GetMapping("/cashCollection/{companyName}")
-	public ResponseEntity<List<CashCollectionResponse>> cashCollectedInStores(@PathVariable String companyName,String startDate, String endDate){
+	public ResponseEntity<List<CashCollectionResponse>> cashCollectedInStores(@PathVariable String companyName,
+			String startDate, String endDate) {
 		LocalDate start = LocalDate.parse(startDate);
 		LocalDate end = LocalDate.parse(endDate);
 		List<CashCollectionResponse> response = saleService.getTotalCashAndCard(companyName, start, end);
 		return new ResponseEntity<List<CashCollectionResponse>>(response, HttpStatus.OK);
-		
+
 	}
-	
+
 	@GetMapping("/viewAllStoresUnderTheCompany")
-	public ResponseEntity<StoreResponse> fetchAllStores(@RequestParam("companyName") String companyName){
+	public ResponseEntity<StoreResponse> fetchAllStores(@RequestParam("companyName") String companyName) {
 		StoreResponse stores = companyService.fetchStores(companyName);
 		return new ResponseEntity<StoreResponse>(stores, HttpStatus.OK);
+
+	}
+
+	@PostMapping("/assignManagerToEmployee")
+	public ResponseEntity<String> assignMangerToEmployee(@RequestParam("employeeNtid") String employeeNtid,
+			@RequestParam("managerName") String managerName) {
 		
+		String message = employeeService.assignManagerToEmployee(employeeNtid, managerName);
+		return new ResponseEntity<String>(message, HttpStatus.OK);
+
 	}
 
 }

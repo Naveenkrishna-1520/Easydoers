@@ -47,11 +47,9 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		}
 		Address employeeAddress = employee.getAddress();
 		employeeAddress = addressRepository.save(employeeAddress);		
-		Manager employeeManager = managerService.checkManager(employee.getManager().getManagerName());
-		Company employeeCompany = companyService.checkCompany(employeeManager.getCompany().getCompanyName());
+		Company employeeCompany = companyService.checkCompany(employee.getCompany().getCompanyName());
 		employee.setCompany(employeeCompany);
 		employee.setAddress(employeeAddress);
-		employee.setManager(employeeManager);
 		return employeeRepository.save(employee);
 	}
 
@@ -95,5 +93,14 @@ public class EmployeeServiceImplementation implements EmployeeService {
 
 		}
 		return new AuthorizedStoreAccessResponse(storeList);
+	}
+
+	@Override
+	public String assignManagerToEmployee(String employeeNtid, String managerName) {
+		Manager manager = managerService.checkManager(managerName);
+		Employee employee = checkEmployee(employeeNtid);
+		employee.setManager(manager);
+		employeeRepository.save(employee);
+		return "Manager : "+managerName+" is successfully assigned to employee : "+employee.getEmployeeName();
 	}
 }
