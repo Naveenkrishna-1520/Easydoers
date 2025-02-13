@@ -72,7 +72,7 @@ public class CompanyController {
 		
 	}
 	
-	@GetMapping("/cashCollection/{companyName")
+	@GetMapping("/cashCollection/{companyName}")
 	public ResponseEntity<List<CashCollectionResponse>> cashCollectedInStores(@PathVariable String companyName,String startDate, String endDate){
 		LocalDate start = LocalDate.parse(startDate);
 		LocalDate end = LocalDate.parse(endDate);
@@ -81,8 +81,8 @@ public class CompanyController {
 		
 	}
 	
-	@GetMapping("/viewAllStoresUnderTheCompany/{companyName}")
-	public ResponseEntity<StoreResponse> fetchAllStores(@RequestParam String companyName){
+	@GetMapping("/viewAllStoresUnderTheCompany")
+	public ResponseEntity<StoreResponse> fetchAllStores(@RequestParam("companyName") String companyName){
 		StoreResponse stores = companyService.fetchStores(companyName);
 		return new ResponseEntity<StoreResponse>(stores, HttpStatus.OK);
 		
