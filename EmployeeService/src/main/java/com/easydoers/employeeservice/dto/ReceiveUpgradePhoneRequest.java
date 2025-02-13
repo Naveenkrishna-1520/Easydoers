@@ -2,7 +2,7 @@ package com.easydoers.employeeservice.dto;
 
 public class ReceiveUpgradePhoneRequest {
 	
-	private String dealerStoreId;
+	private String receivingDealerStoreId;
 	private String employeeNtid;
 	private String imei;
 	/**
@@ -13,27 +13,27 @@ public class ReceiveUpgradePhoneRequest {
 		// TODO Auto-generated constructor stub
 	}
 	/**
-	 * @param dealerStoreId
+	 * @param receivingDealerStoreId
 	 * @param employeeNtid
 	 * @param imei
 	 */
-	public ReceiveUpgradePhoneRequest(String dealerStoreId, String employeeNtid, String imei) {
+	public ReceiveUpgradePhoneRequest(String receivingDealerStoreId, String employeeNtid, String imei) {
 		super();
-		this.dealerStoreId = dealerStoreId;
+		this.receivingDealerStoreId = receivingDealerStoreId;
 		this.employeeNtid = employeeNtid;
 		this.imei = imei;
 	}
 	/**
-	 * @return the dealerStoreId
+	 * @return the receivingDealerStoreId
 	 */
-	public String getDealerStoreId() {
-		return dealerStoreId;
+	public String getReceivingDealerStoreId() {
+		return receivingDealerStoreId;
 	}
 	/**
-	 * @param dealerStoreId the dealerStoreId to set
+	 * @param receivingDealerStoreId the receivingDealerStoreId to set
 	 */
-	public void setDealerStoreId(String dealerStoreId) {
-		this.dealerStoreId = dealerStoreId;
+	public void setReceivingDealerStoreId(String receivingDealerStoreId) {
+		this.receivingDealerStoreId = receivingDealerStoreId;
 	}
 	/**
 	 * @return the employeeNtid
@@ -59,4 +59,5 @@ public class ReceiveUpgradePhoneRequest {
 	public void setImei(String imei) {
 		this.imei = imei;
 	}
+	
 }

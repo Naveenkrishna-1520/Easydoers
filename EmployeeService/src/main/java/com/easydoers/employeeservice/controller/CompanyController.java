@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.easydoers.employeeservice.dto.CashCollectionResponse;
+import com.easydoers.employeeservice.dto.StoreResponse;
 import com.easydoers.employeeservice.entity.Compensation;
 import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Store;
+import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.CompensationService;
 import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.SaleService;
@@ -35,6 +37,8 @@ public class CompanyController {
 	private CompensationService  compensationService;
 	@Autowired
 	private SaleService saleService;
+	@Autowired
+	private CompanyService  companyService;
 
 	@PostMapping("/managerRegistration")
 	public ResponseEntity<String> createManager(@RequestBody Manager manager) {
@@ -73,6 +77,13 @@ public class CompanyController {
 		LocalDate end = LocalDate.parse(endDate);
 		List<CashCollectionResponse> response = saleService.getTotalCashAndCard(companyName, start, end);
 		return new ResponseEntity<List<CashCollectionResponse>>(response, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping("/viewAllStoresUnderTheCompany/{companyName}")
+	public ResponseEntity<StoreResponse> fetchAllStores(@PathVariable String companyName){
+		StoreResponse stores = companyService.fetchStores(companyName);
+		return new ResponseEntity<StoreResponse>(stores, HttpStatus.OK);
 		
 	}
 

@@ -138,7 +138,7 @@ public class UpgradePhonesServiceImplementation implements UpgradePhonesService 
 	@Override
 	public Map<String, Object> receiveUpgradePhone(ReceiveUpgradePhoneRequest receiveUpgradePhoneRequest) {
 		// Fetch necessary entities
-		Store store = storeService.checkStore(receiveUpgradePhoneRequest.getDealerStoreId());
+		Store store = storeService.checkStore(receiveUpgradePhoneRequest.getReceivingDealerStoreId());
 		Employee employee = employeeService.checkEmployee(receiveUpgradePhoneRequest.getEmployeeNtid());
 		UpgradePhones upgradePhones = upgradePhonesRepository
 				.findByImeiAndTransferIsNotNullAndReceiveIsNull(receiveUpgradePhoneRequest.getImei());
