@@ -1,5 +1,6 @@
 package com.easydoers.employeeservice.dto;
 
+
 public class CompanyDTO {
 	
 	private Long companyId;

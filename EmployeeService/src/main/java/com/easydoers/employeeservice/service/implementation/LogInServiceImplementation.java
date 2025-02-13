@@ -18,6 +18,7 @@ import com.easydoers.employeeservice.entity.Sale;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.entity.Work;
+import com.easydoers.employeeservice.exception.UserNotFoundException;
 import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.CookieSetupService;
 import com.easydoers.employeeservice.service.EmployeeService;
@@ -78,7 +79,7 @@ public class LogInServiceImplementation implements LogInService {
 				response.setLoginPerson(setName(user.getUserName()));
 			}
 		} else {
-			response.setMessage("User not found " + logInRequest.getUserName());
+			throw new UserNotFoundException("User not found " + logInRequest.getUserName());
 		}
 
 		return response;

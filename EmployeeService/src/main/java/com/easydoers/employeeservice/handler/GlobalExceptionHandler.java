@@ -11,6 +11,7 @@ import com.easydoers.employeeservice.exception.ManagerNotFoundException;
 import com.easydoers.employeeservice.exception.CompanyNotFoundException;
 import com.easydoers.employeeservice.dto.ErrorResponse;
 import com.easydoers.employeeservice.exception.DuplicateCompanyFoundException;
+import com.easydoers.employeeservice.exception.UserNotFoundException;
 import com.easydoers.employeeservice.exception.DuplicateUserFoundException;
 import com.easydoers.employeeservice.exception.EmployeeNotFoundException;
 import com.easydoers.employeeservice.exception.NoSalesFound;
@@ -32,6 +33,12 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(ManagerNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleManagerNotFoundException(ManagerNotFoundException ex) {
+        ErrorResponse response = new ErrorResponse(false, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+	
+	@ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
         ErrorResponse response = new ErrorResponse(false, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }

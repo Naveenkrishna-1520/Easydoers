@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.easydoers.employeeservice.dto.CashCollectionResponse;
@@ -81,7 +82,7 @@ public class CompanyController {
 	}
 	
 	@GetMapping("/viewAllStoresUnderTheCompany/{companyName}")
-	public ResponseEntity<StoreResponse> fetchAllStores(@PathVariable String companyName){
+	public ResponseEntity<StoreResponse> fetchAllStores(@RequestParam String companyName){
 		StoreResponse stores = companyService.fetchStores(companyName);
 		return new ResponseEntity<StoreResponse>(stores, HttpStatus.OK);
 		
