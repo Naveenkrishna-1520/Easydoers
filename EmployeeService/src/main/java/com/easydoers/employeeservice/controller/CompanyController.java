@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.easydoers.employeeservice.dto.CashCollectionResponse;
+import com.easydoers.employeeservice.dto.EmployeeDetailsResponse;
 import com.easydoers.employeeservice.dto.StoreResponse;
 import com.easydoers.employeeservice.entity.Compensation;
+import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.service.CompanyService;
@@ -58,6 +60,12 @@ public class CompanyController {
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 
 	}
+	
+	@PostMapping("/employeeRegistration")
+	public ResponseEntity<String> saveEmployee(@RequestBody Employee employee) {
+		Employee savedEmployee = employeeService.saveEmployee(employee);
+		return ResponseEntity.ok("Employee '" + savedEmployee.getEmployeeNtid() + "' saved successfully!");
+	}
 
 	@PostMapping("/recordCompensation")
 	public ResponseEntity<String> recordCompensation(@RequestBody Compensation compensation) {
@@ -68,8 +76,8 @@ public class CompanyController {
 	}
 
 	@PostMapping("/assignManagerToStores")
-	public ResponseEntity<String> assignManagerToStores(@RequestParam("dealerStoreId") String dealerStoreId,
-			@RequestParam("managerName") String managerName) {
+	public ResponseEntity<String> assignManagerToStores(@RequestParam String dealerStoreId,
+			@RequestParam String managerName) {
 		String message = storeService.assignManagerToStores(dealerStoreId, managerName);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
 
@@ -86,18 +94,25 @@ public class CompanyController {
 	}
 
 	@GetMapping("/viewAllStoresUnderTheCompany")
-	public ResponseEntity<StoreResponse> fetchAllStores(@RequestParam("companyName") String companyName) {
+	public ResponseEntity<StoreResponse> fetchAllStores(@RequestParam String companyName) {
 		StoreResponse stores = companyService.fetchStores(companyName);
 		return new ResponseEntity<StoreResponse>(stores, HttpStatus.OK);
 
 	}
 
 	@PostMapping("/assignManagerToEmployee")
-	public ResponseEntity<String> assignMangerToEmployee(@RequestParam("employeeNtid") String employeeNtid,
-			@RequestParam("managerName") String managerName) {
+	public ResponseEntity<String> assignMangerToEmployee(@RequestParam String employeeNtid,
+			@RequestParam String managerName) {
 		
 		String message = employeeService.assignManagerToEmployee(employeeNtid, managerName);
 		return new ResponseEntity<String>(message, HttpStatus.OK);
+
+	}
+	
+	@GetMapping("/viewAllEmployeesUnderTheCompany")
+	public ResponseEntity<EmployeeDetailsResponse> fetchAllEmployees(@RequestParam String companyName) {
+		EmployeeDetailsResponse employees = companyService.fetchEmployees(companyName);
+		return new ResponseEntity<EmployeeDetailsResponse>(employees, HttpStatus.OK);
 
 	}
 

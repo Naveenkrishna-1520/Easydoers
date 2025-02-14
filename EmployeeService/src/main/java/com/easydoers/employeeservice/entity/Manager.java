@@ -16,7 +16,7 @@ public class Manager {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int managerId;
+	private Long managerId;
 	private String managerNtid;
 	private String managerName;
 	private String gender;
@@ -45,7 +45,7 @@ public class Manager {
 	 * @param company
 	 * @param address
 	 */
-	public Manager(int managerId, String managerNtid, String managerName, String gender, Long contact, String email,
+	public Manager(Long managerId, String managerNtid, String managerName, String gender, Long contact, String email,
 			Company company, Address address) {
 		super();
 		this.managerId = managerId;
@@ -60,13 +60,13 @@ public class Manager {
 	/**
 	 * @return the managerId
 	 */
-	public int getManagerId() {
+	public Long getManagerId() {
 		return managerId;
 	}
 	/**
 	 * @param managerId the managerId to set
 	 */
-	public void setManagerId(int managerId) {
+	public void setManagerId(Long managerId) {
 		this.managerId = managerId;
 	}
 	/**
@@ -152,12 +152,6 @@ public class Manager {
 	 */
 	public void setAddress(Address address) {
 		this.address = address;
-	}
-	@Override
-	public String toString() {
-		return "Manager [managerId=" + managerId + ", managerNtid=" + managerNtid + ", managerName=" + managerName
-				+ ", gender=" + gender + ", contact=" + contact + ", email=" + email + ", company=" + company
-				+ ", address=" + address + "]";
 	}
 	
 	

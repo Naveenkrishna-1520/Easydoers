@@ -10,7 +10,7 @@ import com.easydoers.employeeservice.entity.Store;
 
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store, String>{
+public interface StoreRepository extends JpaRepository<Store, Long>{
 
 	Store findByDealerStoreId(String dealerStoreId);
 

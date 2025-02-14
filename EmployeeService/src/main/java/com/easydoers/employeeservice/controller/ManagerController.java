@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.PayslipRequest;
 import com.easydoers.employeeservice.dto.PayslipResponse;
-import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Expense;
-import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.ExpenseService;
 import com.easydoers.employeeservice.service.PayslipService;
 
@@ -27,15 +25,9 @@ public class ManagerController {
 	@Autowired
 	private PayslipService payslipService;
 	@Autowired
-	private EmployeeService employeeService;
-	@Autowired
 	private ExpenseService expenseService;
 
-	@PostMapping("/employeeRegistration")
-	public ResponseEntity<String> saveEmployee(@RequestBody Employee employee) {
-		Employee savedEmployee = employeeService.saveEmployee(employee);
-		return ResponseEntity.ok("Employee '" + savedEmployee.getEmployeeNtid() + "' saved successfully!");
-	}
+	
 	
 	@PostMapping("/recordStoreExpenses")
 	public ResponseEntity<Expense> recordStoreExpenses(@RequestBody Expense expense){

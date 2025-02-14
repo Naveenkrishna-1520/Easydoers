@@ -103,4 +103,10 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		employeeRepository.save(employee);
 		return "Manager : "+managerName+" is successfully assigned to employee : "+employee.getEmployeeName();
 	}
+
+	@Override
+	public List<Employee> getEmployeesUnderCompany(Company company) {
+		
+		return employeeRepository.findByCompany(company);
+	}
 }

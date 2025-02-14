@@ -16,6 +16,7 @@ import com.easydoers.employeeservice.dto.CompanyResponse;
 import com.easydoers.employeeservice.dto.StoreResponse;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.service.CompanyService;
+import com.easydoers.employeeservice.service.InvoiceService;
 
 @RestController
 @RequestMapping("v1/admin")
@@ -24,6 +25,8 @@ public class AdminController {
 	
 	@Autowired
 	private CompanyService companyService;
+	@Autowired
+	private InvoiceService invoiceService;
 	
 	@PostMapping("/companyRegistration")
 	public ResponseEntity<String> createCompany(@RequestBody Company company){
@@ -44,4 +47,10 @@ public class AdminController {
 		
 	}
 	
+	@PostMapping("/generateInvoices")
+	public ResponseEntity<String> generateInvoices(){
+		String message = invoiceService.generateInvoicesForAllCompanies();
+		return new ResponseEntity<String>(message,HttpStatus.OK);
+		
+	}
 }

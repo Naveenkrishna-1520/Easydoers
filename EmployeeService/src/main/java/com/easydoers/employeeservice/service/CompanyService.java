@@ -2,6 +2,7 @@ package com.easydoers.employeeservice.service;
 
 
 import com.easydoers.employeeservice.dto.CompanyResponse;
+import com.easydoers.employeeservice.dto.EmployeeDetailsResponse;
 import com.easydoers.employeeservice.dto.StoreResponse;
 import com.easydoers.employeeservice.entity.Company;
 
@@ -18,6 +19,8 @@ public interface CompanyService {
 	Company checkCompany(String companyName);
 
 	Company isCompanyAvailable(String userName);
+
+	EmployeeDetailsResponse fetchEmployees(String companyName);
 
 
 }

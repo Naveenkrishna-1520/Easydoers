@@ -10,10 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.CompanyDTO;
 import com.easydoers.employeeservice.dto.CompanyResponse;
+import com.easydoers.employeeservice.dto.EmployeeDetailsDTO;
+import com.easydoers.employeeservice.dto.EmployeeDetailsResponse;
 import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.dto.StoreResponse;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
+import com.easydoers.employeeservice.entity.Employee;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.exception.CompanyNotFoundException;
@@ -23,6 +26,7 @@ import com.easydoers.employeeservice.repository.CompanyRepository;
 import com.easydoers.employeeservice.repository.UserRepository;
 import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.EmailService;
+import com.easydoers.employeeservice.service.EmployeeService;
 import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.util.PasswordCreatorUtil;
 
@@ -44,6 +48,8 @@ public class CompanyServiceImplementation implements CompanyService {
 	@Autowired
 	@Lazy
 	private StoreService storeService;
+	@Autowired
+	private EmployeeService employeeService;
 
 	@Override
 	public Company getCompany(long companyId) {
@@ -110,7 +116,7 @@ public class CompanyServiceImplementation implements CompanyService {
 	@Override
 	public Company checkCompany(String companyName) {
 		Company company = companyRepository.findByCompanyName(companyName);
-		if(company == null) {
+		if (company == null) {
 			throw new CompanyNotFoundException("company with " + companyName + " not found");
 		}
 		return company;
@@ -121,7 +127,21 @@ public class CompanyServiceImplementation implements CompanyService {
 		Company company = companyRepository.findByEmail(userName);
 		return company;
 	}
-	
-	
+
+	@Override
+	public EmployeeDetailsResponse fetchEmployees(String companyName) {
+		Company company = checkCompany(companyName);
+
+		List<Employee> employees = employeeService.getEmployeesUnderCompany(company);
+		List<EmployeeDetailsDTO> employeeDTOs = employees.stream()
+				.map(employee -> new EmployeeDetailsDTO(employee.getEmployeeId(), employee.getEmployeeNtid(),
+						employee.getEmployeeName(), employee.getPhoneNumber(), employee.getEmail(),
+						employee.getEmployeePayRatePerHour(), employee.getCommissionPercentage(),
+						employee.getPerBoxCommission()))
+				.toList();
+		EmployeeDetailsResponse response = new EmployeeDetailsResponse();
+		response.setEmployees(employeeDTOs);
+		return response;
+	}
 
 }
