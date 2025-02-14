@@ -138,20 +138,20 @@ public class SaleServiceImplementation implements SaleService {
 	private CashDTO setCash(List<Sale> salesList) {
 		CashDTO cashInfoForStore = new CashDTO();
 		for (Sale sale : salesList) {
-			cashInfoForStore.setSystemCash(sale.getSystemCash() + cashInfoForStore.getSystemCash());
-			cashInfoForStore.setActualCash(sale.getActualCash() + cashInfoForStore.getActualCash());
-			cashInfoForStore.setSystemCard(sale.getSystemCard() + cashInfoForStore.getSystemCard());
-			cashInfoForStore.setActualCard(sale.getActualCard() + cashInfoForStore.getActualCard());
+			cashInfoForStore.setSystemCash(cashInfoForStore.getSystemCash() + sale.getSystemCash());
+			cashInfoForStore.setActualCash(cashInfoForStore.getActualCash() + sale.getActualCash());
+			cashInfoForStore.setSystemCard(cashInfoForStore.getSystemCard() + sale.getSystemCard());
+			cashInfoForStore.setActualCard(cashInfoForStore.getActualCard() + sale.getActualCard());
+			cashInfoForStore.setSystemAccessories(cashInfoForStore.getSystemAccessories() + sale.getSystemAccessories());
 		}
 		cashInfoForStore = calculateAccessories(cashInfoForStore);
 		return cashInfoForStore;
 	}
 
 	private CashDTO calculateAccessories(CashDTO cashInfoForStore) {
-		CashDTO accessoriesForStore = new CashDTO();
-		accessoriesForStore.setCashAccessories(cashInfoForStore.getActualCash() - cashInfoForStore.getSystemCash());
-		accessoriesForStore.setCardAccessories(cashInfoForStore.getActualCard() - cashInfoForStore.getSystemCard());
-		return accessoriesForStore;
+		cashInfoForStore.setCashAccessories(cashInfoForStore.getActualCash() - cashInfoForStore.getSystemCash());
+		cashInfoForStore.setCardAccessories(cashInfoForStore.getActualCard() - cashInfoForStore.getSystemCard());
+		return cashInfoForStore;
 	}
 
 }
