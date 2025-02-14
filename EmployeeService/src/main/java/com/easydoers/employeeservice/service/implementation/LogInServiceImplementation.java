@@ -109,15 +109,14 @@ public class LogInServiceImplementation implements LogInService {
 	private LogInResponse setupEmployeeResponse(Employee employee, Store store, LogInRequest logInRequest) {
 		LogInResponse response = new LogInResponse();
 
+		// Generate token
+		response = generateToken(logInRequest, EMPLOYEE);
+		
 		// Set employee and store information
 		EmployeeDTO employeeDTO = new EmployeeDTO(employee.getEmployeeNtid(), employee.getEmployeeName());
 		StoreDTO storeDTO = new StoreDTO(store.getDealerStoreId(), store.getStoreName());
 		response.setEmployee(employeeDTO);
 		response.setStore(storeDTO);
-
-		// Generate token
-		response = generateToken(logInRequest, EMPLOYEE);
-
 		// Set clock-in status
 		Work clockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
 		if (clockinStatus != null) {
