@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.AuthorizedStoreAccessResponse;
 import com.easydoers.employeeservice.dto.ClockinResponse;
@@ -36,6 +37,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	@Autowired
 	private StoreService storeService;
 	@Autowired
+	@Lazy
 	private CompanyService companyService;
 	@Autowired
 	private ManagerService managerService;
