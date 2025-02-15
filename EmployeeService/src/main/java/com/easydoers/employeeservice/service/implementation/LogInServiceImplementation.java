@@ -95,12 +95,14 @@ public class LogInServiceImplementation implements LogInService {
 	}
 
 	private LogInResponse handleEmployeeLogin(LogInRequest logInRequest) {
+
 		LogInResponse response = new LogInResponse();
 		Employee employee = employeeService.checkEmployee(logInRequest.getPassword());
 		Store store = storeService.checkStore(logInRequest.getUserName());
-
-		if (employee != null && store != null) {
-			response = setupEmployeeResponse(employee, store, logInRequest);
+		if (employee.getCompany().getCompanyId() == store.getCompany().getCompanyId()) {
+			if (employee != null && store != null) {
+				response = setupEmployeeResponse(employee, store, logInRequest);
+			}
 		}
 
 		return response;
@@ -111,7 +113,7 @@ public class LogInServiceImplementation implements LogInService {
 
 		// Generate token
 		response = generateToken(logInRequest, EMPLOYEE);
-		
+
 		// Set employee and store information
 		EmployeeDTO employeeDTO = new EmployeeDTO(employee.getEmployeeNtid(), employee.getEmployeeName());
 		StoreDTO storeDTO = new StoreDTO(store.getDealerStoreId(), store.getStoreName());
