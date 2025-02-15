@@ -18,6 +18,7 @@ import com.easydoers.employeeservice.entity.Sale;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.entity.Work;
+import com.easydoers.employeeservice.exception.CompanyCredentialsNotMatchedException;
 import com.easydoers.employeeservice.exception.UserNotFoundException;
 import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.CookieSetupService;
@@ -103,6 +104,8 @@ public class LogInServiceImplementation implements LogInService {
 			if (employee != null && store != null) {
 				response = setupEmployeeResponse(employee, store, logInRequest);
 			}
+		}else {
+			throw new CompanyCredentialsNotMatchedException("Company is not matching with credentails");
 		}
 
 		return response;

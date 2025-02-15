@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.easydoers.employeeservice.exception.ManagerNotFoundException;
+import com.easydoers.employeeservice.exception.CompanyCredentialsNotMatchedException;
 import com.easydoers.employeeservice.exception.CompanyNotFoundException;
 import com.easydoers.employeeservice.dto.ErrorResponse;
 import com.easydoers.employeeservice.exception.DuplicateCompanyFoundException;
@@ -57,6 +58,12 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(NoSalesFound.class)
     public ResponseEntity<ErrorResponse> handleNoSalesFound(NoSalesFound ex) {
+        ErrorResponse response = new ErrorResponse(false, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+	
+	@ExceptionHandler(CompanyCredentialsNotMatchedException.class)
+    public ResponseEntity<ErrorResponse> handleCompanyCredentialsNotMatchedException(CompanyCredentialsNotMatchedException ex) {
         ErrorResponse response = new ErrorResponse(false, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
