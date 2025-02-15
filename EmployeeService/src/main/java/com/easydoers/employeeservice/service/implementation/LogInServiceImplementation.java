@@ -105,7 +105,7 @@ public class LogInServiceImplementation implements LogInService {
 				response = setupEmployeeResponse(employee, store, logInRequest);
 			}
 		}else {
-			throw new CompanyCredentialsNotMatchedException("Company is not matching with credentails");
+			throw new CompanyCredentialsNotMatchedException(logInRequest.getPassword()+" do not have access to this store");
 		}
 
 		return response;
