@@ -88,7 +88,7 @@ public class JWTTokenService {
 
     public boolean validateToken(String token, Store store) {
         final String userName = extractUserName(token);
-        return (userName.equals(store.getDealerStoreId()) && !isTokenExpired(token));
+        return (userName.equalsIgnoreCase(store.getDealerStoreId()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
