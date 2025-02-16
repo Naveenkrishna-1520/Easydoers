@@ -10,6 +10,7 @@ import com.easydoers.employeeservice.dto.CashCollectionResponse;
 import com.easydoers.employeeservice.dto.CashDTO;
 import com.easydoers.employeeservice.dto.EmployeeSalesDTO;
 import com.easydoers.employeeservice.dto.SaleDTO;
+import com.easydoers.employeeservice.dto.SaleHistoryDTO;
 import com.easydoers.employeeservice.dto.SaleRequest;
 import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.dto.StoreResponse;
@@ -129,10 +130,35 @@ public class SaleServiceImplementation implements SaleService {
 			CashCollectionResponse storeCashCollection = new CashCollectionResponse();
 			storeCashCollection.setStore(storeDTO);
 			storeCashCollection.setCash(setCash(salesList));
+			storeCashCollection.setSaleHistory(setSaleHistory(salesList));
 			response.add(storeCashCollection);
 		}
 
 		return response;
+	}
+
+	private List<SaleHistoryDTO> setSaleHistory(List<Sale> salesList) {
+		List<SaleHistoryDTO> saleHistoryList = new ArrayList<>();
+		for (Sale sale : salesList) {
+			SaleHistoryDTO saleHistory = new SaleHistoryDTO();
+			saleHistory.setSaleId(sale.getSaleId());
+			saleHistory.setEmployeeName(sale.getEmployee().getEmployeeName());
+			saleHistory.setBoxesSold(sale.getBoxesSold());
+			saleHistory.setSystemAccessories(sale.getSystemAccessories());
+			saleHistory.setAccessories(sale.getAccessories());
+			saleHistory.setTabletsSold(sale.getTabletsSold());
+			saleHistory.setHsiSold(sale.getHsiSold());
+			saleHistory.setWatchesSold(sale.getWatchesSold());
+			saleHistory.setSystemCash(sale.getSystemCash());
+			saleHistory.setActualCash(sale.getActualCash());
+			saleHistory.setSystemCard(sale.getSystemCard());
+			saleHistory.setActualCard(sale.getActualCard());
+			saleHistory.setCashExpense(sale.getCashExpense());
+			saleHistory.setExpenseReason(sale.getExpenseReason());
+			saleHistory.setSaleDate(sale.getSaleDate());
+			saleHistoryList.add(saleHistory);
+		}
+		return saleHistoryList;
 	}
 
 	private CashDTO setCash(List<Sale> salesList) {

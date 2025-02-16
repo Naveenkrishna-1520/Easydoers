@@ -16,7 +16,7 @@ public class LogInResponse {
 	private String isClockin;
 	private String clockinLocation;
 	private String isSaleSubmit;
-	private LocalTime clockinTime;
+	private String clockinTime;
 	private String loginEmail;
 	private String loginPerson;
 	private String message;
@@ -43,7 +43,7 @@ public class LogInResponse {
 	 * @param message
 	 */
 	public LogInResponse(EmployeeDTO employee, StoreDTO store, String token, String refreshToken, String isClockin,
-			String clockinLocation, String isSaleSubmit, LocalTime clockinTime, String loginEmail, String loginPerson,
+			String clockinLocation, String isSaleSubmit, String clockinTime, String loginEmail, String loginPerson,
 			String message) {
 		super();
 		this.employee = employee;
@@ -160,14 +160,14 @@ public class LogInResponse {
 	/**
 	 * @return the clockinTime
 	 */
-	public LocalTime getClockinTime() {
+	public String getClockinTime() {
 		return clockinTime;
 	}
 
 	/**
 	 * @param clockinTime the clockinTime to set
 	 */
-	public void setClockinTime(LocalTime clockinTime) {
+	public void setClockinTime(String clockinTime) {
 		this.clockinTime = clockinTime;
 	}
 
@@ -212,4 +212,5 @@ public class LogInResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
 }

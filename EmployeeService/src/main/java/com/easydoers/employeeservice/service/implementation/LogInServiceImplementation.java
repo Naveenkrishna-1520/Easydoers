@@ -126,10 +126,11 @@ public class LogInServiceImplementation implements LogInService {
 		Work clockinStatus = workService.checkClockinStatus(employee.getEmployeeId(), LocalDate.now());
 		if (clockinStatus != null) {
 			response.setIsClockin("true");
-			response.setClockinTime(clockinStatus.getClockInTime());
+			response.setClockinTime(clockinStatus.getClockInTime().toString());
 			response.setClockinLocation(clockinStatus.getStore().getStoreName());
 		} else {
 			response.setIsClockin("false");
+			response.setClockinLocation("NOT CLOCKED IN YET");
 		}
 
 		// Set sale submission status
