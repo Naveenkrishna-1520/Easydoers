@@ -23,6 +23,7 @@ import com.easydoers.employeeservice.exception.UserNotFoundException;
 import com.easydoers.employeeservice.service.CompanyService;
 import com.easydoers.employeeservice.service.CookieSetupService;
 import com.easydoers.employeeservice.service.EmployeeService;
+import com.easydoers.employeeservice.service.JWTTokenService;
 import com.easydoers.employeeservice.service.LogInService;
 import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.SaleService;
@@ -37,8 +38,6 @@ public class LogInServiceImplementation implements LogInService {
 	private EmployeeService employeeService;
 	@Autowired
 	private StoreService storeService;
-	@Autowired
-	private JWTTokenService tokenService;
 	@Autowired
 	private CookieSetupService cookieSetupService;
 	@Autowired
@@ -142,8 +141,8 @@ public class LogInServiceImplementation implements LogInService {
 
 	private LogInResponse generateToken(LogInRequest logInRequest, String role) {
 		LogInResponse response = new LogInResponse();
-		String jwtToken = tokenService.generateToken(logInRequest.getUserName(), role);
-		String refreshJwtToken = tokenService.generateRefreshToken(logInRequest.getUserName(), role);
+		String jwtToken = jwtTokenService.generateToken(logInRequest.getUserName(), role);
+		String refreshJwtToken = jwtTokenService.generateRefreshToken(logInRequest.getUserName(), role);
 		ResponseCookie cookie = cookieSetupService.setupJwtCookie(jwtToken);
 		ResponseCookie refreshCookie = cookieSetupService.setupRefreshJwtCookie(refreshJwtToken);
 		response.setToken(cookie.toString());

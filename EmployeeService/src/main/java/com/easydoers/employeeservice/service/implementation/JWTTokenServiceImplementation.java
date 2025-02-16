@@ -12,6 +12,8 @@ import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.exception.SignatureExceptionFound;
 import com.easydoers.employeeservice.exception.TokenInvalidException;
+import com.easydoers.employeeservice.service.JWTTokenService;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -21,12 +23,12 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 
 @Service
-public class JWTTokenService {
+public class JWTTokenServiceImplementation implements JWTTokenService{
 	
 	private final String secretKey;
     private final String refreshSecretKey;
 
-    public JWTTokenService(Environment env) {
+    public JWTTokenServiceImplementation(Environment env) {
         this.secretKey = env.getProperty("jwt.secret.key");
         this.refreshSecretKey = env.getProperty("jwt.refresh.secret.key");
     }
