@@ -11,4 +11,6 @@ public interface EmployeeTargetService {
 
 	List<EmployeeTargetResponse> getAllEmployeeTargets(String companyName, String targetMonth);
 
+	List<EmployeeTargetResponse> getAllEmployeeTargetsForEmployee(String managerName, String targetMonth);
+
 }

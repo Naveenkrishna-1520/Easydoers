@@ -12,4 +12,6 @@ public interface StoreTargetService {
 
 	List<StoreTargetResponse> getAllStoreTargets(String companyName, String targetMonth);
 
+	List<StoreTargetResponse> getAllStoreTargetsForManager(String managerName, String targetMonth);
+
 }

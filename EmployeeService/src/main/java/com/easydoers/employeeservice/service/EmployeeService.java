@@ -10,6 +10,7 @@ import com.easydoers.employeeservice.dto.ClockinResponse;
 import com.easydoers.employeeservice.dto.EmployeeDetailsDTO;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Employee;
+import com.easydoers.employeeservice.entity.Manager;
 
 public interface EmployeeService {
 	
@@ -23,6 +24,7 @@ public interface EmployeeService {
 	String deleteEmployee(String employeeNtid);
 	EmployeeDetailsDTO updateEmployee(Employee employee);
 	Employee isEmployeeAvailable(String employeeNTId);
+	List<Employee> getEmployeesUnderManager(Manager manager);
 	
 
 }

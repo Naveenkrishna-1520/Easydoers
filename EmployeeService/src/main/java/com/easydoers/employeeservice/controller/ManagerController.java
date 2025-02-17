@@ -16,13 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.easydoers.employeeservice.dto.AddMinimumInventoryRequest;
 import com.easydoers.employeeservice.dto.DeleteProductRequest;
+import com.easydoers.employeeservice.dto.EmployeeTargetResponse;
 import com.easydoers.employeeservice.dto.PayslipRequest;
 import com.easydoers.employeeservice.dto.PayslipResponse;
 import com.easydoers.employeeservice.dto.ReorderSummaryResponse;
+import com.easydoers.employeeservice.dto.StoreTargetResponse;
+import com.easydoers.employeeservice.entity.EmployeeTarget;
 import com.easydoers.employeeservice.entity.Expense;
+import com.easydoers.employeeservice.entity.StoreTarget;
+import com.easydoers.employeeservice.service.EmployeeTargetService;
 import com.easydoers.employeeservice.service.ExpenseService;
 import com.easydoers.employeeservice.service.InventoryService;
 import com.easydoers.employeeservice.service.PayslipService;
+import com.easydoers.employeeservice.service.StoreTargetService;
 
 @RestController
 @RequestMapping("v1/manager")
@@ -34,6 +40,10 @@ public class ManagerController {
 	private ExpenseService expenseService;
 	@Autowired
 	private InventoryService inventoryService;
+	@Autowired
+	private StoreTargetService storeTargetService;
+	@Autowired
+	private EmployeeTargetService employeeTargetService;
 
 
 	@PostMapping("/recordStoreExpenses")
@@ -88,6 +98,32 @@ public class ManagerController {
 	public ResponseEntity<List<ReorderSummaryResponse>> viewReorderSummary(@RequestParam String managerName){
 		List<ReorderSummaryResponse> response = inventoryService.fetchStoresReorderSummary(managerName);
 		return new ResponseEntity<List<ReorderSummaryResponse>>(response, HttpStatus.OK);	
+	}
+	
+	@PostMapping("/storeTarget")
+	public ResponseEntity<String> setStoreTargets(@RequestBody StoreTarget storeTarget) {
+		String message = storeTargetService.setStoreTarget(storeTarget);
+		return new ResponseEntity<String>(message, HttpStatus.OK);
+	}
+
+	@PostMapping("/employeeTarget")
+	public ResponseEntity<String> setEmployeeTarget(@RequestBody EmployeeTarget employeeTarget) {
+		String message = employeeTargetService.setEmployeeTarget(employeeTarget);
+		return new ResponseEntity<String>(message, HttpStatus.OK);
+	}
+
+	@GetMapping("/viewStoresTargets")
+	public ResponseEntity<List<StoreTargetResponse>> viewAllStoreTargets(@RequestParam String managerName,
+			@RequestParam String targetMonth) {
+		List<StoreTargetResponse> stores = storeTargetService.getAllStoreTargetsForManager(managerName, targetMonth);
+		return new ResponseEntity<List<StoreTargetResponse>>(stores, HttpStatus.OK);
+	}
+	
+	@GetMapping("/viewEmployeesTargets")
+	public ResponseEntity<List<EmployeeTargetResponse>> viewAllEmployeeTargets(@RequestParam String managerName,
+			@RequestParam String targetMonth){
+		List<EmployeeTargetResponse> employees = employeeTargetService.getAllEmployeeTargetsForEmployee(managerName, targetMonth);
+		return new ResponseEntity<List<EmployeeTargetResponse>>(employees, HttpStatus.OK);
 	}
 
 }

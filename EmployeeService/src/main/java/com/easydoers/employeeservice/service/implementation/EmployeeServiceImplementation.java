@@ -128,4 +128,10 @@ public class EmployeeServiceImplementation implements EmployeeService {
 				employee.getEmployeePayRatePerHour(), employee.getCommissionPercentage(),
 				employee.getPerBoxCommission());
 	}
+
+	@Override
+	public List<Employee> getEmployeesUnderManager(Manager manager) {
+		
+		return employeeRepository.findByManager(manager);
+	}
 }

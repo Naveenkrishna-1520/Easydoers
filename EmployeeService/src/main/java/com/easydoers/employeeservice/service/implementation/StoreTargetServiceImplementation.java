@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.dto.StoreTargetResponse;
 import com.easydoers.employeeservice.entity.Company;
+import com.easydoers.employeeservice.entity.Manager;
 import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.StoreTarget;
 import com.easydoers.employeeservice.exception.targetExistedException;
 import com.easydoers.employeeservice.repository.StoreTargetRepository;
 import com.easydoers.employeeservice.service.CompanyService;
+import com.easydoers.employeeservice.service.ManagerService;
 import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.service.StoreTargetService;
 
@@ -28,6 +30,8 @@ public class StoreTargetServiceImplementation implements StoreTargetService {
 	private StoreService storeService;
 	@Autowired
 	private CompanyService companyService;
+	@Autowired
+	private ManagerService managerService;
 
 	@Override
 	public String setStoreTarget(StoreTarget storeTarget) {
@@ -49,10 +53,17 @@ public class StoreTargetServiceImplementation implements StoreTargetService {
 
 	@Override
 	public List<StoreTargetResponse> getAllStoreTargets(String companyName, String targetMonth) {
-		List<StoreTargetResponse> StoreTargetResponse = new ArrayList<>();
+		
 		Company company = companyService.checkCompany(companyName);
 		List<Store> stores = storeService.getStoresUnderCompany(company);
 		YearMonth month = YearMonth.parse(targetMonth);
+		List<StoreTargetResponse> StoreTargetResponse = fetchTargets(stores, month);
+		return StoreTargetResponse;
+		
+	}
+
+	private List<StoreTargetResponse> fetchTargets(List<Store> stores, YearMonth month) {
+		List<StoreTargetResponse> StoreTargetResponse = new ArrayList<>();
 		for (Store store : stores) {
 			StoreTarget storeTarget = storeTargetRepository.findByStoreAndTargetMonth(store, month);
 			StoreDTO storeDTO = new StoreDTO(store.getDealerStoreId(), store.getStoreName());
@@ -64,6 +75,15 @@ public class StoreTargetServiceImplementation implements StoreTargetService {
 			StoreTargetResponse.add(response);
 			}
 		}
+		return StoreTargetResponse;
+	}
+
+	@Override
+	public List<StoreTargetResponse> getAllStoreTargetsForManager(String managerName, String targetMonth) {
+		Manager manager = managerService.checkManager(managerName);
+		List<Store> stores = managerService.getStoresUnderManager(manager);
+		YearMonth month = YearMonth.parse(targetMonth);
+		List<StoreTargetResponse> StoreTargetResponse = fetchTargets(stores, month);
 		return StoreTargetResponse;
 	}
 
