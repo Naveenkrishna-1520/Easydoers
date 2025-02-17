@@ -94,7 +94,7 @@ public class ManagerController {
 		}
 	}
 	
-	@GetMapping("/reorderSummay")
+	@GetMapping("/reorderSummary")
 	public ResponseEntity<List<ReorderSummaryResponse>> viewReorderSummary(@RequestParam String managerName){
 		List<ReorderSummaryResponse> response = inventoryService.fetchStoresReorderSummary(managerName);
 		return new ResponseEntity<List<ReorderSummaryResponse>>(response, HttpStatus.OK);	

@@ -182,7 +182,7 @@ public class CompanyController {
 		return new ResponseEntity<List<EmployeeTargetResponse>>(employees, HttpStatus.OK);
 	}
 	
-	@GetMapping("/reorderSummay")
+	@GetMapping("/reorderSummary")
 	public ResponseEntity<List<ReorderSummaryResponse>> viewReorderSummary(@RequestParam String companyName){
 		List<ReorderSummaryResponse> response = inventoryService.fetchStoresReorderSummaryForCompany(companyName);
 		return new ResponseEntity<List<ReorderSummaryResponse>>(response, HttpStatus.OK);	
