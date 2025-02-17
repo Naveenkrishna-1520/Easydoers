@@ -18,6 +18,7 @@ public class SaleRequest {
     private String expenseReason;
     private LocalDate localDate;
     private EmployeeDTO employee;
+    private ManagerDetailsDTO manager;
     private StoreDTO store;
 	/**
 	 * @return the saleId
@@ -210,6 +211,18 @@ public class SaleRequest {
 	 */
 	public void setStore(StoreDTO store) {
 		this.store = store;
+	}
+	/**
+	 * @return the manager
+	 */
+	public ManagerDetailsDTO getManager() {
+		return manager;
+	}
+	/**
+	 * @param manager the manager to set
+	 */
+	public void setManager(ManagerDetailsDTO manager) {
+		this.manager = manager;
 	}
 	
     

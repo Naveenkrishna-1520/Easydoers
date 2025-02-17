@@ -1,40 +1,63 @@
 package com.easydoers.employeeservice.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.easydoers.employeeservice.dto.AddMinimumInventoryRequest;
+import com.easydoers.employeeservice.dto.DeleteProductRequest;
 import com.easydoers.employeeservice.dto.PayslipRequest;
 import com.easydoers.employeeservice.dto.PayslipResponse;
+import com.easydoers.employeeservice.dto.ReorderSummaryResponse;
 import com.easydoers.employeeservice.entity.Expense;
 import com.easydoers.employeeservice.service.ExpenseService;
+import com.easydoers.employeeservice.service.InventoryService;
 import com.easydoers.employeeservice.service.PayslipService;
 
 @RestController
 @RequestMapping("v1/manager")
 public class ManagerController {
 
-
 	@Autowired
 	private PayslipService payslipService;
 	@Autowired
 	private ExpenseService expenseService;
+	@Autowired
+	private InventoryService inventoryService;
 
-	
-	
+
 	@PostMapping("/recordStoreExpenses")
-	public ResponseEntity<Expense> recordStoreExpenses(@RequestBody Expense expense){
-		
-	Expense expenses = expenseService.saveExpense(expense);
+	public ResponseEntity<Expense> recordStoreExpenses(@RequestBody Expense expense) {
+
+		Expense expenses = expenseService.saveExpense(expense);
 		return new ResponseEntity<Expense>(expenses, HttpStatus.OK);
-		
+
+	}
+
+	@PostMapping("/addInventory")
+	public ResponseEntity<Map<String, Object>> addMinimumInventoryToStores(
+			@RequestBody AddMinimumInventoryRequest inventoryRequest) {
+		Map<String, Object> response = inventoryService.addMinimumInventoryToStores(inventoryRequest);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+
+	}
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<Map<String, Object>> deleteProductFromStoreInventory(
+			@RequestBody DeleteProductRequest deleteProductRequest) {
+		Map<String, Object> response = inventoryService.deleteInventoryfromStore(deleteProductRequest);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+
 	}
 
 	@GetMapping("/payslip")
@@ -59,6 +82,12 @@ public class ManagerController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(("Error generating payslip: " + e.getMessage()).getBytes());
 		}
+	}
+	
+	@GetMapping("/reorderSummay")
+	public ResponseEntity<List<ReorderSummaryResponse>> viewReorderSummary(@RequestParam String managerName){
+		List<ReorderSummaryResponse> response = inventoryService.fetchStoresReorderSummary(managerName);
+		return new ResponseEntity<List<ReorderSummaryResponse>>(response, HttpStatus.OK);	
 	}
 
 }

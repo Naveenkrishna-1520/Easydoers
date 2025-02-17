@@ -1,58 +1,31 @@
-package com.easydoers.employeeservice.entity;
+package com.easydoers.employeeservice.dto;
 
-import java.time.YearMonth;
 
-import com.easydoers.employeeservice.converter.YearMonthConverter;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+public class EmployeeTargetResponse {
 
-@Entity
-public class EmployeeTarget {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int targetId;
 	private int phonesTargetToEmployee;
 	private double accessoriesTargetByEmployee;
 	private int hsiTarget;
 	private int tabletsTargetByEmployee;
 	private int smartwatchTragetByEmployee;
-	@Column(nullable = false, length = 7) // Store as "YYYY-MM"
-	@Convert(converter = YearMonthConverter.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM")
-	private YearMonth targetMonth;
-	@ManyToOne
-	@JoinColumn(name = "employee_id")
-	private Employee employee;
-
-	/**
-	 * 
-	 */
-	public EmployeeTarget() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	private String targetMonth;
+	private EmployeeDTO employeeDTO;
 
 	/**
 	 * @param targetId
 	 * @param phonesTargetToEmployee
 	 * @param accessoriesTargetByEmployee
-	 * @param hSITarget
+	 * @param hsiTarget
 	 * @param tabletsTargetByEmployee
 	 * @param smartwatchTragetByEmployee
 	 * @param targetMonth
-	 * @param employee
+	 * @param employeeDTO
 	 */
-	public EmployeeTarget(int targetId, int phonesTargetToEmployee, double accessoriesTargetByEmployee, int hsiTarget,
-			int tabletsTargetByEmployee, int smartwatchTragetByEmployee, YearMonth targetMonth, Employee employee) {
+	public EmployeeTargetResponse(int targetId, int phonesTargetToEmployee, double accessoriesTargetByEmployee,
+			int hsiTarget, int tabletsTargetByEmployee, int smartwatchTragetByEmployee, String targetMonth,
+			EmployeeDTO employeeDTO) {
 		super();
 		this.targetId = targetId;
 		this.phonesTargetToEmployee = phonesTargetToEmployee;
@@ -61,7 +34,7 @@ public class EmployeeTarget {
 		this.tabletsTargetByEmployee = tabletsTargetByEmployee;
 		this.smartwatchTragetByEmployee = smartwatchTragetByEmployee;
 		this.targetMonth = targetMonth;
-		this.employee = employee;
+		this.employeeDTO = employeeDTO;
 	}
 
 	/**
@@ -151,29 +124,29 @@ public class EmployeeTarget {
 	/**
 	 * @return the targetMonth
 	 */
-	public YearMonth getTargetMonth() {
+	public String getTargetMonth() {
 		return targetMonth;
 	}
 
 	/**
 	 * @param targetMonth the targetMonth to set
 	 */
-	public void setTargetMonth(YearMonth targetMonth) {
+	public void setTargetMonth(String targetMonth) {
 		this.targetMonth = targetMonth;
 	}
 
 	/**
-	 * @return the employee
+	 * @return the employeeDTO
 	 */
-	public Employee getEmployee() {
-		return employee;
+	public EmployeeDTO getEmployeeDTO() {
+		return employeeDTO;
 	}
 
 	/**
-	 * @param employee the employee to set
+	 * @param employeeDTO the employeeDTO to set
 	 */
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
+	public void setEmployeeDTO(EmployeeDTO employeeDTO) {
+		this.employeeDTO = employeeDTO;
 	}
 
 }

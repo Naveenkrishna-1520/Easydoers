@@ -22,6 +22,7 @@ import com.easydoers.employeeservice.exception.SignatureExceptionFound;
 import com.easydoers.employeeservice.exception.StoreNotFoundException;
 import com.easydoers.employeeservice.exception.TokenInvalidException;
 import com.easydoers.employeeservice.exception.payCheckGenerationException;
+import com.easydoers.employeeservice.exception.targetExistedException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -66,6 +67,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleCompanyCredentialsNotMatchedException(CompanyCredentialsNotMatchedException ex) {
         ErrorResponse response = new ErrorResponse(false, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+	
+	@ExceptionHandler(targetExistedException.class)
+    public ResponseEntity<ErrorResponse> handletargetExistedException(targetExistedException ex) {
+        ErrorResponse response = new ErrorResponse(false, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 	
 	@ExceptionHandler(DuplicateUserFoundException.class)

@@ -1,59 +1,29 @@
-package com.easydoers.employeeservice.entity;
+package com.easydoers.employeeservice.dto;
 
-import java.time.YearMonth;
+public class StoreTargetResponse {
 
-import com.easydoers.employeeservice.converter.YearMonthConverter;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
-@Entity
-public class StoreTarget {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int targetId;
 	private int activationTargetToStore;
 	private double accessoriesTargetToStore;
 	private int hsiTargetToStore;
 	private int tabletsTargetToStore;
 	private int smartwatchTragetToStore;
-	@Column(nullable = false, length = 7) // Store as "YYYY-MM"
-	@Convert(converter = YearMonthConverter.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM")
-	private YearMonth targetMonth;
-
-	@ManyToOne
-	@JoinColumn(name = "store_id")
-	private Store store;
-
-	/**
-	 * 
-	 */
-	public StoreTarget() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	private String targetMonth;
+	private StoreDTO store;
 
 	/**
 	 * @param targetId
 	 * @param activationTargetToStore
 	 * @param accessoriesTargetToStore
-	 * @param hSITargetToStore
+	 * @param hsiTargetToStore
 	 * @param tabletsTargetToStore
 	 * @param smartwatchTragetToStore
 	 * @param targetMonth
 	 * @param store
 	 */
-	public StoreTarget(int targetId, int activationTargetToStore, double accessoriesTargetToStore, int hsiTargetToStore,
-			int tabletsTargetToStore, int smartwatchTragetToStore, YearMonth targetMonth, Store store) {
+	public StoreTargetResponse(int targetId, int activationTargetToStore, double accessoriesTargetToStore,
+			int hsiTargetToStore, int tabletsTargetToStore, int smartwatchTragetToStore, String targetMonth,
+			StoreDTO store) {
 		super();
 		this.targetId = targetId;
 		this.activationTargetToStore = activationTargetToStore;
@@ -152,28 +122,28 @@ public class StoreTarget {
 	/**
 	 * @return the targetMonth
 	 */
-	public YearMonth getTargetMonth() {
+	public String getTargetMonth() {
 		return targetMonth;
 	}
 
 	/**
 	 * @param targetMonth the targetMonth to set
 	 */
-	public void setTargetMonth(YearMonth targetMonth) {
+	public void setTargetMonth(String targetMonth) {
 		this.targetMonth = targetMonth;
 	}
 
 	/**
 	 * @return the store
 	 */
-	public Store getStore() {
+	public StoreDTO getStore() {
 		return store;
 	}
 
 	/**
 	 * @param store the store to set
 	 */
-	public void setStore(Store store) {
+	public void setStore(StoreDTO store) {
 		this.store = store;
 	}
 

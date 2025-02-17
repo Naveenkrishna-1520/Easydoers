@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.easydoers.employeeservice.dto.AuthorizedStoreAccessResponse;
 import com.easydoers.employeeservice.dto.ClockinResponse;
+import com.easydoers.employeeservice.dto.EmployeeDetailsDTO;
 import com.easydoers.employeeservice.dto.StoreDTO;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
@@ -44,7 +45,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	
 	@Override
 	public Employee saveEmployee(Employee employee) {
-		if (checkEmployeeWhileRegistration(employee.getEmployeeNtid()) != null) {
+		if (isEmployeeAvailable(employee.getEmployeeNtid()) != null) {
 			throw new DuplicateUserFoundException("Employee already exists with : " + employee.getEmployeeNtid());
 		}
 		Address employeeAddress = employee.getAddress();
@@ -75,7 +76,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		return employee;
 	}
 
-	public Employee checkEmployeeWhileRegistration(String employeeNtid) {
+	public Employee isEmployeeAvailable(String employeeNtid) {
 
 		Employee employee = employeeRepository.findByEmployeeNtid(employeeNtid);
 
@@ -110,5 +111,21 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	public List<Employee> getEmployeesUnderCompany(Company company) {
 		
 		return employeeRepository.findByCompany(company);
+	}
+
+	@Override
+	public String deleteEmployee(String employeeNtid) {
+		Employee employee = checkEmployee(employeeNtid);
+		employeeRepository.delete(employee);
+		return "Employee deleted successfully";
+	}
+
+	@Override
+	public EmployeeDetailsDTO updateEmployee(Employee employee) {
+		employee = employeeRepository.save(employee);
+		return new EmployeeDetailsDTO(employee.getEmployeeId(), employee.getEmployeeNtid(),
+				employee.getEmployeeName(), employee.getPhoneNumber(), employee.getEmail(),
+				employee.getEmployeePayRatePerHour(), employee.getCommissionPercentage(),
+				employee.getPerBoxCommission());
 	}
 }

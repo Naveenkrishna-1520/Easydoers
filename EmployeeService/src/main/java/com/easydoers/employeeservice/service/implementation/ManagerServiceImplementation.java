@@ -1,13 +1,19 @@
 package com.easydoers.employeeservice.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import static com.easydoers.employeeservice.constants.RoleConstants.*;
+
+import java.util.List;
+
+import com.easydoers.employeeservice.dto.ManagerDetailsDTO;
 import com.easydoers.employeeservice.entity.Address;
 import com.easydoers.employeeservice.entity.Company;
 import com.easydoers.employeeservice.entity.Manager;
+import com.easydoers.employeeservice.entity.Store;
 import com.easydoers.employeeservice.entity.Users;
 import com.easydoers.employeeservice.exception.DuplicateUserFoundException;
 import com.easydoers.employeeservice.exception.ManagerNotFoundException;
@@ -17,6 +23,7 @@ import com.easydoers.employeeservice.repository.ManagerRepository;
 import com.easydoers.employeeservice.repository.UserRepository;
 import com.easydoers.employeeservice.service.EmailService;
 import com.easydoers.employeeservice.service.ManagerService;
+import com.easydoers.employeeservice.service.StoreService;
 import com.easydoers.employeeservice.util.PasswordCreatorUtil;
 
 @Service
@@ -36,6 +43,10 @@ public class ManagerServiceImplementation implements ManagerService {
 	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	@Lazy
+	private StoreService storeService;
+	
 
 	@Override
 	public String createManager(Manager manager) {
@@ -81,6 +92,26 @@ public class ManagerServiceImplementation implements ManagerService {
 	public Manager isManagerAvailable(String userName) {
 		Manager manager = managerRepository.findByEmail(userName);
 		return manager;
+	}
+
+	@Override
+	public String deleteManager(String managerEmail) {
+		Manager manager = isManagerAvailable(managerEmail);
+		managerRepository.delete(manager);
+		return "Manager deleted successfully";
+	}
+
+	@Override
+	public ManagerDetailsDTO updateManager(Manager manager) {
+		manager = managerRepository.save(manager);
+		return new ManagerDetailsDTO(manager.getManagerId(), manager.getManagerNtid(), manager.getManagerName(),
+				manager.getEmail(), manager.getContact(), manager.getGender());
+	}
+
+	@Override
+	public List<Store> getStoresUnderManager(Manager manager) {
+		List<Store> storesUnderManager = storeService.getStoresUnderManager(manager);
+		return storesUnderManager;
 	}
 
 }

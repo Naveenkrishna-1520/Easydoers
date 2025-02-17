@@ -76,4 +76,17 @@ public class StoreServiceImplementation implements StoreService {
 		return "Manager : "+ managerName+" is successfully assigned to store : "+store.getDealerStoreId();
 	}
 
+	@Override
+	public String deleteStore(String dealerStoreId) {
+		Store store = checkStore(dealerStoreId);
+		storeRepository.delete(store);
+		return "Store deleted successfully";
+	}
+
+	@Override
+	public List<Store> getStoresUnderManager(Manager manager) {
+		
+		return storeRepository.findByManager(manager);
+	}
+
 }
