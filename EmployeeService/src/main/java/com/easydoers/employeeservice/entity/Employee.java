@@ -31,6 +31,7 @@ public class Employee {
 	private int employeePayRatePerHour;
 	private int commissionPercentage;
 	private int perBoxCommission;
+	private boolean isActive;
 
 	/**
 	 * 
@@ -52,10 +53,11 @@ public class Employee {
 	 * @param employeePayRatePerHour
 	 * @param commissionPercentage
 	 * @param perBoxCommission
+	 * @param isActive
 	 */
 	public Employee(Long employeeId, String employeeNtid, String employeeName, Long phoneNumber, String email,
 			Company company, Manager manager, Address address, int employeePayRatePerHour, int commissionPercentage,
-			int perBoxCommission) {
+			int perBoxCommission, boolean isActive) {
 		super();
 		this.employeeId = employeeId;
 		this.employeeNtid = employeeNtid;
@@ -68,6 +70,7 @@ public class Employee {
 		this.employeePayRatePerHour = employeePayRatePerHour;
 		this.commissionPercentage = commissionPercentage;
 		this.perBoxCommission = perBoxCommission;
+		this.isActive = isActive;
 	}
 
 	/**
@@ -222,6 +225,20 @@ public class Employee {
 	 */
 	public void setPerBoxCommission(int perBoxCommission) {
 		this.perBoxCommission = perBoxCommission;
+	}
+
+	/**
+	 * @return the isActive
+	 */
+	public boolean isActive() {
+		return isActive;
+	}
+
+	/**
+	 * @param isActive the isActive to set
+	 */
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 }

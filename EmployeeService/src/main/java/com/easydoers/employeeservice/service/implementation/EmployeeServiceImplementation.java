@@ -53,6 +53,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		Company employeeCompany = companyService.checkCompany(employee.getCompany().getCompanyName());
 		employee.setCompany(employeeCompany);
 		employee.setAddress(employeeAddress);
+		employee.setActive(true);
 		return employeeRepository.save(employee);
 	}
 
@@ -110,18 +111,20 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	@Override
 	public List<Employee> getEmployeesUnderCompany(Company company) {
 		
-		return employeeRepository.findByCompany(company);
+		return employeeRepository.findByCompanyAndIsActiveTrue(company);
 	}
 
 	@Override
 	public String deleteEmployee(String employeeNtid) {
 		Employee employee = checkEmployee(employeeNtid);
-		employeeRepository.delete(employee);
-		return "Employee deleted successfully";
+		employee.setActive(false);
+		employeeRepository.save(employee);
+		return "Employee moved to inactive status successfully";
 	}
 
 	@Override
 	public EmployeeDetailsDTO updateEmployee(Employee employee) {
+		employee = checkEmployee(employee.getEmployeeNtid());
 		employee = employeeRepository.save(employee);
 		return new EmployeeDetailsDTO(employee.getEmployeeId(), employee.getEmployeeNtid(),
 				employee.getEmployeeName(), employee.getPhoneNumber(), employee.getEmail(),
@@ -132,6 +135,6 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	@Override
 	public List<Employee> getEmployeesUnderManager(Manager manager) {
 		
-		return employeeRepository.findByManager(manager);
+		return employeeRepository.findByManagerAndIsActiveTrue(manager);
 	}
 }

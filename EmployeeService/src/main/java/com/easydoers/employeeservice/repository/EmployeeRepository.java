@@ -16,9 +16,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 	
 	Employee findByEmployeeNtid(String employeeNtid);
 
-	List<Employee> findByCompany(Company company);
+	List<Employee> findByCompanyAndIsActiveTrue(Company company);
 
-	List<Employee> findByManager(Manager manager);
+	List<Employee> findByManagerAndIsActiveTrue(Manager manager);
 
 
 }

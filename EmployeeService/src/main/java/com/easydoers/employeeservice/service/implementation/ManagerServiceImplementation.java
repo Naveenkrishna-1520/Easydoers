@@ -103,6 +103,7 @@ public class ManagerServiceImplementation implements ManagerService {
 
 	@Override
 	public ManagerDetailsDTO updateManager(Manager manager) {
+		manager = checkManager(manager.getManagerName());
 		manager = managerRepository.save(manager);
 		return new ManagerDetailsDTO(manager.getManagerId(), manager.getManagerNtid(), manager.getManagerName(),
 				manager.getEmail(), manager.getContact(), manager.getGender());
